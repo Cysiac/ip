@@ -228,3 +228,67 @@ ____________________________________________________________
  > ^ <
 ____________________________________________________________
 ```
+
+## Test: Add a deadline and list it
+**Aim:** "deadline <description> /by <when>" adds a task tagged [D] with
+the "by" text shown in parentheses, and shows up in "list" the same way.
+
+```input
+deadline return book /by Sunday
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Sunday)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+ 1.[D][ ] return book (by: Sunday)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Malformed deadline commands are guarded
+**Aim:** A "deadline" missing the "/by" marker (or with nothing after it)
+prints a usage hint instead of being added, whether or not a description
+was given.
+
+```input
+deadline return book
+deadline
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? Use "deadline <description> /by <when>", e.g.
+ "deadline return book /by Sunday".
+____________________________________________________________
+____________________________________________________________
+ Meow? Use "deadline <description> /by <when>", e.g.
+ "deadline return book /by Sunday".
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```

@@ -57,6 +57,19 @@ public class Meowmeow {
                     } else {
                         taskCount = addTask(new Task(description, "T"), tasks, taskCount);
                     }
+                } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
+                    // "deadline <description> /by <when>" adds a task due
+                    // by a given point, kept as plain text for now.
+                    String rest = input.length() > 8 ? input.substring(8).trim() : "";
+                    int marker = rest.indexOf("/by");
+                    String description = marker < 0 ? "" : rest.substring(0, marker).trim();
+                    String by = marker < 0 ? "" : rest.substring(marker + 3).trim();
+                    if (marker < 0 || description.isEmpty() || by.isEmpty()) {
+                        printBoxed(" Meow? Use \"deadline <description> /by <when>\", e.g.",
+                                " \"deadline return book /by Sunday\".");
+                    } else {
+                        taskCount = addTask(new Task(description, "D", by), tasks, taskCount);
+                    }
                 } else {
                     // No known command matched: rather than storing the line
                     // as a typeless task, tell the user what's understood.
