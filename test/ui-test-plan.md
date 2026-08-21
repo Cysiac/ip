@@ -140,6 +140,124 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+## Test: Delete a task
+**Aim:** "delete N" removes the N-th listed task, prints a confirmation
+showing the removed task and the new total, and "list" afterwards shows
+the remaining tasks renumbered with the gap closed.
+
+```input
+todo read book
+todo return book
+todo join sports club
+delete 2
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] return book
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] join sports club
+ Now you have 3 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've removed this task:
+   [T][ ] return book
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+ 1.[T][ ] read book
+ 2.[T][ ] join sports club
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Bare delete is guarded
+**Aim:** "delete" with no number given prints a friendly prompt instead of
+being added as a literal task named "delete".
+
+```input
+delete
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? Tell me which task number to delete.
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Invalid delete targets are rejected without affecting existing tasks
+**Aim:** A non-numeric or out-of-range argument to "delete" prints a
+friendly error, matching "mark"/"unmark"'s behaviour, and leaves the
+existing task list unchanged.
+
+```input
+todo read book
+delete abc
+delete 5
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ That's not a task number I recognise, meow?
+____________________________________________________________
+____________________________________________________________
+ Meow? Task 5 doesn't exist in your list.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+ 1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
 ## Test: Bare mark/unmark are guarded
 **Aim:** "mark" and "unmark" with no number given print a friendly prompt
 instead of being added as literal tasks named "mark"/"unmark".
@@ -220,7 +338,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow? I don't know what that means.
- Try: todo, deadline, event, list, mark, unmark, bye
+ Try: todo, deadline, event, list, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -505,7 +623,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow? I don't know what that means.
- Try: todo, deadline, event, list, mark, unmark, bye
+ Try: todo, deadline, event, list, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
  Meow? Task 99 doesn't exist in your list.

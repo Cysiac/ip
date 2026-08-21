@@ -54,6 +54,13 @@ public class Meowmeow {
                     } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                         // "mark N" marks the N-th listed task (1-based) as done.
                         setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
+                    } else if (input.equalsIgnoreCase("delete")) {
+                        // "delete" with no number given: same guard as bare
+                        // "mark"/"unmark", so it isn't stored as a literal task.
+                        throw new MeowmeowException(" Meow? Tell me which task number to delete.");
+                    } else if (input.regionMatches(true, 0, "delete ", 0, 7)) {
+                        // "delete N" removes the N-th listed task (1-based).
+                        taskCount = deleteTask(input.substring(7).trim(), tasks, taskCount);
                     } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
                         // "todo <description>" adds a plain, undated task.
                         String description = input.length() > 4 ? input.substring(4).trim() : "";
@@ -100,7 +107,7 @@ public class Meowmeow {
                         // No known command matched: rather than storing the line
                         // as a typeless task, tell the user what's understood.
                         throw new MeowmeowException(" Meow? I don't know what that means.\n"
-                                + " Try: todo, deadline, event, list, mark, unmark, bye");
+                                + " Try: todo, deadline, event, list, mark, unmark, delete, bye");
                     }
                 } catch (MeowmeowException e) {
                     printBoxed(e.getMessage().split("\n"));
@@ -134,6 +141,37 @@ public class Meowmeow {
             task.markAsNotDone();
             printBoxed(" OK, I've marked this task as not done yet, meow:", "   " + task);
         }
+    }
+
+    /**
+     * Removes the task at the given 1-based position (as shown by "list")
+     * and prints a confirmation. Throws MeowmeowException on invalid input
+     * (not a number, or out of range) instead of crashing. Tasks after the
+     * removed one are shifted down by one to close the gap, since the task
+     * store is a plain array rather than a Collection with a built-in
+     * remove operation. Returns the updated task count.
+     */
+    private static int deleteTask(String indexText, Task[] tasks, int taskCount) throws MeowmeowException {
+        int index;
+        try {
+            index = Integer.parseInt(indexText);
+        } catch (NumberFormatException e) {
+            throw new MeowmeowException(" That's not a task number I recognise, meow?");
+        }
+        if (index < 1 || index > taskCount) {
+            throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
+        }
+        Task removed = tasks[index - 1];
+        for (int i = index - 1; i < taskCount - 1; i++) {
+            tasks[i] = tasks[i + 1];
+        }
+        tasks[taskCount - 1] = null;
+        taskCount--;
+        String taskWord = taskCount == 1 ? "task" : "tasks";
+        printBoxed(" Meow! I've removed this task:",
+                "   " + removed,
+                " Now you have " + taskCount + " " + taskWord + " in the list, meow!");
+        return taskCount;
     }
 
     /**
