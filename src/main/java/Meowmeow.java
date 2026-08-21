@@ -55,7 +55,7 @@ public class Meowmeow {
                     if (description.isEmpty()) {
                         printBoxed(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
                     } else {
-                        taskCount = addTask(new Task(description, "T"), tasks, taskCount);
+                        taskCount = addTask(new Todo(description), tasks, taskCount);
                     }
                 } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
                     // "deadline <description> /by <when>" adds a task due
@@ -68,7 +68,7 @@ public class Meowmeow {
                         printBoxed(" Meow? Use \"deadline <description> /by <when>\", e.g.",
                                 " \"deadline return book /by Sunday\".");
                     } else {
-                        taskCount = addTask(new Task(description, "D", by), tasks, taskCount);
+                        taskCount = addTask(new Deadline(description, by), tasks, taskCount);
                     }
                 } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
                     // "event <description> /from <start> /to <end>" adds a
@@ -85,7 +85,7 @@ public class Meowmeow {
                         printBoxed(" Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
                                 " \"event project meeting /from Mon 2pm /to 4pm\".");
                     } else {
-                        taskCount = addTask(new Task(description, "E", from, to), tasks, taskCount);
+                        taskCount = addTask(new Event(description, from, to), tasks, taskCount);
                     }
                 } else {
                     // No known command matched: rather than storing the line
