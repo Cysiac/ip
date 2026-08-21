@@ -24,80 +24,86 @@ public class Meowmeow {
                 if (input.isEmpty()) {
                     // Blank lines aren't a command or a task worth storing.
                     continue;
-                } else if (input.equalsIgnoreCase("bye")) {
-                    printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
-                    break;
-                } else if (input.equalsIgnoreCase("list")) {
-                    String[] lines = new String[taskCount + 1];
-                    lines[0] = " Here are the tasks in your list, meow:";
-                    for (int i = 0; i < taskCount; i++) {
-                        lines[i + 1] = " " + (i + 1) + "." + tasks[i];
-                    }
-                    printBoxed(lines);
-                } else if (input.equalsIgnoreCase("unmark")) {
-                    // "unmark" with no number given: without this, it would
-                    // fall through and get added as a task literally called
-                    // "unmark".
-                    printBoxed(" Meow? Tell me which task number to unmark.");
-                } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
-                    // "unmark N" reverses "mark N": the N-th listed task
-                    // (1-based) goes back to not done.
-                    setTaskDone(input.substring(7).trim(), false, tasks, taskCount);
-                } else if (input.equalsIgnoreCase("mark")) {
-                    // Same guard as "unmark" above, for a bare "mark".
-                    printBoxed(" Meow? Tell me which task number to mark.");
-                } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
-                    // "mark N" marks the N-th listed task (1-based) as done.
-                    setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
-                } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
-                    // "todo <description>" adds a plain, undated task.
-                    String description = input.length() > 4 ? input.substring(4).trim() : "";
-                    if (description.isEmpty()) {
-                        printBoxed(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
-                    } else {
+                }
+                // Every command below reports a problem by throwing a
+                // MeowmeowException rather than printing directly, so this
+                // one catch prints the friendly error for all of them.
+                try {
+                    if (input.equalsIgnoreCase("bye")) {
+                        printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
+                        break;
+                    } else if (input.equalsIgnoreCase("list")) {
+                        String[] lines = new String[taskCount + 1];
+                        lines[0] = " Here are the tasks in your list, meow:";
+                        for (int i = 0; i < taskCount; i++) {
+                            lines[i + 1] = " " + (i + 1) + "." + tasks[i];
+                        }
+                        printBoxed(lines);
+                    } else if (input.equalsIgnoreCase("unmark")) {
+                        // "unmark" with no number given: without this, it
+                        // would fall through and get added as a task
+                        // literally called "unmark".
+                        throw new MeowmeowException(" Meow? Tell me which task number to unmark.");
+                    } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
+                        // "unmark N" reverses "mark N": the N-th listed task
+                        // (1-based) goes back to not done.
+                        setTaskDone(input.substring(7).trim(), false, tasks, taskCount);
+                    } else if (input.equalsIgnoreCase("mark")) {
+                        // Same guard as "unmark" above, for a bare "mark".
+                        throw new MeowmeowException(" Meow? Tell me which task number to mark.");
+                    } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
+                        // "mark N" marks the N-th listed task (1-based) as done.
+                        setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
+                    } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
+                        // "todo <description>" adds a plain, undated task.
+                        String description = input.length() > 4 ? input.substring(4).trim() : "";
+                        if (description.isEmpty()) {
+                            throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
+                        }
                         taskCount = addTask(new Todo(description), tasks, taskCount);
-                    }
-                } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
-                    // "deadline <description> /by <when>" adds a task due
-                    // by a given point, kept as plain text for now.
-                    String rest = input.length() > 8 ? input.substring(8).trim() : "";
-                    // Search from the end, case-insensitively: the marker
-                    // closest to the end is the real flag, even if the
-                    // description text happens to also contain "/by", and
-                    // "/BY"/"/By" work the same as "/by".
-                    int marker = lastIndexOfIgnoreCase(rest, "/by", rest.length());
-                    String description = marker < 0 ? "" : rest.substring(0, marker).trim();
-                    String by = marker < 0 ? "" : rest.substring(marker + 3).trim();
-                    if (marker < 0 || description.isEmpty() || by.isEmpty()) {
-                        printBoxed(" Meow? Use \"deadline <description> /by <when>\", e.g.",
-                                " \"deadline return book /by Sunday\".");
-                    } else {
+                    } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
+                        // "deadline <description> /by <when>" adds a task due
+                        // by a given point, kept as plain text for now.
+                        String rest = input.length() > 8 ? input.substring(8).trim() : "";
+                        // Search from the end, case-insensitively: the marker
+                        // closest to the end is the real flag, even if the
+                        // description text happens to also contain "/by", and
+                        // "/BY"/"/By" work the same as "/by".
+                        int marker = lastIndexOfIgnoreCase(rest, "/by", rest.length());
+                        String description = marker < 0 ? "" : rest.substring(0, marker).trim();
+                        String by = marker < 0 ? "" : rest.substring(marker + 3).trim();
+                        if (marker < 0 || description.isEmpty() || by.isEmpty()) {
+                            throw new MeowmeowException(" Meow? Use \"deadline <description> /by <when>\", e.g.\n"
+                                    + " \"deadline return book /by Sunday\".");
+                        }
                         taskCount = addTask(new Deadline(description, by), tasks, taskCount);
-                    }
-                } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
-                    // "event <description> /from <start> /to <end>" adds a
-                    // task spanning a time range, kept as plain text for now.
-                    String rest = input.length() > 5 ? input.substring(5).trim() : "";
-                    // Search from the end, same reasoning as "deadline"
-                    // above: the rightmost "/to" is the real flag, and the
-                    // real "/from" is the rightmost one before it. Both
-                    // searches are case-insensitive.
-                    int toMarker = lastIndexOfIgnoreCase(rest, "/to", rest.length());
-                    int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(rest, "/from", toMarker - 1);
-                    String description = fromMarker < 0 ? "" : rest.substring(0, fromMarker).trim();
-                    String from = fromMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
-                    String to = toMarker < 0 ? "" : rest.substring(toMarker + 3).trim();
-                    if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                        printBoxed(" Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
-                                " \"event project meeting /from Mon 2pm /to 4pm\".");
-                    } else {
+                    } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
+                        // "event <description> /from <start> /to <end>" adds a
+                        // task spanning a time range, kept as plain text for now.
+                        String rest = input.length() > 5 ? input.substring(5).trim() : "";
+                        // Search from the end, same reasoning as "deadline"
+                        // above: the rightmost "/to" is the real flag, and the
+                        // real "/from" is the rightmost one before it. Both
+                        // searches are case-insensitive.
+                        int toMarker = lastIndexOfIgnoreCase(rest, "/to", rest.length());
+                        int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(rest, "/from", toMarker - 1);
+                        String description = fromMarker < 0 ? "" : rest.substring(0, fromMarker).trim();
+                        String from = fromMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
+                        String to = toMarker < 0 ? "" : rest.substring(toMarker + 3).trim();
+                        if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                            throw new MeowmeowException(
+                                    " Meow? Use \"event <description> /from <start> /to <end>\", e.g.\n"
+                                    + " \"event project meeting /from Mon 2pm /to 4pm\".");
+                        }
                         taskCount = addTask(new Event(description, from, to), tasks, taskCount);
+                    } else {
+                        // No known command matched: rather than storing the line
+                        // as a typeless task, tell the user what's understood.
+                        throw new MeowmeowException(" Meow? I don't know what that means.\n"
+                                + " Try: todo, deadline, event, list, mark, unmark, bye");
                     }
-                } else {
-                    // No known command matched: rather than storing the line
-                    // as a typeless task, tell the user what's understood.
-                    printBoxed(" Meow? I don't know what that means.",
-                            " Try: todo, deadline, event, list, mark, unmark, bye");
+                } catch (MeowmeowException e) {
+                    printBoxed(e.getMessage().split("\n"));
                 }
             }
         }
@@ -106,20 +112,19 @@ public class Meowmeow {
     /**
      * Sets the done status of the task at the given 1-based position (as
      * shown by "list") and prints a confirmation, shared by "mark" and
-     * "unmark". Invalid input (not a number, or out of range) prints a
-     * friendly error instead of crashing.
+     * "unmark". Throws MeowmeowException on invalid input (not a number, or
+     * out of range) instead of crashing.
      */
-    private static void setTaskDone(String indexText, boolean done, Task[] tasks, int taskCount) {
+    private static void setTaskDone(String indexText, boolean done, Task[] tasks, int taskCount)
+            throws MeowmeowException {
         int index;
         try {
             index = Integer.parseInt(indexText);
         } catch (NumberFormatException e) {
-            printBoxed(" That's not a task number I recognise, meow?");
-            return;
+            throw new MeowmeowException(" That's not a task number I recognise, meow?");
         }
         if (index < 1 || index > taskCount) {
-            printBoxed(" Meow? Task " + index + " doesn't exist in your list.");
-            return;
+            throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
         Task task = tasks[index - 1];
         if (done) {
@@ -144,12 +149,11 @@ public class Meowmeow {
      * Stores a newly created task and prints the standard confirmation,
      * shared by the "todo"/"deadline"/"event" commands so each one doesn't
      * repeat the capacity check and confirmation message. Returns the
-     * updated task count (unchanged if the list was already full).
+     * updated task count, or throws MeowmeowException if the list is full.
      */
-    private static int addTask(Task task, Task[] tasks, int taskCount) {
+    private static int addTask(Task task, Task[] tasks, int taskCount) throws MeowmeowException {
         if (taskCount >= tasks.length) {
-            printBoxed(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
-            return taskCount;
+            throw new MeowmeowException(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
         }
         tasks[taskCount] = task;
         taskCount++;
