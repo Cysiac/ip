@@ -12,6 +12,10 @@ public class Meowmeow {
         // course project at 100 tasks for this stage, so a plain array
         // (rather than a resizable list) is sufficient.
         String[] items = new String[MAX_ITEMS];
+        // Parallel array: isDone[i] tracks whether items[i] is marked done.
+        // A parallel array (rather than a separate Task class) keeps this
+        // increment to "no new classes", as required.
+        boolean[] isDone = new boolean[MAX_ITEMS];
         int itemCount = 0;
 
         // try-with-resources guarantees the scanner (and System.in) is closed
@@ -28,11 +32,15 @@ public class Meowmeow {
                     printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
                     break;
                 } else if (input.equalsIgnoreCase("list")) {
-                    String[] lines = new String[itemCount];
+                    String[] lines = new String[itemCount + 1];
+                    lines[0] = " Here are the tasks in your list:";
                     for (int i = 0; i < itemCount; i++) {
-                        lines[i] = " " + (i + 1) + ". " + items[i];
+                        lines[i + 1] = " " + (i + 1) + ".[" + (isDone[i] ? "X" : " ") + "] " + items[i];
                     }
                     printBoxed(lines);
+                } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
+                    // "mark N" marks the N-th listed task (1-based) as done.
+                    markTaskDone(input.substring(5).trim(), items, isDone, itemCount);
                 } else if (itemCount < items.length) {
                     items[itemCount] = input;
                     itemCount++;
@@ -42,6 +50,27 @@ public class Meowmeow {
                 }
             }
         }
+    }
+
+    /**
+     * Marks the task at the given 1-based position (as shown by "list") as
+     * done, and prints a confirmation. Invalid input (not a number, or out
+     * of range) prints a friendly error instead of crashing.
+     */
+    private static void markTaskDone(String indexText, String[] items, boolean[] isDone, int itemCount) {
+        int index;
+        try {
+            index = Integer.parseInt(indexText);
+        } catch (NumberFormatException e) {
+            printBoxed(" That's not a task number I recognise, meow?");
+            return;
+        }
+        if (index < 1 || index > itemCount) {
+            printBoxed(" Meow? Task " + index + " doesn't exist in your list.");
+            return;
+        }
+        isDone[index - 1] = true;
+        printBoxed(" Nice! I've marked this task as done:", "   [X] " + items[index - 1]);
     }
 
     /**
