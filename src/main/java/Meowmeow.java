@@ -1,18 +1,16 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Meowmeow {
     private static final String NAME = "Meowmeow";
     private static final String DIVIDER = "____________________________________________________________";
-    private static final int MAX_ITEMS = 100;
 
     public static void main(String[] args) {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
 
-        // Fixed-size store for the tasks the user adds. The spec caps the
-        // course project at 100 tasks for this stage, so a plain array
-        // (rather than a resizable list) is sufficient.
-        Task[] tasks = new Task[MAX_ITEMS];
-        int taskCount = 0;
+        // ArrayList<Task> grows as needed, so there's no artificial cap on
+        // how many tasks can be stored (unlike a fixed-size array).
+        ArrayList<Task> tasks = new ArrayList<>();
 
         // try-with-resources guarantees the scanner (and System.in) is closed
         // even if something inside the loop throws.
@@ -33,10 +31,10 @@ public class Meowmeow {
                         printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
                         break;
                     } else if (input.equalsIgnoreCase("list")) {
-                        String[] lines = new String[taskCount + 1];
+                        String[] lines = new String[tasks.size() + 1];
                         lines[0] = " Here are the tasks in your list, meow:";
-                        for (int i = 0; i < taskCount; i++) {
-                            lines[i + 1] = " " + (i + 1) + "." + tasks[i];
+                        for (int i = 0; i < tasks.size(); i++) {
+                            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
                         }
                         printBoxed(lines);
                     } else if (input.equalsIgnoreCase("unmark")) {
@@ -47,27 +45,27 @@ public class Meowmeow {
                     } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
                         // "unmark N" reverses "mark N": the N-th listed task
                         // (1-based) goes back to not done.
-                        setTaskDone(input.substring(7).trim(), false, tasks, taskCount);
+                        setTaskDone(input.substring(7).trim(), false, tasks);
                     } else if (input.equalsIgnoreCase("mark")) {
                         // Same guard as "unmark" above, for a bare "mark".
                         throw new MeowmeowException(" Meow? Tell me which task number to mark.");
                     } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                         // "mark N" marks the N-th listed task (1-based) as done.
-                        setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
+                        setTaskDone(input.substring(5).trim(), true, tasks);
                     } else if (input.equalsIgnoreCase("delete")) {
                         // "delete" with no number given: same guard as bare
                         // "mark"/"unmark", so it isn't stored as a literal task.
                         throw new MeowmeowException(" Meow? Tell me which task number to delete.");
                     } else if (input.regionMatches(true, 0, "delete ", 0, 7)) {
                         // "delete N" removes the N-th listed task (1-based).
-                        taskCount = deleteTask(input.substring(7).trim(), tasks, taskCount);
+                        deleteTask(input.substring(7).trim(), tasks);
                     } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
                         // "todo <description>" adds a plain, undated task.
                         String description = input.length() > 4 ? input.substring(4).trim() : "";
                         if (description.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
                         }
-                        taskCount = addTask(new Todo(description), tasks, taskCount);
+                        addTask(new Todo(description), tasks);
                     } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
                         // "deadline <description> /by <when>" adds a task due
                         // by a given point, kept as plain text for now.
@@ -83,7 +81,7 @@ public class Meowmeow {
                             throw new MeowmeowException(" Meow? Use \"deadline <description> /by <when>\", e.g.\n"
                                     + " \"deadline return book /by Sunday\".");
                         }
-                        taskCount = addTask(new Deadline(description, by), tasks, taskCount);
+                        addTask(new Deadline(description, by), tasks);
                     } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
                         // "event <description> /from <start> /to <end>" adds a
                         // task spanning a time range, kept as plain text for now.
@@ -102,7 +100,7 @@ public class Meowmeow {
                                     " Meow? Use \"event <description> /from <start> /to <end>\", e.g.\n"
                                     + " \"event project meeting /from Mon 2pm /to 4pm\".");
                         }
-                        taskCount = addTask(new Event(description, from, to), tasks, taskCount);
+                        addTask(new Event(description, from, to), tasks);
                     } else {
                         // No known command matched: rather than storing the line
                         // as a typeless task, tell the user what's understood.
@@ -122,7 +120,7 @@ public class Meowmeow {
      * "unmark". Throws MeowmeowException on invalid input (not a number, or
      * out of range) instead of crashing.
      */
-    private static void setTaskDone(String indexText, boolean done, Task[] tasks, int taskCount)
+    private static void setTaskDone(String indexText, boolean done, ArrayList<Task> tasks)
             throws MeowmeowException {
         int index;
         try {
@@ -130,10 +128,10 @@ public class Meowmeow {
         } catch (NumberFormatException e) {
             throw new MeowmeowException(" That's not a task number I recognise, meow?");
         }
-        if (index < 1 || index > taskCount) {
+        if (index < 1 || index > tasks.size()) {
             throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
-        Task task = tasks[index - 1];
+        Task task = tasks.get(index - 1);
         if (done) {
             task.markAsDone();
             printBoxed(" Nice! I've marked this task as done, meow:", "   " + task);
@@ -146,32 +144,23 @@ public class Meowmeow {
     /**
      * Removes the task at the given 1-based position (as shown by "list")
      * and prints a confirmation. Throws MeowmeowException on invalid input
-     * (not a number, or out of range) instead of crashing. Tasks after the
-     * removed one are shifted down by one to close the gap, since the task
-     * store is a plain array rather than a Collection with a built-in
-     * remove operation. Returns the updated task count.
+     * (not a number, or out of range) instead of crashing.
      */
-    private static int deleteTask(String indexText, Task[] tasks, int taskCount) throws MeowmeowException {
+    private static void deleteTask(String indexText, ArrayList<Task> tasks) throws MeowmeowException {
         int index;
         try {
             index = Integer.parseInt(indexText);
         } catch (NumberFormatException e) {
             throw new MeowmeowException(" That's not a task number I recognise, meow?");
         }
-        if (index < 1 || index > taskCount) {
+        if (index < 1 || index > tasks.size()) {
             throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
-        Task removed = tasks[index - 1];
-        for (int i = index - 1; i < taskCount - 1; i++) {
-            tasks[i] = tasks[i + 1];
-        }
-        tasks[taskCount - 1] = null;
-        taskCount--;
-        String taskWord = taskCount == 1 ? "task" : "tasks";
+        Task removed = tasks.remove(index - 1);
+        String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've removed this task:",
                 "   " + removed,
-                " Now you have " + taskCount + " " + taskWord + " in the list, meow!");
-        return taskCount;
+                " Now you have " + tasks.size() + " " + taskWord + " in the list, meow!");
     }
 
     /**
@@ -186,20 +175,14 @@ public class Meowmeow {
     /**
      * Stores a newly created task and prints the standard confirmation,
      * shared by the "todo"/"deadline"/"event" commands so each one doesn't
-     * repeat the capacity check and confirmation message. Returns the
-     * updated task count, or throws MeowmeowException if the list is full.
+     * repeat the confirmation message.
      */
-    private static int addTask(Task task, Task[] tasks, int taskCount) throws MeowmeowException {
-        if (taskCount >= tasks.length) {
-            throw new MeowmeowException(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
-        }
-        tasks[taskCount] = task;
-        taskCount++;
-        String taskWord = taskCount == 1 ? "task" : "tasks";
+    private static void addTask(Task task, ArrayList<Task> tasks) {
+        tasks.add(task);
+        String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've added this task:",
                 "   " + task,
-                " Now you have " + taskCount + " " + taskWord + " in the list, meow!");
-        return taskCount;
+                " Now you have " + tasks.size() + " " + taskWord + " in the list, meow!");
     }
 
     /**
