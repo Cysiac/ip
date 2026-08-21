@@ -29,7 +29,7 @@ public class Meowmeow {
                     break;
                 } else if (input.equalsIgnoreCase("list")) {
                     String[] lines = new String[taskCount + 1];
-                    lines[0] = " Here are the tasks in your list:";
+                    lines[0] = " Here are the tasks in your list, meow:";
                     for (int i = 0; i < taskCount; i++) {
                         lines[i + 1] = " " + (i + 1) + "." + tasks[i];
                     }
@@ -44,7 +44,7 @@ public class Meowmeow {
                 } else if (taskCount < tasks.length) {
                     tasks[taskCount] = new Task(input);
                     taskCount++;
-                    printBoxed(" added: " + input + " Meow!");
+                    printBoxed(" Meow! I've added this task:", "   " + tasks[taskCount - 1]);
                 } else {
                     printBoxed(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
                 }
@@ -73,10 +73,10 @@ public class Meowmeow {
         Task task = tasks[index - 1];
         if (done) {
             task.markAsDone();
-            printBoxed(" Nice! I've marked this task as done:", "   " + task);
+            printBoxed(" Nice! I've marked this task as done, meow:", "   " + task);
         } else {
             task.markAsNotDone();
-            printBoxed(" OK, I've marked this task as not done yet:", "   " + task);
+            printBoxed(" OK, I've marked this task as not done yet, meow:", "   " + task);
         }
     }
 
