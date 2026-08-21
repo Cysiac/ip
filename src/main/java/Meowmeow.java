@@ -16,7 +16,10 @@ public class Meowmeow {
         // even if something inside the loop throws.
         try (Scanner scanner = new Scanner(System.in)) {
             // hasNextLine() lets the loop end gracefully on EOF (e.g. piped
-            // input with no "bye" line) instead of nextLine() throwing.
+            // input with no "bye" line) instead of nextLine() throwing. The
+            // "conversation" label lets "bye" (handled inside the switch,
+            // itself inside the try below) exit the loop directly.
+            conversation:
             while (scanner.hasNextLine()) {
                 String input = scanner.nextLine().trim();
                 if (input.isEmpty()) {
@@ -26,86 +29,101 @@ public class Meowmeow {
                 // Every command below reports a problem by throwing a
                 // MeowmeowException rather than printing directly, so this
                 // one catch prints the friendly error for all of them.
+                // Command.fromInput itself throws that way for unrecognised
+                // input, so unknown commands are handled by the same catch.
                 try {
-                    if (input.equalsIgnoreCase("bye")) {
+                    Command command = Command.fromInput(input);
+                    String arguments = command.argumentsOf(input);
+                    switch (command) {
+                    case BYE: {
                         printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
-                        break;
-                    } else if (input.equalsIgnoreCase("list")) {
+                        break conversation;
+                    }
+                    case LIST: {
                         String[] lines = new String[tasks.size() + 1];
                         lines[0] = " Here are the tasks in your list, meow:";
                         for (int i = 0; i < tasks.size(); i++) {
                             lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
                         }
                         printBoxed(lines);
-                    } else if (input.equalsIgnoreCase("unmark")) {
-                        // "unmark" with no number given: without this, it
-                        // would fall through and get added as a task
-                        // literally called "unmark".
-                        throw new MeowmeowException(" Meow? Tell me which task number to unmark.");
-                    } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
-                        // "unmark N" reverses "mark N": the N-th listed task
-                        // (1-based) goes back to not done.
-                        setTaskDone(input.substring(7).trim(), false, tasks);
-                    } else if (input.equalsIgnoreCase("mark")) {
-                        // Same guard as "unmark" above, for a bare "mark".
-                        throw new MeowmeowException(" Meow? Tell me which task number to mark.");
-                    } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
-                        // "mark N" marks the N-th listed task (1-based) as done.
-                        setTaskDone(input.substring(5).trim(), true, tasks);
-                    } else if (input.equalsIgnoreCase("delete")) {
-                        // "delete" with no number given: same guard as bare
-                        // "mark"/"unmark", so it isn't stored as a literal task.
-                        throw new MeowmeowException(" Meow? Tell me which task number to delete.");
-                    } else if (input.regionMatches(true, 0, "delete ", 0, 7)) {
-                        // "delete N" removes the N-th listed task (1-based).
-                        deleteTask(input.substring(7).trim(), tasks);
-                    } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
+                        break;
+                    }
+                    case MARK: {
+                        // Bare "mark" with no number given: without this
+                        // guard, it would fall through and try to parse ""
+                        // as a task number.
+                        if (arguments.isEmpty()) {
+                            throw new MeowmeowException(" Meow? Tell me which task number to mark.");
+                        }
+                        setTaskStatus(arguments, TaskStatus.DONE, tasks);
+                        break;
+                    }
+                    case UNMARK: {
+                        // Same guard as "mark" above, for a bare "unmark".
+                        if (arguments.isEmpty()) {
+                            throw new MeowmeowException(" Meow? Tell me which task number to unmark.");
+                        }
+                        setTaskStatus(arguments, TaskStatus.NOT_DONE, tasks);
+                        break;
+                    }
+                    case DELETE: {
+                        // Same guard again, for a bare "delete".
+                        if (arguments.isEmpty()) {
+                            throw new MeowmeowException(" Meow? Tell me which task number to delete.");
+                        }
+                        deleteTask(arguments, tasks);
+                        break;
+                    }
+                    case TODO: {
                         // "todo <description>" adds a plain, undated task.
-                        String description = input.length() > 4 ? input.substring(4).trim() : "";
-                        if (description.isEmpty()) {
+                        if (arguments.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
                         }
-                        addTask(new Todo(description), tasks);
-                    } else if (input.equalsIgnoreCase("deadline") || input.regionMatches(true, 0, "deadline ", 0, 9)) {
+                        addTask(new Todo(arguments), tasks);
+                        break;
+                    }
+                    case DEADLINE: {
                         // "deadline <description> /by <when>" adds a task due
                         // by a given point, kept as plain text for now.
-                        String rest = input.length() > 8 ? input.substring(8).trim() : "";
                         // Search from the end, case-insensitively: the marker
                         // closest to the end is the real flag, even if the
                         // description text happens to also contain "/by", and
                         // "/BY"/"/By" work the same as "/by".
-                        int marker = lastIndexOfIgnoreCase(rest, "/by", rest.length());
-                        String description = marker < 0 ? "" : rest.substring(0, marker).trim();
-                        String by = marker < 0 ? "" : rest.substring(marker + 3).trim();
-                        if (marker < 0 || description.isEmpty() || by.isEmpty()) {
+                        int byMarker = lastIndexOfIgnoreCase(arguments, "/by", arguments.length());
+                        String deadlineDescription = byMarker < 0 ? "" : arguments.substring(0, byMarker).trim();
+                        String by = byMarker < 0 ? "" : arguments.substring(byMarker + 3).trim();
+                        if (byMarker < 0 || deadlineDescription.isEmpty() || by.isEmpty()) {
                             throw new MeowmeowException(" Meow? Use \"deadline <description> /by <when>\", e.g.\n"
                                     + " \"deadline return book /by Sunday\".");
                         }
-                        addTask(new Deadline(description, by), tasks);
-                    } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
+                        addTask(new Deadline(deadlineDescription, by), tasks);
+                        break;
+                    }
+                    case EVENT: {
                         // "event <description> /from <start> /to <end>" adds a
                         // task spanning a time range, kept as plain text for now.
-                        String rest = input.length() > 5 ? input.substring(5).trim() : "";
                         // Search from the end, same reasoning as "deadline"
                         // above: the rightmost "/to" is the real flag, and the
                         // real "/from" is the rightmost one before it. Both
                         // searches are case-insensitive.
-                        int toMarker = lastIndexOfIgnoreCase(rest, "/to", rest.length());
-                        int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(rest, "/from", toMarker - 1);
-                        String description = fromMarker < 0 ? "" : rest.substring(0, fromMarker).trim();
-                        String from = fromMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
-                        String to = toMarker < 0 ? "" : rest.substring(toMarker + 3).trim();
-                        if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                        int toMarker = lastIndexOfIgnoreCase(arguments, "/to", arguments.length());
+                        int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(arguments, "/from", toMarker - 1);
+                        String eventDescription = fromMarker < 0 ? "" : arguments.substring(0, fromMarker).trim();
+                        String from = fromMarker < 0 ? "" : arguments.substring(fromMarker + 5, toMarker).trim();
+                        String to = toMarker < 0 ? "" : arguments.substring(toMarker + 3).trim();
+                        if (fromMarker < 0 || eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
                             throw new MeowmeowException(
                                     " Meow? Use \"event <description> /from <start> /to <end>\", e.g.\n"
                                     + " \"event project meeting /from Mon 2pm /to 4pm\".");
                         }
-                        addTask(new Event(description, from, to), tasks);
-                    } else {
-                        // No known command matched: rather than storing the line
-                        // as a typeless task, tell the user what's understood.
-                        throw new MeowmeowException(" Meow? I don't know what that means.\n"
-                                + " Try: todo, deadline, event, list, mark, unmark, delete, bye");
+                        addTask(new Event(eventDescription, from, to), tasks);
+                        break;
+                    }
+                    default:
+                        // Unreachable: every Command constant has a case
+                        // above. Kept so the compiler can warn if a new
+                        // constant is ever added without handling it here.
+                        throw new IllegalStateException("Unhandled command: " + command);
                     }
                 } catch (MeowmeowException e) {
                     printBoxed(e.getMessage().split("\n"));
@@ -115,12 +133,12 @@ public class Meowmeow {
     }
 
     /**
-     * Sets the done status of the task at the given 1-based position (as
-     * shown by "list") and prints a confirmation, shared by "mark" and
-     * "unmark". Throws MeowmeowException on invalid input (not a number, or
-     * out of range) instead of crashing.
+     * Sets the status of the task at the given 1-based position (as shown
+     * by "list") and prints the confirmation for that status, shared by
+     * "mark" and "unmark". Throws MeowmeowException on invalid input (not a
+     * number, or out of range) instead of crashing.
      */
-    private static void setTaskDone(String indexText, boolean done, ArrayList<Task> tasks)
+    private static void setTaskStatus(String indexText, TaskStatus status, ArrayList<Task> tasks)
             throws MeowmeowException {
         int index;
         try {
@@ -132,13 +150,8 @@ public class Meowmeow {
             throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
         Task task = tasks.get(index - 1);
-        if (done) {
-            task.markAsDone();
-            printBoxed(" Nice! I've marked this task as done, meow:", "   " + task);
-        } else {
-            task.markAsNotDone();
-            printBoxed(" OK, I've marked this task as not done yet, meow:", "   " + task);
-        }
+        task.setStatus(status);
+        printBoxed(status.getConfirmationMessage(), "   " + task);
     }
 
     /**

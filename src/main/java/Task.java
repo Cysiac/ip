@@ -1,41 +1,36 @@
 /**
- * A single task in Meowmeow's list, with a description and a done status.
- * Subclasses ({@link Todo}, {@link Deadline}, {@link Event}) add their own
- * type tag and detail fields, and override {@link #toString()} to render
- * them - {@code Task} itself is never stored directly, only via its
- * subclasses.
+ * A single task in Meowmeow's list, with a description, a {@link TaskType},
+ * and a {@link TaskStatus}. Subclasses ({@link Todo}, {@link Deadline},
+ * {@link Event}) pass their own {@code TaskType} to the constructor and add
+ * their own detail fields, overriding {@link #toString()} only to append
+ * those details - {@code Task} itself is never stored directly, only via
+ * its subclasses.
  */
 public class Task {
     protected String description;
-    protected boolean isDone;
+    protected final TaskType type;
+    protected TaskStatus status;
 
-    public Task(String description) {
+    public Task(String description, TaskType type) {
         this.description = description;
-        this.isDone = false;
+        this.type = type;
+        this.status = TaskStatus.NOT_DONE;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+    public TaskStatus getStatus() {
+        return status;
     }
 
-    public boolean isDone() {
-        return isDone;
-    }
-
-    public void markAsDone() {
-        isDone = true;
-    }
-
-    public void markAsNotDone() {
-        isDone = false;
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + type.getTag() + "][" + status.getIcon() + "] " + description;
     }
 }

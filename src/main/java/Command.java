@@ -1,0 +1,71 @@
+/**
+ * The set of commands Meowmeow understands, each paired with the keyword a
+ * user types to invoke it (e.g. {@code MARK} for "mark"). Matching and
+ * argument-stripping are both driven off the same {@code keyword} field, so
+ * (unlike separate hardcoded string literals and substring offsets) the two
+ * can never drift out of sync.
+ */
+public enum Command {
+    TODO("todo"),
+    DEADLINE("deadline"),
+    EVENT("event"),
+    LIST("list"),
+    MARK("mark"),
+    UNMARK("unmark"),
+    DELETE("delete"),
+    BYE("bye");
+
+    private final String keyword;
+
+    Command(String keyword) {
+        this.keyword = keyword;
+    }
+
+    /**
+     * True if {@code input} is exactly this command's keyword, or the
+     * keyword followed by a space and further text (its arguments).
+     * Case-insensitive, matching the rest of Meowmeow's input handling.
+     */
+    private boolean matches(String input) {
+        return input.equalsIgnoreCase(keyword)
+                || input.regionMatches(true, 0, keyword + " ", 0, keyword.length() + 1);
+    }
+
+    /**
+     * Everything in {@code input} after this command's keyword, trimmed.
+     * Empty for a bare keyword with no arguments (e.g. "mark" -> "").
+     */
+    public String argumentsOf(String input) {
+        return input.length() > keyword.length() ? input.substring(keyword.length()).trim() : "";
+    }
+
+    /**
+     * Finds the command whose keyword matches the start of {@code input}.
+     * Throws MeowmeowException, with the same message Meowmeow has always
+     * shown for unrecognised input, if none match.
+     */
+    public static Command fromInput(String input) throws MeowmeowException {
+        for (Command command : values()) {
+            if (command.matches(input)) {
+                return command;
+            }
+        }
+        throw new MeowmeowException(" Meow? I don't know what that means.\n Try: " + helpText());
+    }
+
+    /**
+     * The comma-separated keyword list shown in the "unknown command"
+     * message, generated from the enum's own values so it can't drift out
+     * of sync with the commands actually implemented.
+     */
+    private static String helpText() {
+        StringBuilder builder = new StringBuilder();
+        for (Command command : values()) {
+            if (builder.length() > 0) {
+                builder.append(", ");
+            }
+            builder.append(command.keyword);
+        }
+        return builder.toString();
+    }
+}
