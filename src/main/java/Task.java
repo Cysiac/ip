@@ -1,12 +1,15 @@
 /**
- * A single task in Meowmeow's list, with a description and a done status.
+ * A single task in Meowmeow's list, with a description, a done status, and
+ * a type tag ("T" for todo, etc.) shown in its rendered form.
  */
 public class Task {
     protected String description;
     protected boolean isDone;
+    protected String type;
 
-    public Task(String description) {
+    public Task(String description, String type) {
         this.description = description;
+        this.type = type;
         this.isDone = false;
     }
 
@@ -32,6 +35,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return "[" + type + "][" + getStatusIcon() + "] " + description;
     }
 }

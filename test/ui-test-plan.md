@@ -62,8 +62,8 @@ ____________________________________________________________
 ```
 
 ## Test: Add a task and list it
-**Aim:** A plain line of text is added as a new (not-done) task, and shows
-up in "list" with a 1-based index and an unchecked box.
+**Aim:** "todo <description>" adds a new (not-done) todo task, tagged [T],
+and shows up in "list" with a 1-based index and an unchecked box.
 
 ```input
 todo read book
@@ -79,11 +79,12 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [ ] todo read book
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
- 1.[ ] todo read book
+ 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -113,23 +114,24 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [ ] todo read book
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Nice! I've marked this task as done, meow:
-   [X] todo read book
+   [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
- 1.[X] todo read book
+ 1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
  OK, I've marked this task as not done yet, meow:
-   [ ] todo read book
+   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
- 1.[ ] todo read book
+ 1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -188,6 +190,37 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow? Task 5 doesn't exist in your list.
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Bare todo and unknown commands are guarded
+**Aim:** "todo" with no description prints a friendly prompt instead of
+being added, and a line that isn't any known command is rejected rather
+than being stored as a task.
+
+```input
+todo
+read book
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? Tell me what to add, e.g. "todo borrow book".
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't know what that means.
+ Try: todo, deadline, event, list, mark, unmark, bye
 ____________________________________________________________
 ____________________________________________________________
  /\_/\

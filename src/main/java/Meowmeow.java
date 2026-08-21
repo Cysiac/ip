@@ -49,12 +49,19 @@ public class Meowmeow {
                 } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                     // "mark N" marks the N-th listed task (1-based) as done.
                     setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
-                } else if (taskCount < tasks.length) {
-                    tasks[taskCount] = new Task(input);
-                    taskCount++;
-                    printBoxed(" Meow! I've added this task:", "   " + tasks[taskCount - 1]);
+                } else if (input.equalsIgnoreCase("todo") || input.regionMatches(true, 0, "todo ", 0, 5)) {
+                    // "todo <description>" adds a plain, undated task.
+                    String description = input.length() > 4 ? input.substring(4).trim() : "";
+                    if (description.isEmpty()) {
+                        printBoxed(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
+                    } else {
+                        taskCount = addTask(new Task(description, "T"), tasks, taskCount);
+                    }
                 } else {
-                    printBoxed(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
+                    // No known command matched: rather than storing the line
+                    // as a typeless task, tell the user what's understood.
+                    printBoxed(" Meow? I don't know what that means.",
+                            " Try: todo, deadline, event, list, mark, unmark, bye");
                 }
             }
         }
@@ -86,6 +93,26 @@ public class Meowmeow {
             task.markAsNotDone();
             printBoxed(" OK, I've marked this task as not done yet, meow:", "   " + task);
         }
+    }
+
+    /**
+     * Stores a newly created task and prints the standard confirmation,
+     * shared by the "todo"/"deadline"/"event" commands so each one doesn't
+     * repeat the capacity check and confirmation message. Returns the
+     * updated task count (unchanged if the list was already full).
+     */
+    private static int addTask(Task task, Task[] tasks, int taskCount) {
+        if (taskCount >= tasks.length) {
+            printBoxed(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
+            return taskCount;
+        }
+        tasks[taskCount] = task;
+        taskCount++;
+        String taskWord = taskCount == 1 ? "task" : "tasks";
+        printBoxed(" Meow! I've added this task:",
+                "   " + task,
+                " Now you have " + taskCount + " " + taskWord + " in the list, meow!");
+        return taskCount;
     }
 
     /**
