@@ -38,9 +38,13 @@ public class Meowmeow {
                         lines[i + 1] = " " + (i + 1) + ".[" + (isDone[i] ? "X" : " ") + "] " + items[i];
                     }
                     printBoxed(lines);
+                } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
+                    // "unmark N" reverses "mark N": the N-th listed task
+                    // (1-based) goes back to not done.
+                    setTaskDone(input.substring(7).trim(), false, items, isDone, itemCount);
                 } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                     // "mark N" marks the N-th listed task (1-based) as done.
-                    markTaskDone(input.substring(5).trim(), items, isDone, itemCount);
+                    setTaskDone(input.substring(5).trim(), true, items, isDone, itemCount);
                 } else if (itemCount < items.length) {
                     items[itemCount] = input;
                     itemCount++;
@@ -53,11 +57,12 @@ public class Meowmeow {
     }
 
     /**
-     * Marks the task at the given 1-based position (as shown by "list") as
-     * done, and prints a confirmation. Invalid input (not a number, or out
-     * of range) prints a friendly error instead of crashing.
+     * Sets the done status of the task at the given 1-based position (as
+     * shown by "list") and prints a confirmation, shared by "mark" and
+     * "unmark". Invalid input (not a number, or out of range) prints a
+     * friendly error instead of crashing.
      */
-    private static void markTaskDone(String indexText, String[] items, boolean[] isDone, int itemCount) {
+    private static void setTaskDone(String indexText, boolean done, String[] items, boolean[] isDone, int itemCount) {
         int index;
         try {
             index = Integer.parseInt(indexText);
@@ -69,8 +74,10 @@ public class Meowmeow {
             printBoxed(" Meow? Task " + index + " doesn't exist in your list.");
             return;
         }
-        isDone[index - 1] = true;
-        printBoxed(" Nice! I've marked this task as done:", "   [X] " + items[index - 1]);
+        isDone[index - 1] = done;
+        String heading = done ? " Nice! I've marked this task as done:" : " OK, I've marked this task as not done yet:";
+        String marker = done ? "[X] " : "[ ] ";
+        printBoxed(heading, "   " + marker + items[index - 1]);
     }
 
     /**
