@@ -35,6 +35,10 @@ When proposing or creating a commit message, include enough detail to explain th
 Do not commit or push unless explicitly asked.
 Commit subjects must follow the SE-EDU Git commit-message convention (required by the course).
 
+## Testing
+
+After any change to code under `src/`, use the `test-ui` skill: update `test/ui-test-plan.md` first if the change affects console input/output, then run the skill's tests and confirm they pass before considering the change done.
+
 ## CS2103T iP course constraints
 
 This repo is graded by an automated script as part of the CS2103T Individual Project, which imposes constraints beyond normal Java project practice:
