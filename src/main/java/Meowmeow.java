@@ -34,10 +34,18 @@ public class Meowmeow {
                         lines[i + 1] = " " + (i + 1) + "." + tasks[i];
                     }
                     printBoxed(lines);
+                } else if (input.equalsIgnoreCase("unmark")) {
+                    // "unmark" with no number given: without this, it would
+                    // fall through and get added as a task literally called
+                    // "unmark".
+                    printBoxed(" Meow? Tell me which task number to unmark.");
                 } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
                     // "unmark N" reverses "mark N": the N-th listed task
                     // (1-based) goes back to not done.
                     setTaskDone(input.substring(7).trim(), false, tasks, taskCount);
+                } else if (input.equalsIgnoreCase("mark")) {
+                    // Same guard as "unmark" above, for a bare "mark".
+                    printBoxed(" Meow? Tell me which task number to mark.");
                 } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                     // "mark N" marks the N-th listed task (1-based) as done.
                     setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
