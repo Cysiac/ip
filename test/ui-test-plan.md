@@ -292,3 +292,119 @@ ____________________________________________________________
  > ^ <
 ____________________________________________________________
 ```
+
+## Test: Add an event and list it
+**Aim:** "event <description> /from <start> /to <end>" adds a task tagged
+[E] with the "from"/"to" text shown in parentheses, and shows up in "list"
+the same way.
+
+```input
+event project meeting /from Mon 2pm /to 4pm
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+ 1.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Malformed event commands are guarded
+**Aim:** An "event" missing "/from", missing "/to", or with no description
+at all prints a usage hint instead of being added.
+
+```input
+event meeting
+event meeting /from Mon
+event
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? Use "event <description> /from <start> /to <end>", e.g.
+ "event project meeting /from Mon 2pm /to 4pm".
+____________________________________________________________
+____________________________________________________________
+ Meow? Use "event <description> /from <start> /to <end>", e.g.
+ "event project meeting /from Mon 2pm /to 4pm".
+____________________________________________________________
+____________________________________________________________
+ Meow? Use "event <description> /from <start> /to <end>", e.g.
+ "event project meeting /from Mon 2pm /to 4pm".
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Mixed task list
+
+**Aim:** Todos, a deadline, and an event can all be added together and
+each renders with its own type tag and detail suffix in "list".
+
+```input
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] borrow book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Sunday)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+ Now you have 3 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+ 1.[T][ ] borrow book
+ 2.[D][ ] return book (by: Sunday)
+ 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```

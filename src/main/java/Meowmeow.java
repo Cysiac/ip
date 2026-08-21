@@ -70,6 +70,23 @@ public class Meowmeow {
                     } else {
                         taskCount = addTask(new Task(description, "D", by), tasks, taskCount);
                     }
+                } else if (input.equalsIgnoreCase("event") || input.regionMatches(true, 0, "event ", 0, 6)) {
+                    // "event <description> /from <start> /to <end>" adds a
+                    // task spanning a time range, kept as plain text for now.
+                    String rest = input.length() > 5 ? input.substring(5).trim() : "";
+                    int fromMarker = rest.indexOf("/from");
+                    // Search for "/to" only after "/from" so text earlier in
+                    // the description can't be mistaken for the marker.
+                    int toMarker = fromMarker < 0 ? -1 : rest.indexOf("/to", fromMarker + 1);
+                    String description = fromMarker < 0 ? "" : rest.substring(0, fromMarker).trim();
+                    String from = toMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
+                    String to = toMarker < 0 ? "" : rest.substring(toMarker + 3).trim();
+                    if (toMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                        printBoxed(" Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
+                                " \"event project meeting /from Mon 2pm /to 4pm\".");
+                    } else {
+                        taskCount = addTask(new Task(description, "E", from, to), tasks, taskCount);
+                    }
                 } else {
                     // No known command matched: rather than storing the line
                     // as a typeless task, tell the user what's understood.
