@@ -8,15 +8,11 @@ public class Meowmeow {
     public static void main(String[] args) {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
 
-        // Fixed-size store for the items the user adds. The spec caps the
+        // Fixed-size store for the tasks the user adds. The spec caps the
         // course project at 100 tasks for this stage, so a plain array
         // (rather than a resizable list) is sufficient.
-        String[] items = new String[MAX_ITEMS];
-        // Parallel array: isDone[i] tracks whether items[i] is marked done.
-        // A parallel array (rather than a separate Task class) keeps this
-        // increment to "no new classes", as required.
-        boolean[] isDone = new boolean[MAX_ITEMS];
-        int itemCount = 0;
+        Task[] tasks = new Task[MAX_ITEMS];
+        int taskCount = 0;
 
         // try-with-resources guarantees the scanner (and System.in) is closed
         // even if something inside the loop throws.
@@ -32,22 +28,22 @@ public class Meowmeow {
                     printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
                     break;
                 } else if (input.equalsIgnoreCase("list")) {
-                    String[] lines = new String[itemCount + 1];
+                    String[] lines = new String[taskCount + 1];
                     lines[0] = " Here are the tasks in your list:";
-                    for (int i = 0; i < itemCount; i++) {
-                        lines[i + 1] = " " + (i + 1) + ".[" + (isDone[i] ? "X" : " ") + "] " + items[i];
+                    for (int i = 0; i < taskCount; i++) {
+                        lines[i + 1] = " " + (i + 1) + "." + tasks[i];
                     }
                     printBoxed(lines);
                 } else if (input.regionMatches(true, 0, "unmark ", 0, 7)) {
                     // "unmark N" reverses "mark N": the N-th listed task
                     // (1-based) goes back to not done.
-                    setTaskDone(input.substring(7).trim(), false, items, isDone, itemCount);
+                    setTaskDone(input.substring(7).trim(), false, tasks, taskCount);
                 } else if (input.regionMatches(true, 0, "mark ", 0, 5)) {
                     // "mark N" marks the N-th listed task (1-based) as done.
-                    setTaskDone(input.substring(5).trim(), true, items, isDone, itemCount);
-                } else if (itemCount < items.length) {
-                    items[itemCount] = input;
-                    itemCount++;
+                    setTaskDone(input.substring(5).trim(), true, tasks, taskCount);
+                } else if (taskCount < tasks.length) {
+                    tasks[taskCount] = new Task(input);
+                    taskCount++;
                     printBoxed(" added: " + input + " Meow!");
                 } else {
                     printBoxed(" Sorry, I can't remember any more than " + MAX_ITEMS + " things! Meow?");
@@ -62,7 +58,7 @@ public class Meowmeow {
      * "unmark". Invalid input (not a number, or out of range) prints a
      * friendly error instead of crashing.
      */
-    private static void setTaskDone(String indexText, boolean done, String[] items, boolean[] isDone, int itemCount) {
+    private static void setTaskDone(String indexText, boolean done, Task[] tasks, int taskCount) {
         int index;
         try {
             index = Integer.parseInt(indexText);
@@ -70,14 +66,18 @@ public class Meowmeow {
             printBoxed(" That's not a task number I recognise, meow?");
             return;
         }
-        if (index < 1 || index > itemCount) {
+        if (index < 1 || index > taskCount) {
             printBoxed(" Meow? Task " + index + " doesn't exist in your list.");
             return;
         }
-        isDone[index - 1] = done;
-        String heading = done ? " Nice! I've marked this task as done:" : " OK, I've marked this task as not done yet:";
-        String marker = done ? "[X] " : "[ ] ";
-        printBoxed(heading, "   " + marker + items[index - 1]);
+        Task task = tasks[index - 1];
+        if (done) {
+            task.markAsDone();
+            printBoxed(" Nice! I've marked this task as done:", "   " + task);
+        } else {
+            task.markAsNotDone();
+            printBoxed(" OK, I've marked this task as not done yet:", "   " + task);
+        }
     }
 
     /**
