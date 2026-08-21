@@ -408,3 +408,71 @@ ____________________________________________________________
  > ^ <
 ____________________________________________________________
 ```
+
+## Test: Deadline and event markers are case-insensitive
+**Aim:** "/BY", "/FROM", and "/TO" are recognized the same as their
+lowercase forms, matching how the command names themselves are already
+case-insensitive.
+
+```input
+deadline return book /BY Sunday
+event project meeting /FROM Mon 2pm /TO 4pm
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Sunday)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Marker closest to the end wins when it also appears in the description
+**Aim:** If the description text happens to contain something that looks
+like a marker (e.g. "/by" or "/to"), the flag nearest the end of the line
+is treated as the real one, not the first match.
+
+```input
+deadline reply /by email /by Friday
+event remind team /to buy cake /from 2pm /to 4pm
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] reply /by email (by: Friday)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] remind team /to buy cake (from: 2pm to: 4pm)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```

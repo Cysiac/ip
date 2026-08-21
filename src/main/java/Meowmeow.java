@@ -61,7 +61,11 @@ public class Meowmeow {
                     // "deadline <description> /by <when>" adds a task due
                     // by a given point, kept as plain text for now.
                     String rest = input.length() > 8 ? input.substring(8).trim() : "";
-                    int marker = rest.indexOf("/by");
+                    // Search from the end, case-insensitively: the marker
+                    // closest to the end is the real flag, even if the
+                    // description text happens to also contain "/by", and
+                    // "/BY"/"/By" work the same as "/by".
+                    int marker = lastIndexOfIgnoreCase(rest, "/by", rest.length());
                     String description = marker < 0 ? "" : rest.substring(0, marker).trim();
                     String by = marker < 0 ? "" : rest.substring(marker + 3).trim();
                     if (marker < 0 || description.isEmpty() || by.isEmpty()) {
@@ -74,14 +78,16 @@ public class Meowmeow {
                     // "event <description> /from <start> /to <end>" adds a
                     // task spanning a time range, kept as plain text for now.
                     String rest = input.length() > 5 ? input.substring(5).trim() : "";
-                    int fromMarker = rest.indexOf("/from");
-                    // Search for "/to" only after "/from" so text earlier in
-                    // the description can't be mistaken for the marker.
-                    int toMarker = fromMarker < 0 ? -1 : rest.indexOf("/to", fromMarker + 1);
+                    // Search from the end, same reasoning as "deadline"
+                    // above: the rightmost "/to" is the real flag, and the
+                    // real "/from" is the rightmost one before it. Both
+                    // searches are case-insensitive.
+                    int toMarker = lastIndexOfIgnoreCase(rest, "/to", rest.length());
+                    int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(rest, "/from", toMarker - 1);
                     String description = fromMarker < 0 ? "" : rest.substring(0, fromMarker).trim();
-                    String from = toMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
+                    String from = fromMarker < 0 ? "" : rest.substring(fromMarker + 5, toMarker).trim();
                     String to = toMarker < 0 ? "" : rest.substring(toMarker + 3).trim();
-                    if (toMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                    if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
                         printBoxed(" Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
                                 " \"event project meeting /from Mon 2pm /to 4pm\".");
                     } else {
@@ -123,6 +129,15 @@ public class Meowmeow {
             task.markAsNotDone();
             printBoxed(" OK, I've marked this task as not done yet, meow:", "   " + task);
         }
+    }
+
+    /**
+     * Case-insensitive equivalent of {@code text.lastIndexOf(marker, fromIndex)}:
+     * finds the marker regardless of how the user capitalized it, while
+     * still returning an index into the original (not lowercased) text.
+     */
+    private static int lastIndexOfIgnoreCase(String text, String marker, int fromIndex) {
+        return text.toLowerCase().lastIndexOf(marker.toLowerCase(), fromIndex);
     }
 
     /**
