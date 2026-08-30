@@ -15,8 +15,10 @@ public class Meowmeow {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
 
         // ArrayList<Task> grows as needed, so there's no artificial cap on
-        // how many tasks can be stored (unlike a fixed-size array).
-        ArrayList<Task> tasks = new ArrayList<>();
+        // how many tasks can be stored (unlike a fixed-size array). The
+        // list starts from whatever was saved on the last run (empty on a
+        // first run).
+        ArrayList<Task> tasks = STORAGE.load();
 
         // try-with-resources guarantees the scanner (and System.in) is closed
         // even if something inside the loop throws.
