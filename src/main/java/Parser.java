@@ -1,12 +1,12 @@
 /**
- * Makes sense of the arguments a user typed after a command keyword: the
- * task number for "mark"/"unmark"/"delete", the description for "todo", the
- * "/by" of a deadline, the "/from" and "/to" of an event, and the date of a
- * "list &lt;date&gt;" query.
+ * Turns a full input line into a ready-to-run {@link Command}: it works out
+ * which command the line invokes, reads that command's arguments (the task
+ * number for "mark"/"unmark"/"delete", the description for "todo", the
+ * "/by" of a deadline, the "/from" and "/to" of an event, the date of a
+ * "list &lt;date&gt;" query) and returns the matching {@code Command}
+ * object.
  *
- * <p>Which command a line invokes is still recognised by
- * {@link CommandType#fromInput(String)}; {@code Parser} takes over from there.
- * Every "I don't understand that" case is raised here as a
+ * <p>Every "I don't understand that" case is raised here as a
  * {@link MeowmeowException} carrying the exact message shown to the user, so
  * the command loop only has to catch it, not work out what went wrong.
  *
@@ -20,9 +20,51 @@ public class Parser {
     }
 
     /**
+     * Turns a full input line into the {@link Command} it asks for.
+     *
+     * <p>{@link CommandType#fromInput(String)} recognises which command the
+     * line invokes (throwing for an unknown one); this method then reads
+     * that command's arguments and builds the matching {@code Command}.
+     *
+     * @throws MeowmeowException if the line is not a known command, or its
+     *     arguments do not make sense (missing, malformed, or a date
+     *     Meowmeow does not recognise).
+     */
+    public static Command parse(String fullCommand) throws MeowmeowException {
+        CommandType type = CommandType.fromInput(fullCommand);
+        String arguments = type.argumentsOf(fullCommand);
+        switch (type) {
+        case BYE:
+            return new ExitCommand();
+        case LIST:
+            // "list" alone lists everything; "list <date>" filters by day.
+            return arguments.isEmpty()
+                    ? new ListCommand()
+                    : new ListCommand(TaskDateTime.parse(arguments));
+        case MARK:
+            return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.DONE);
+        case UNMARK:
+            return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.NOT_DONE);
+        case DELETE:
+            return new DeleteCommand(parseTaskNumber(arguments, type));
+        case TODO:
+            return new AddCommand(parseTodo(arguments));
+        case DEADLINE:
+            return new AddCommand(parseDeadline(arguments));
+        case EVENT:
+            return new AddCommand(parseEvent(arguments));
+        default:
+            // Unreachable: every CommandType constant is handled above.
+            // Kept so the compiler warns if a new constant is added
+            // without a case here.
+            throw new IllegalStateException("Unhandled command: " + type);
+        }
+    }
+
+    /**
      * Reads the 1-based task number for a "mark", "unmark" or "delete"
-     * command. The number is not range-checked here - {@link TaskList}
-     * does that when the task is actually looked up.
+     * command. The number is not range-checked here - {@link TaskList} does
+     * that when the task is actually looked up.
      *
      * @param arguments the text after the command keyword.
      * @param command   the command being run, named in the error message if
@@ -30,7 +72,7 @@ public class Parser {
      * @throws MeowmeowException if no number was given, or the text is not a
      *     whole number.
      */
-    public static int parseTaskNumber(String arguments, CommandType command) throws MeowmeowException {
+    private static int parseTaskNumber(String arguments, CommandType command) throws MeowmeowException {
         if (arguments.isEmpty()) {
             throw new MeowmeowException(" Meow? Tell me which task number to " + command.keyword() + ".");
         }
@@ -46,7 +88,7 @@ public class Parser {
      *
      * @throws MeowmeowException if no description was given.
      */
-    public static Todo parseTodo(String arguments) throws MeowmeowException {
+    private static Todo parseTodo(String arguments) throws MeowmeowException {
         if (arguments.isEmpty()) {
             throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
         }
@@ -65,7 +107,7 @@ public class Parser {
      * @throws MeowmeowException if the "/by" marker, the description or the
      *     date is missing, or the date is not one Meowmeow recognises.
      */
-    public static Deadline parseDeadline(String arguments) throws MeowmeowException {
+    private static Deadline parseDeadline(String arguments) throws MeowmeowException {
         int byMarker = lastIndexOfIgnoreCase(arguments, "/by", arguments.length());
         String description = byMarker < 0 ? "" : arguments.substring(0, byMarker).trim();
         String by = byMarker < 0 ? "" : arguments.substring(byMarker + 3).trim();
@@ -90,7 +132,7 @@ public class Parser {
      *     is missing, an endpoint is not a date Meowmeow recognises, or the
      *     end is before the start.
      */
-    public static Event parseEvent(String arguments) throws MeowmeowException {
+    private static Event parseEvent(String arguments) throws MeowmeowException {
         int toMarker = lastIndexOfIgnoreCase(arguments, "/to", arguments.length());
         int fromMarker = toMarker < 0 ? -1 : lastIndexOfIgnoreCase(arguments, "/from", toMarker - 1);
         String description = fromMarker < 0 ? "" : arguments.substring(0, fromMarker).trim();
@@ -107,16 +149,6 @@ public class Parser {
             throw new MeowmeowException(" Meow? An event can't end before it starts.");
         }
         return new Event(description, start, end);
-    }
-
-    /**
-     * Parses the date in a "list &lt;date&gt;" query. A time, if given, is
-     * accepted but ignored by the caller since the filter matches by day.
-     *
-     * @throws MeowmeowException if the text is not a date Meowmeow recognises.
-     */
-    public static TaskDateTime parseListDate(String arguments) throws MeowmeowException {
-        return TaskDateTime.parse(arguments);
     }
 
     /**
