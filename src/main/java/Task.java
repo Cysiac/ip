@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /**
  * A single task in Meowmeow's list, with a description, a {@link TaskType},
  * and a {@link TaskStatus}. Subclasses ({@link Todo}, {@link Deadline},
@@ -27,6 +29,16 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    /**
+     * Whether this task happens on the given calendar date, used by the
+     * "list &lt;date&gt;" filter. A plain {@link Todo} has no date, so the
+     * base answer is {@code false}; {@link Deadline} and {@link Event}
+     * override this with their own date logic.
+     */
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     @Override

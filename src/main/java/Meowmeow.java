@@ -50,12 +50,13 @@ public class Meowmeow {
                         break conversation;
                     }
                     case LIST: {
-                        String[] lines = new String[tasks.size() + 1];
-                        lines[0] = " Here are the tasks in your list, meow:";
-                        for (int i = 0; i < tasks.size(); i++) {
-                            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
+                        // "list" alone shows everything; "list <date>" shows
+                        // only the deadlines/events happening on that day.
+                        if (arguments.isEmpty()) {
+                            listAllTasks(tasks);
+                        } else {
+                            listTasksOn(arguments, tasks);
                         }
-                        printBoxed(lines);
                         break;
                     }
                     case MARK: {
@@ -104,9 +105,12 @@ public class Meowmeow {
                         String by = byMarker < 0 ? "" : arguments.substring(byMarker + 3).trim();
                         if (byMarker < 0 || deadlineDescription.isEmpty() || by.isEmpty()) {
                             throw new MeowmeowException(" Meow? Use \"deadline <description> /by <when>\", e.g.\n"
-                                    + " \"deadline return book /by Sunday\".");
+                                    + " \"deadline return book /by 2/12/2019 1800\".");
                         }
-                        addTask(new Deadline(deadlineDescription, by), tasks);
+                        // TaskDateTime.parse turns the "/by" text into a real
+                        // date; it throws MeowmeowException (caught below) if
+                        // the text isn't a date Meowmeow recognises.
+                        addTask(new Deadline(deadlineDescription, TaskDateTime.parse(by)), tasks);
                         break;
                     }
                     case EVENT: {
@@ -124,9 +128,16 @@ public class Meowmeow {
                         if (fromMarker < 0 || eventDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
                             throw new MeowmeowException(
                                     " Meow? Use \"event <description> /from <start> /to <end>\", e.g.\n"
-                                    + " \"event project meeting /from Mon 2pm /to 4pm\".");
+                                    + " \"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
                         }
-                        addTask(new Event(eventDescription, from, to), tasks);
+                        // Both endpoints are parsed into real dates (parse
+                        // throws, caught below, on unrecognised text).
+                        TaskDateTime start = TaskDateTime.parse(from);
+                        TaskDateTime end = TaskDateTime.parse(to);
+                        if (!start.isNotAfter(end)) {
+                            throw new MeowmeowException(" Meow? An event can't end before it starts.");
+                        }
+                        addTask(new Event(eventDescription, start, end), tasks);
                         break;
                     }
                     default:
@@ -195,6 +206,46 @@ public class Meowmeow {
      */
     private static int lastIndexOfIgnoreCase(String text, String marker, int fromIndex) {
         return text.toLowerCase().lastIndexOf(marker.toLowerCase(), fromIndex);
+    }
+
+    /**
+     * Prints the whole task list, numbered from 1, under the standard
+     * header - the behaviour of a bare "list".
+     */
+    private static void listAllTasks(ArrayList<Task> tasks) {
+        String[] lines = new String[tasks.size() + 1];
+        lines[0] = " Here are the tasks in your list, meow:";
+        for (int i = 0; i < tasks.size(); i++) {
+            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
+        }
+        printBoxed(lines);
+    }
+
+    /**
+     * Prints only the tasks occurring on the given date - deadlines due
+     * that day, and events whose span covers it (see
+     * {@link Task#occursOn(java.time.LocalDate)}). The date is accepted in
+     * any of {@link TaskDateTime}'s input formats; a time, if given, is
+     * ignored since the match is by day.
+     *
+     * <p>The numbers shown here restart at 1 for this filtered view and are
+     * <em>not</em> the positions "mark"/"unmark"/"delete" expect - a bare
+     * "list" remains the reference for those.
+     */
+    private static void listTasksOn(String dateText, ArrayList<Task> tasks) throws MeowmeowException {
+        TaskDateTime when = TaskDateTime.parse(dateText);
+        ArrayList<String> lines = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.occursOn(when.getDate())) {
+                lines.add(" " + (lines.size() + 1) + "." + task);
+            }
+        }
+        if (lines.isEmpty()) {
+            printBoxed(" Nothing on " + when.toDateString() + " - free day, meow!");
+            return;
+        }
+        lines.add(0, " Here are the tasks on " + when.toDateString() + ", meow:");
+        printBoxed(lines.toArray(new String[0]));
     }
 
     /**

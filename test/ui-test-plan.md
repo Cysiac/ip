@@ -349,10 +349,11 @@ ____________________________________________________________
 
 ## Test: Add a deadline and list it
 **Aim:** "deadline <description> /by <when>" adds a task tagged [D] with
-the "by" text shown in parentheses, and shows up in "list" the same way.
+the "/by" date parsed and re-shown in "MMM d yyyy, h:mm a" form in
+parentheses, and shows up in "list" the same way.
 
 ```input
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 list
 bye
 ```
@@ -365,12 +366,12 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [D][ ] return book (by: Sunday)
+   [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
- 1.[D][ ] return book (by: Sunday)
+ 1.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -398,11 +399,11 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "deadline <description> /by <when>", e.g.
- "deadline return book /by Sunday".
+ "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "deadline <description> /by <when>", e.g.
- "deadline return book /by Sunday".
+ "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -413,11 +414,11 @@ ____________________________________________________________
 
 ## Test: Add an event and list it
 **Aim:** "event <description> /from <start> /to <end>" adds a task tagged
-[E] with the "from"/"to" text shown in parentheses, and shows up in "list"
-the same way.
+[E] with both endpoints parsed and re-shown in "MMM d yyyy, h:mm a" form
+in parentheses, and shows up in "list" the same way.
 
 ```input
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600
 list
 bye
 ```
@@ -430,12 +431,12 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+   [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
- 1.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 1.[E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -463,15 +464,15 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "event <description> /from <start> /to <end>", e.g.
- "event project meeting /from Mon 2pm /to 4pm".
+ "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "event <description> /from <start> /to <end>", e.g.
- "event project meeting /from Mon 2pm /to 4pm".
+ "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "event <description> /from <start> /to <end>", e.g.
- "event project meeting /from Mon 2pm /to 4pm".
+ "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -487,8 +488,8 @@ each renders with its own type tag and detail suffix in "list".
 
 ```input
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2/12/2019 1800
+event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600
 list
 bye
 ```
@@ -506,19 +507,19 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [D][ ] return book (by: Sunday)
+   [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+   [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 3 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
  1.[T][ ] borrow book
- 2.[D][ ] return book (by: Sunday)
- 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+ 2.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
+ 3.[E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -533,8 +534,8 @@ lowercase forms, matching how the command names themselves are already
 case-insensitive.
 
 ```input
-deadline return book /BY Sunday
-event project meeting /FROM Mon 2pm /TO 4pm
+deadline return book /BY 2/12/2019 1800
+event project meeting /FROM 2/12/2019 1400 /TO 2/12/2019 1600
 bye
 ```
 
@@ -546,12 +547,12 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [D][ ] return book (by: Sunday)
+   [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [E][ ] project meeting (from: Mon 2pm to: 4pm)
+   [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
@@ -567,8 +568,8 @@ like a marker (e.g. "/by" or "/to"), the flag nearest the end of the line
 is treated as the real one, not the first match.
 
 ```input
-deadline reply /by email /by Friday
-event remind team /to buy cake /from 2pm /to 4pm
+deadline reply /by email /by 2/12/2019
+event remind team /to buy cake /from 2/12/2019 1400 /to 2/12/2019 1600
 bye
 ```
 
@@ -580,13 +581,166 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [D][ ] reply /by email (by: Friday)
+   [D][ ] reply /by email (by: Dec 2 2019)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  Meow! I've added this task:
-   [E][ ] remind team /to buy cake (from: 2pm to: 4pm)
+   [E][ ] remind team /to buy cake (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Unrecognised or impossible dates are rejected
+**Aim:** A "/by" value that is not a date ("tomorrow"), a date that does
+not exist on the calendar ("30/2/2019"), and an impossible clock time
+("2560") all print the date-format hint and add nothing.
+
+```input
+deadline return book /by tomorrow
+deadline return book /by 30/2/2019
+deadline return book /by 2/12/2019 2560
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: An event that ends before it starts is rejected
+**Aim:** When "/to" is an earlier moment than "/from", the event is not
+added and Meowmeow explains why.
+
+```input
+event trip /from 2/12/2019 1800 /to 2/12/2019 1400
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? An event can't end before it starts.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: List tasks on a specific date
+**Aim:** "list <date>" shows only the deadline due that day and the event
+whose span covers it (a multi-day event matches every day it spans), a
+plain todo never matches, an empty result gets its own "free day" line,
+and the filtered numbering restarts at 1.
+
+```input
+todo borrow book
+deadline return book /by 2/12/2019 1800
+event conf /from 1/12/2019 0900 /to 3/12/2019 1700
+list 2/12/2019
+list 2019-12-10
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] borrow book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Dec 2 2019, 6:00 pm)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
+ Now you have 3 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks on Dec 2 2019, meow:
+ 1.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
+ 2.[E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
+____________________________________________________________
+____________________________________________________________
+ Nothing on Dec 10 2019 - free day, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: List with an unrecognised date is rejected
+**Aim:** "list <something that isn't a date>" prints the date-format hint
+rather than falling back to listing everything.
+
+```input
+todo borrow book
+list someday
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] borrow book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -793,12 +947,13 @@ ____________________________________________________________
 ```
 
 ## Test: Deadline with an empty description or empty by-value is guarded
-**Aim:** "deadline /by Sunday" (no description) and "deadline return book /by"
-(no text after "/by") both print the usage hint instead of being
-added, even though the "/by" marker itself is present.
+**Aim:** "deadline /by 2/12/2019 1800" (no description) and "deadline
+return book /by" (no text after "/by") both print the usage hint instead
+of being added, even though the "/by" marker itself is present. The empty
+part is caught before the date is ever parsed.
 
 ```input
-deadline /by Sunday
+deadline /by 2/12/2019 1800
 deadline return book /by
 bye
 ```
@@ -811,11 +966,11 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "deadline <description> /by <when>", e.g.
- "deadline return book /by Sunday".
+ "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "deadline <description> /by <when>", e.g.
- "deadline return book /by Sunday".
+ "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -825,13 +980,13 @@ ____________________________________________________________
 ```
 
 ## Test: Event with an empty description or reversed /from and /to markers is guarded
-**Aim:** "event /from Mon /to Tue" (no description) and an event with "/to"
+**Aim:** "event /from ... /to ..." (no description) and an event with "/to"
 appearing before "/from" both print the usage hint instead of being
-added.
+added. The structural problem is caught before any date is parsed.
 
 ```input
-event /from Mon /to Tue
-event meeting /to 4pm /from 2pm
+event /from 2/12/2019 1400 /to 2/12/2019 1600
+event meeting /to 2/12/2019 1600 /from 2/12/2019 1400
 bye
 ```
 
@@ -843,11 +998,11 @@ What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "event <description> /from <start> /to <end>", e.g.
- "event project meeting /from Mon 2pm /to 4pm".
+ "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  Meow? Use "event <description> /from <start> /to <end>", e.g.
- "event project meeting /from Mon 2pm /to 4pm".
+ "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\

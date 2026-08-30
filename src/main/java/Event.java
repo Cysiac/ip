@@ -1,18 +1,28 @@
+import java.time.LocalDate;
+
 /**
  * A task spanning a start and end point, added via the "event" command.
- * "from" and "to" are kept as plain strings for now rather than a real
- * date/time type. Renders with an "[E]" tag (via {@link TaskType#EVENT})
- * and both times in parentheses.
+ * "from" and "to" are real {@link TaskDateTime} values, so Meowmeow parses
+ * them on input, re-formats them for display, and can tell whether a given
+ * date falls within the event's span (used by "list &lt;date&gt;"). Renders
+ * with an "[E]" tag (via {@link TaskType#EVENT}) and both endpoints in
+ * parentheses.
  */
 public class Event extends Task {
 
-    protected String from;
-    protected String to;
+    protected TaskDateTime from;
+    protected TaskDateTime to;
 
-    public Event(String description, String from, String to) {
+    public Event(String description, TaskDateTime from, TaskDateTime to) {
         super(description, TaskType.EVENT);
         this.from = from;
         this.to = to;
+    }
+
+    /** True when {@code date} is on the start day, the end day, or in between. */
+    @Override
+    public boolean occursOn(LocalDate date) {
+        return !date.isBefore(from.getDate()) && !date.isAfter(to.getDate());
     }
 
     @Override
@@ -22,6 +32,6 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        return super.toFileString() + " | " + from + " | " + to;
+        return super.toFileString() + " | " + from.toFileString() + " | " + to.toFileString();
     }
 }
