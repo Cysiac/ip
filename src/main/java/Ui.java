@@ -57,6 +57,15 @@ public class Ui implements AutoCloseable {
     }
 
     /**
+     * Shows a non-fatal warning from {@link Storage} (an unreadable line, a
+     * failed save). Printed as a plain line rather than a boxed block,
+     * since it can happen while loading, before the conversation proper.
+     */
+    public void showWarning(String message) {
+        System.out.println(message);
+    }
+
+    /**
      * Confirms that a task was added, and reports the new task count with
      * the right singular/plural wording.
      */

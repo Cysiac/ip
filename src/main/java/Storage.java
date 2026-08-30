@@ -16,20 +16,27 @@ import java.util.List;
  * same code locates the file correctly on Windows, macOS and Linux.
  *
  * <p>First-run friendly: {@link #load()} treats a missing file or missing
- * folder as "no tasks yet" rather than an error, and {@link #save()}
+ * folder as "no tasks yet" rather than an error, and {@link #save(List)}
  * creates the folder before writing.
+ *
+ * <p>Problems that are not fatal to the session - an unreadable line, or a
+ * failed save - are reported to the user through {@link Ui} rather than
+ * thrown, so one bad line never loses the rest of the list.
  */
 public class Storage {
+    private final Ui ui;
     private final Path file;
 
     /**
+     * @param ui    where load/save warnings are shown.
      * @param first the first segment of the relative path, e.g. {@code "data"}.
      * @param more  any further segments, e.g. {@code "meowmeow.txt"}. Passing
      *              the segments separately (instead of one {@code "data/meowmeow.txt"}
      *              string) keeps the path separator out of our code so it
      *              stays correct on every OS.
      */
-    public Storage(String first, String... more) {
+    public Storage(Ui ui, String first, String... more) {
+        this.ui = ui;
         this.file = Path.of(first, more);
     }
 
@@ -55,13 +62,13 @@ public class Storage {
                 }
                 Task task = parseTask(line);
                 if (task == null) {
-                    System.out.println("Meow... I skipped a line I couldn't read: " + line);
+                    ui.showWarning("Meow... I skipped a line I couldn't read: " + line);
                 } else {
                     tasks.add(task);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Meow... I couldn't read your saved tasks: " + e.getMessage());
+            ui.showWarning("Meow... I couldn't read your saved tasks: " + e.getMessage());
         }
         return tasks;
     }
@@ -152,7 +159,7 @@ public class Storage {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Meow... I couldn't save your tasks: " + e.getMessage());
+            ui.showWarning("Meow... I couldn't save your tasks: " + e.getMessage());
         }
     }
 }
