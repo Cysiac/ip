@@ -31,6 +31,11 @@ public enum Command {
                 || input.regionMatches(true, 0, keyword + " ", 0, keyword.length() + 1);
     }
 
+    /** The keyword a user types to invoke this command, e.g. "mark". */
+    public String keyword() {
+        return keyword;
+    }
+
     /**
      * Everything in {@code input} after this command's keyword, trimmed.
      * Empty for a bare keyword with no arguments (e.g. "mark" -> "").
