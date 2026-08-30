@@ -5,6 +5,12 @@ public class Meowmeow {
     private static final String NAME = "Meowmeow";
     private static final String DIVIDER = "____________________________________________________________";
 
+    // Tasks are saved here after every change so they survive between runs.
+    // The path is relative to wherever the program is started (the project
+    // root, normally). Storage holds only this path, so a single shared
+    // instance is fine.
+    private static final Storage STORAGE = new Storage("./data/meowmeow.txt");
+
     public static void main(String[] args) {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
 
@@ -151,6 +157,7 @@ public class Meowmeow {
         }
         Task task = tasks.get(index - 1);
         task.setStatus(status);
+        STORAGE.save(tasks);
         printBoxed(status.getConfirmationMessage(), "   " + task);
     }
 
@@ -170,6 +177,7 @@ public class Meowmeow {
             throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
         Task removed = tasks.remove(index - 1);
+        STORAGE.save(tasks);
         String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've removed this task:",
                 "   " + removed,
@@ -192,6 +200,7 @@ public class Meowmeow {
      */
     private static void addTask(Task task, ArrayList<Task> tasks) {
         tasks.add(task);
+        STORAGE.save(tasks);
         String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've added this task:",
                 "   " + task,
