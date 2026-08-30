@@ -1,9 +1,6 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Meowmeow {
-    private static final String NAME = "Meowmeow";
-    private static final String DIVIDER = "____________________________________________________________";
 
     // Tasks are saved here after every change so they survive between runs.
     // The path segments are passed separately so Storage can join them with
@@ -14,31 +11,29 @@ public class Meowmeow {
     private static final Storage STORAGE = new Storage("data", "meowmeow.txt");
 
     public static void main(String[] args) {
-        printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
+        // try-with-resources guarantees the Ui's scanner (and System.in) is
+        // closed even if something inside the loop throws.
+        try (Ui ui = new Ui()) {
+            ui.showWelcome();
 
-        // ArrayList<Task> grows as needed, so there's no artificial cap on
-        // how many tasks can be stored (unlike a fixed-size array). The
-        // list starts from whatever was saved on the last run (empty on a
-        // first run).
-        ArrayList<Task> tasks = STORAGE.load();
+            // ArrayList<Task> grows as needed, so there's no artificial cap
+            // on how many tasks can be stored (unlike a fixed-size array).
+            // The list starts from whatever was saved on the last run (empty
+            // on a first run).
+            ArrayList<Task> tasks = STORAGE.load();
 
-        // try-with-resources guarantees the scanner (and System.in) is closed
-        // even if something inside the loop throws.
-        try (Scanner scanner = new Scanner(System.in)) {
-            // hasNextLine() lets the loop end gracefully on EOF (e.g. piped
-            // input with no "bye" line) instead of nextLine() throwing. The
-            // "conversation" label lets "bye" (handled inside the switch,
+            // The "conversation" label lets "bye" (handled inside the switch,
             // itself inside the try below) exit the loop directly.
             conversation:
-            while (scanner.hasNextLine()) {
-                String input = scanner.nextLine().trim();
+            while (ui.hasNextCommand()) {
+                String input = ui.readCommand();
                 if (input.isEmpty()) {
                     // Blank lines aren't a command or a task worth storing.
                     continue;
                 }
                 // Every command below reports a problem by throwing a
                 // MeowmeowException rather than printing directly, so this
-                // one catch prints the friendly error for all of them.
+                // one catch shows the friendly error for all of them.
                 // Command.fromInput itself throws that way for unrecognised
                 // input, so unknown commands are handled by the same catch.
                 try {
@@ -46,16 +41,16 @@ public class Meowmeow {
                     String arguments = command.argumentsOf(input);
                     switch (command) {
                     case BYE: {
-                        printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
+                        ui.showFarewell();
                         break conversation;
                     }
                     case LIST: {
                         // "list" alone shows everything; "list <date>" shows
                         // only the deadlines/events happening on that day.
                         if (arguments.isEmpty()) {
-                            listAllTasks(tasks);
+                            ui.showTasks(tasks);
                         } else {
-                            listTasksOn(arguments, tasks);
+                            listTasksOn(arguments, tasks, ui);
                         }
                         break;
                     }
@@ -66,7 +61,7 @@ public class Meowmeow {
                         if (arguments.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me which task number to mark.");
                         }
-                        setTaskStatus(arguments, TaskStatus.DONE, tasks);
+                        setTaskStatus(arguments, TaskStatus.DONE, tasks, ui);
                         break;
                     }
                     case UNMARK: {
@@ -74,7 +69,7 @@ public class Meowmeow {
                         if (arguments.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me which task number to unmark.");
                         }
-                        setTaskStatus(arguments, TaskStatus.NOT_DONE, tasks);
+                        setTaskStatus(arguments, TaskStatus.NOT_DONE, tasks, ui);
                         break;
                     }
                     case DELETE: {
@@ -82,7 +77,7 @@ public class Meowmeow {
                         if (arguments.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me which task number to delete.");
                         }
-                        deleteTask(arguments, tasks);
+                        deleteTask(arguments, tasks, ui);
                         break;
                     }
                     case TODO: {
@@ -90,12 +85,12 @@ public class Meowmeow {
                         if (arguments.isEmpty()) {
                             throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
                         }
-                        addTask(new Todo(arguments), tasks);
+                        addTask(new Todo(arguments), tasks, ui);
                         break;
                     }
                     case DEADLINE: {
                         // "deadline <description> /by <when>" adds a task due
-                        // by a given point, kept as plain text for now.
+                        // by a given point.
                         // Search from the end, case-insensitively: the marker
                         // closest to the end is the real flag, even if the
                         // description text happens to also contain "/by", and
@@ -110,12 +105,12 @@ public class Meowmeow {
                         // TaskDateTime.parse turns the "/by" text into a real
                         // date; it throws MeowmeowException (caught below) if
                         // the text isn't a date Meowmeow recognises.
-                        addTask(new Deadline(deadlineDescription, TaskDateTime.parse(by)), tasks);
+                        addTask(new Deadline(deadlineDescription, TaskDateTime.parse(by)), tasks, ui);
                         break;
                     }
                     case EVENT: {
                         // "event <description> /from <start> /to <end>" adds a
-                        // task spanning a time range, kept as plain text for now.
+                        // task spanning a time range.
                         // Search from the end, same reasoning as "deadline"
                         // above: the rightmost "/to" is the real flag, and the
                         // real "/from" is the rightmost one before it. Both
@@ -137,7 +132,7 @@ public class Meowmeow {
                         if (!start.isNotAfter(end)) {
                             throw new MeowmeowException(" Meow? An event can't end before it starts.");
                         }
-                        addTask(new Event(eventDescription, start, end), tasks);
+                        addTask(new Event(eventDescription, start, end), tasks, ui);
                         break;
                     }
                     default:
@@ -147,7 +142,7 @@ public class Meowmeow {
                         throw new IllegalStateException("Unhandled command: " + command);
                     }
                 } catch (MeowmeowException e) {
-                    printBoxed(e.getMessage().split("\n"));
+                    ui.showError(e.getMessage());
                 }
             }
         }
@@ -155,11 +150,11 @@ public class Meowmeow {
 
     /**
      * Sets the status of the task at the given 1-based position (as shown
-     * by "list") and prints the confirmation for that status, shared by
+     * by "list") and shows the confirmation for that status, shared by
      * "mark" and "unmark". Throws MeowmeowException on invalid input (not a
      * number, or out of range) instead of crashing.
      */
-    private static void setTaskStatus(String indexText, TaskStatus status, ArrayList<Task> tasks)
+    private static void setTaskStatus(String indexText, TaskStatus status, ArrayList<Task> tasks, Ui ui)
             throws MeowmeowException {
         int index;
         try {
@@ -173,15 +168,15 @@ public class Meowmeow {
         Task task = tasks.get(index - 1);
         task.setStatus(status);
         STORAGE.save(tasks);
-        printBoxed(status.getConfirmationMessage(), "   " + task);
+        ui.showStatusChange(status, task);
     }
 
     /**
      * Removes the task at the given 1-based position (as shown by "list")
-     * and prints a confirmation. Throws MeowmeowException on invalid input
+     * and shows a confirmation. Throws MeowmeowException on invalid input
      * (not a number, or out of range) instead of crashing.
      */
-    private static void deleteTask(String indexText, ArrayList<Task> tasks) throws MeowmeowException {
+    private static void deleteTask(String indexText, ArrayList<Task> tasks, Ui ui) throws MeowmeowException {
         int index;
         try {
             index = Integer.parseInt(indexText);
@@ -193,10 +188,7 @@ public class Meowmeow {
         }
         Task removed = tasks.remove(index - 1);
         STORAGE.save(tasks);
-        String taskWord = tasks.size() == 1 ? "task" : "tasks";
-        printBoxed(" Meow! I've removed this task:",
-                "   " + removed,
-                " Now you have " + tasks.size() + " " + taskWord + " in the list, meow!");
+        ui.showRemoved(removed, tasks.size());
     }
 
     /**
@@ -209,69 +201,31 @@ public class Meowmeow {
     }
 
     /**
-     * Prints the whole task list, numbered from 1, under the standard
-     * header - the behaviour of a bare "list".
+     * Filters the list to the tasks occurring on the given date - deadlines
+     * due that day, and events whose span covers it (see
+     * {@link Task#occursOn(java.time.LocalDate)}) - and hands them to the UI
+     * to display. The date is accepted in any of {@link TaskDateTime}'s input
+     * formats; a time, if given, is ignored since the match is by day.
      */
-    private static void listAllTasks(ArrayList<Task> tasks) {
-        String[] lines = new String[tasks.size() + 1];
-        lines[0] = " Here are the tasks in your list, meow:";
-        for (int i = 0; i < tasks.size(); i++) {
-            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
-        }
-        printBoxed(lines);
-    }
-
-    /**
-     * Prints only the tasks occurring on the given date - deadlines due
-     * that day, and events whose span covers it (see
-     * {@link Task#occursOn(java.time.LocalDate)}). The date is accepted in
-     * any of {@link TaskDateTime}'s input formats; a time, if given, is
-     * ignored since the match is by day.
-     *
-     * <p>The numbers shown here restart at 1 for this filtered view and are
-     * <em>not</em> the positions "mark"/"unmark"/"delete" expect - a bare
-     * "list" remains the reference for those.
-     */
-    private static void listTasksOn(String dateText, ArrayList<Task> tasks) throws MeowmeowException {
+    private static void listTasksOn(String dateText, ArrayList<Task> tasks, Ui ui) throws MeowmeowException {
         TaskDateTime when = TaskDateTime.parse(dateText);
-        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<Task> matches = new ArrayList<>();
         for (Task task : tasks) {
             if (task.occursOn(when.getDate())) {
-                lines.add(" " + (lines.size() + 1) + "." + task);
+                matches.add(task);
             }
         }
-        if (lines.isEmpty()) {
-            printBoxed(" Nothing on " + when.toDateString() + " - free day, meow!");
-            return;
-        }
-        lines.add(0, " Here are the tasks on " + when.toDateString() + ", meow:");
-        printBoxed(lines.toArray(new String[0]));
+        ui.showTasksOn(when.toDateString(), matches);
     }
 
     /**
-     * Stores a newly created task and prints the standard confirmation,
+     * Stores a newly created task and shows the standard confirmation,
      * shared by the "todo"/"deadline"/"event" commands so each one doesn't
      * repeat the confirmation message.
      */
-    private static void addTask(Task task, ArrayList<Task> tasks) {
+    private static void addTask(Task task, ArrayList<Task> tasks, Ui ui) {
         tasks.add(task);
         STORAGE.save(tasks);
-        String taskWord = tasks.size() == 1 ? "task" : "tasks";
-        printBoxed(" Meow! I've added this task:",
-                "   " + task,
-                " Now you have " + tasks.size() + " " + taskWord + " in the list, meow!");
-    }
-
-    /**
-     * Prints a block of lines surrounded by the divider, matching Meowmeow's
-     * standard reply format. Used for every message so the boxed layout
-     * only needs to be written once.
-     */
-    private static void printBoxed(String... lines) {
-        System.out.println(DIVIDER);
-        for (String line : lines) {
-            System.out.println(line);
-        }
-        System.out.println(DIVIDER);
+        ui.showAdded(task, tasks.size());
     }
 }
