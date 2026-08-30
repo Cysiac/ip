@@ -596,6 +596,76 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+## Test: Unrecognised or impossible dates are rejected
+**Aim:** A "/by" value that is not a date ("tomorrow"), a date that does
+not exist on the calendar ("30/2/2019"), and an impossible clock time
+("2560") all print the date-format hint and add nothing.
+
+```input
+deadline return book /by tomorrow
+deadline return book /by 30/2/2019
+deadline return book /by 2/12/2019 2560
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: An event that ends before it starts is rejected
+**Aim:** When "/to" is an earlier moment than "/from", the event is not
+added and Meowmeow explains why.
+
+```input
+event trip /from 2/12/2019 1800 /to 2/12/2019 1400
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? An event can't end before it starts.
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks in your list, meow:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
 ## Test: Errors interleaved with valid commands do not corrupt task count or list
 **Aim:** An unknown command and two out-of-range "mark"/"unmark" calls are
 rejected without being stored or changing the task count, and a
