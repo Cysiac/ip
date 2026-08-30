@@ -7,18 +7,30 @@ import java.util.List;
 
 /**
  * Reads and writes Meowmeow's task list to a plain-text file on disk, so
- * tasks survive between runs. The file path is fixed (relative to wherever
- * the program is started) and each task is stored as one pipe-separated
+ * tasks survive between runs. Each task is stored as one pipe-separated
  * line - see {@link Task#toFileString()} for the exact format.
+ *
+ * <p>The path is always <em>relative</em> to the working directory (never
+ * something machine-specific like {@code C:\data}) and is built from
+ * separate name segments via {@link Path#of(String, String...)}, so the
+ * same code locates the file correctly on Windows, macOS and Linux.
+ *
+ * <p>First-run friendly: {@link #load()} treats a missing file or missing
+ * folder as "no tasks yet" rather than an error, and {@link #save()}
+ * creates the folder before writing.
  */
 public class Storage {
     private final Path file;
 
     /**
-     * @param filePath location of the data file, e.g. {@code "./data/meowmeow.txt"}.
+     * @param first the first segment of the relative path, e.g. {@code "data"}.
+     * @param more  any further segments, e.g. {@code "meowmeow.txt"}. Passing
+     *              the segments separately (instead of one {@code "data/meowmeow.txt"}
+     *              string) keeps the path separator out of our code so it
+     *              stays correct on every OS.
      */
-    public Storage(String filePath) {
-        this.file = Path.of(filePath);
+    public Storage(String first, String... more) {
+        this.file = Path.of(first, more);
     }
 
     /**
@@ -29,6 +41,9 @@ public class Storage {
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
+        // Covers both "someone just cloned the repo" (no ./data folder at
+        // all) and "folder exists but no save yet": Files.exists is false
+        // in both cases, so a first run simply starts with no tasks.
         if (!Files.exists(file)) {
             return tasks;
         }
@@ -53,9 +68,11 @@ public class Storage {
 
     /**
      * Rebuilds one {@link Task} from a saved line such as
-     * {@code "D | 0 | return book | June 6th"}. Returns {@code null} if the
-     * line doesn't match any known format (unknown type tag, or too few
-     * fields) so the caller can skip it.
+     * {@code "D | 0 | return book | June 6th"}. Returns {@code null} for
+     * any line that isn't in the expected format - unknown type tag, a
+     * done-flag that isn't {@code 0} or {@code 1}, or fewer fields than the
+     * type needs - so a corrupted file loses only the bad lines, not all of
+     * them.
      */
     private Task parseTask(String line) {
         // -1 limit keeps trailing empty fields, so a task whose last part
@@ -65,8 +82,16 @@ public class Storage {
             return null;
         }
         String typeTag = parts[0].trim();
-        boolean isDone = parts[1].trim().equals(TaskStatus.DONE.getFileFlag());
+        String doneFlag = parts[1].trim();
         String description = parts[2];
+
+        // Reject a garbled flag instead of silently treating it as "not
+        // done" - a flag we don't recognise means the line is corrupted.
+        if (!doneFlag.equals(TaskStatus.DONE.getFileFlag())
+                && !doneFlag.equals(TaskStatus.NOT_DONE.getFileFlag())) {
+            return null;
+        }
+        boolean isDone = doneFlag.equals(TaskStatus.DONE.getFileFlag());
 
         Task task;
         switch (typeTag) {

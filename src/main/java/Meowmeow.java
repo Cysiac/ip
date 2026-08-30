@@ -6,10 +6,12 @@ public class Meowmeow {
     private static final String DIVIDER = "____________________________________________________________";
 
     // Tasks are saved here after every change so they survive between runs.
-    // The path is relative to wherever the program is started (the project
-    // root, normally). Storage holds only this path, so a single shared
-    // instance is fine.
-    private static final Storage STORAGE = new Storage("./data/meowmeow.txt");
+    // The path segments are passed separately so Storage can join them with
+    // the right separator for the current OS; it stays relative to the
+    // working directory (the project root, normally) so the app is portable
+    // between machines. Storage holds only this path, so one shared instance
+    // is fine.
+    private static final Storage STORAGE = new Storage("data", "meowmeow.txt");
 
     public static void main(String[] args) {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
