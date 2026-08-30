@@ -666,6 +666,89 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+## Test: List tasks on a specific date
+**Aim:** "list <date>" shows only the deadline due that day and the event
+whose span covers it (a multi-day event matches every day it spans), a
+plain todo never matches, an empty result gets its own "free day" line,
+and the filtered numbering restarts at 1.
+
+```input
+todo borrow book
+deadline return book /by 2/12/2019 1800
+event conf /from 1/12/2019 0900 /to 3/12/2019 1700
+list 2/12/2019
+list 2019-12-10
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] borrow book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Dec 2 2019, 6:00 pm)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
+ Now you have 3 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the tasks on Dec 2 2019, meow:
+ 1.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
+ 2.[E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
+____________________________________________________________
+____________________________________________________________
+ Nothing on Dec 10 2019 - free day, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: List with an unrecognised date is rejected
+**Aim:** "list <something that isn't a date>" prints the date-format hint
+rather than falling back to listing everything.
+
+```input
+todo borrow book
+list someday
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] borrow book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow? I don't understand that date.
+ Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
 ## Test: Errors interleaved with valid commands do not corrupt task count or list
 **Aim:** An unknown command and two out-of-range "mark"/"unmark" calls are
 rejected without being stored or changing the task count, and a

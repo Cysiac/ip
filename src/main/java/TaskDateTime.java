@@ -95,6 +95,11 @@ public class TaskDateTime {
         return date;
     }
 
+    /** Just the date part on screen, e.g. {@code "Dec 2 2019"} (no time). */
+    public String toDateString() {
+        return date.format(DISPLAY_DATE);
+    }
+
     /**
      * True if this point is no later than {@code other} - used to check that
      * an event's start isn't after its end. A missing time counts as the

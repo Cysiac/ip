@@ -50,12 +50,13 @@ public class Meowmeow {
                         break conversation;
                     }
                     case LIST: {
-                        String[] lines = new String[tasks.size() + 1];
-                        lines[0] = " Here are the tasks in your list, meow:";
-                        for (int i = 0; i < tasks.size(); i++) {
-                            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
+                        // "list" alone shows everything; "list <date>" shows
+                        // only the deadlines/events happening on that day.
+                        if (arguments.isEmpty()) {
+                            listAllTasks(tasks);
+                        } else {
+                            listTasksOn(arguments, tasks);
                         }
-                        printBoxed(lines);
                         break;
                     }
                     case MARK: {
@@ -205,6 +206,46 @@ public class Meowmeow {
      */
     private static int lastIndexOfIgnoreCase(String text, String marker, int fromIndex) {
         return text.toLowerCase().lastIndexOf(marker.toLowerCase(), fromIndex);
+    }
+
+    /**
+     * Prints the whole task list, numbered from 1, under the standard
+     * header - the behaviour of a bare "list".
+     */
+    private static void listAllTasks(ArrayList<Task> tasks) {
+        String[] lines = new String[tasks.size() + 1];
+        lines[0] = " Here are the tasks in your list, meow:";
+        for (int i = 0; i < tasks.size(); i++) {
+            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
+        }
+        printBoxed(lines);
+    }
+
+    /**
+     * Prints only the tasks occurring on the given date - deadlines due
+     * that day, and events whose span covers it (see
+     * {@link Task#occursOn(java.time.LocalDate)}). The date is accepted in
+     * any of {@link TaskDateTime}'s input formats; a time, if given, is
+     * ignored since the match is by day.
+     *
+     * <p>The numbers shown here restart at 1 for this filtered view and are
+     * <em>not</em> the positions "mark"/"unmark"/"delete" expect - a bare
+     * "list" remains the reference for those.
+     */
+    private static void listTasksOn(String dateText, ArrayList<Task> tasks) throws MeowmeowException {
+        TaskDateTime when = TaskDateTime.parse(dateText);
+        ArrayList<String> lines = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.occursOn(when.getDate())) {
+                lines.add(" " + (lines.size() + 1) + "." + task);
+            }
+        }
+        if (lines.isEmpty()) {
+            printBoxed(" Nothing on " + when.toDateString() + " - free day, meow!");
+            return;
+        }
+        lines.add(0, " Here are the tasks on " + when.toDateString() + ", meow:");
+        printBoxed(lines.toArray(new String[0]));
     }
 
     /**
