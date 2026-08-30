@@ -136,7 +136,7 @@ public class Storage {
      * than crashing the program, since losing a save is not fatal to the
      * current session.
      */
-    public void save(ArrayList<Task> tasks) {
+    public void save(List<Task> tasks) {
         try {
             // Files.createDirectories is a no-op if the folder already
             // exists, so it's safe to call on every save.

@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Meowmeow {
 
     // Tasks are saved here after every change so they survive between runs.
@@ -16,11 +14,11 @@ public class Meowmeow {
         try (Ui ui = new Ui()) {
             ui.showWelcome();
 
-            // ArrayList<Task> grows as needed, so there's no artificial cap
-            // on how many tasks can be stored (unlike a fixed-size array).
-            // The list starts from whatever was saved on the last run (empty
-            // on a first run).
-            ArrayList<Task> tasks = STORAGE.load();
+            // TaskList wraps a growable ArrayList, so there's no artificial
+            // cap on how many tasks can be stored (unlike a fixed-size
+            // array). It starts from whatever was saved on the last run
+            // (empty on a first run).
+            TaskList tasks = new TaskList(STORAGE.load());
 
             // The "conversation" label lets "bye" (handled inside the switch,
             // itself inside the try below) exit the loop directly.
@@ -48,7 +46,7 @@ public class Meowmeow {
                         // "list" alone shows everything; "list <date>" shows
                         // only the deadlines/events happening on that day.
                         if (arguments.isEmpty()) {
-                            ui.showTasks(tasks);
+                            ui.showTasks(tasks.asList());
                         } else {
                             listTasksOn(arguments, tasks, ui);
                         }
@@ -154,7 +152,7 @@ public class Meowmeow {
      * "mark" and "unmark". Throws MeowmeowException on invalid input (not a
      * number, or out of range) instead of crashing.
      */
-    private static void setTaskStatus(String indexText, TaskStatus status, ArrayList<Task> tasks, Ui ui)
+    private static void setTaskStatus(String indexText, TaskStatus status, TaskList tasks, Ui ui)
             throws MeowmeowException {
         int index;
         try {
@@ -162,12 +160,11 @@ public class Meowmeow {
         } catch (NumberFormatException e) {
             throw new MeowmeowException(" That's not a task number I recognise, meow?");
         }
-        if (index < 1 || index > tasks.size()) {
-            throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
-        }
-        Task task = tasks.get(index - 1);
+        // tasks.get rejects an out-of-range position with the "doesn't
+        // exist" message.
+        Task task = tasks.get(index);
         task.setStatus(status);
-        STORAGE.save(tasks);
+        STORAGE.save(tasks.asList());
         ui.showStatusChange(status, task);
     }
 
@@ -176,18 +173,17 @@ public class Meowmeow {
      * and shows a confirmation. Throws MeowmeowException on invalid input
      * (not a number, or out of range) instead of crashing.
      */
-    private static void deleteTask(String indexText, ArrayList<Task> tasks, Ui ui) throws MeowmeowException {
+    private static void deleteTask(String indexText, TaskList tasks, Ui ui) throws MeowmeowException {
         int index;
         try {
             index = Integer.parseInt(indexText);
         } catch (NumberFormatException e) {
             throw new MeowmeowException(" That's not a task number I recognise, meow?");
         }
-        if (index < 1 || index > tasks.size()) {
-            throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
-        }
-        Task removed = tasks.remove(index - 1);
-        STORAGE.save(tasks);
+        // tasks.delete rejects an out-of-range position with the "doesn't
+        // exist" message.
+        Task removed = tasks.delete(index);
+        STORAGE.save(tasks.asList());
         ui.showRemoved(removed, tasks.size());
     }
 
@@ -207,15 +203,9 @@ public class Meowmeow {
      * to display. The date is accepted in any of {@link TaskDateTime}'s input
      * formats; a time, if given, is ignored since the match is by day.
      */
-    private static void listTasksOn(String dateText, ArrayList<Task> tasks, Ui ui) throws MeowmeowException {
+    private static void listTasksOn(String dateText, TaskList tasks, Ui ui) throws MeowmeowException {
         TaskDateTime when = TaskDateTime.parse(dateText);
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.occursOn(when.getDate())) {
-                matches.add(task);
-            }
-        }
-        ui.showTasksOn(when.toDateString(), matches);
+        ui.showTasksOn(when.toDateString(), tasks.findOn(when.getDate()));
     }
 
     /**
@@ -223,9 +213,9 @@ public class Meowmeow {
      * shared by the "todo"/"deadline"/"event" commands so each one doesn't
      * repeat the confirmation message.
      */
-    private static void addTask(Task task, ArrayList<Task> tasks, Ui ui) {
+    private static void addTask(Task task, TaskList tasks, Ui ui) {
         tasks.add(task);
-        STORAGE.save(tasks);
+        STORAGE.save(tasks.asList());
         ui.showAdded(task, tasks.size());
     }
 }
