@@ -1,71 +1,33 @@
 /**
- * The set of commands Meowmeow understands, each paired with the keyword a
- * user types to invoke it (e.g. {@code MARK} for "mark"). Matching and
- * argument-stripping are both driven off the same {@code keyword} field, so
- * (unlike separate hardcoded string literals and substring offsets) the two
- * can never drift out of sync.
+ * One user command, ready to run. {@link Parser#parse(String)} turns a raw
+ * input line into a concrete subclass ({@link AddCommand},
+ * {@link DeleteCommand}, {@link MarkCommand}, {@link ListCommand},
+ * {@link ExitCommand}); the command loop in {@link Meowmeow} then just calls
+ * {@link #execute} and checks {@link #isExit}.
+ *
+ * <p>All the "does this input make sense" checking has already happened in
+ * {@code Parser} by the time a {@code Command} exists, so {@code execute}
+ * only has to deal with what can still go wrong at run time - e.g. a task
+ * number that names no task.
  */
-public enum Command {
-    TODO("todo"),
-    DEADLINE("deadline"),
-    EVENT("event"),
-    LIST("list"),
-    MARK("mark"),
-    UNMARK("unmark"),
-    DELETE("delete"),
-    BYE("bye");
-
-    private final String keyword;
-
-    Command(String keyword) {
-        this.keyword = keyword;
-    }
+public abstract class Command {
 
     /**
-     * True if {@code input} is exactly this command's keyword, or the
-     * keyword followed by a space and further text (its arguments).
-     * Case-insensitive, matching the rest of Meowmeow's input handling.
+     * Carries out this command against the app's state.
+     *
+     * @param tasks   the task list to read or change.
+     * @param ui      where the result is shown to the user.
+     * @param storage used to save the list after a change.
+     * @throws MeowmeowException if the command cannot be completed (e.g. no
+     *     task has the requested number).
      */
-    private boolean matches(String input) {
-        return input.equalsIgnoreCase(keyword)
-                || input.regionMatches(true, 0, keyword + " ", 0, keyword.length() + 1);
-    }
+    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException;
 
     /**
-     * Everything in {@code input} after this command's keyword, trimmed.
-     * Empty for a bare keyword with no arguments (e.g. "mark" -> "").
+     * Whether the app should stop reading commands after this one. Only
+     * {@link ExitCommand} overrides this to {@code true}.
      */
-    public String argumentsOf(String input) {
-        return input.length() > keyword.length() ? input.substring(keyword.length()).trim() : "";
-    }
-
-    /**
-     * Finds the command whose keyword matches the start of {@code input}.
-     * Throws MeowmeowException, with the same message Meowmeow has always
-     * shown for unrecognised input, if none match.
-     */
-    public static Command fromInput(String input) throws MeowmeowException {
-        for (Command command : values()) {
-            if (command.matches(input)) {
-                return command;
-            }
-        }
-        throw new MeowmeowException(" Meow? I don't know what that means.\n Try: " + helpText());
-    }
-
-    /**
-     * The comma-separated keyword list shown in the "unknown command"
-     * message, generated from the enum's own values so it can't drift out
-     * of sync with the commands actually implemented.
-     */
-    private static String helpText() {
-        StringBuilder builder = new StringBuilder();
-        for (Command command : values()) {
-            if (builder.length() > 0) {
-                builder.append(", ");
-            }
-            builder.append(command.keyword);
-        }
-        return builder.toString();
+    public boolean isExit() {
+        return false;
     }
 }
