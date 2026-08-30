@@ -68,11 +68,11 @@ public class Storage {
 
     /**
      * Rebuilds one {@link Task} from a saved line such as
-     * {@code "D | 0 | return book | June 6th"}. Returns {@code null} for
-     * any line that isn't in the expected format - unknown type tag, a
-     * done-flag that isn't {@code 0} or {@code 1}, or fewer fields than the
-     * type needs - so a corrupted file loses only the bad lines, not all of
-     * them.
+     * {@code "D | 0 | return book | 2019-12-02 1800"}. Returns {@code null}
+     * for any line that isn't in the expected format - unknown type tag, a
+     * done-flag that isn't {@code 0} or {@code 1}, fewer fields than the type
+     * needs, or a date part that no longer parses - so a corrupted file loses
+     * only the bad lines, not all of them.
      */
     private Task parseTask(String line) {
         // -1 limit keeps trailing empty fields, so a task whose last part
@@ -94,23 +94,33 @@ public class Storage {
         boolean isDone = doneFlag.equals(TaskStatus.DONE.getFileFlag());
 
         Task task;
-        switch (typeTag) {
-        case "T":
-            task = new Todo(description);
-            break;
-        case "D":
-            if (parts.length < 4) {
+        try {
+            switch (typeTag) {
+            case "T":
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length < 4) {
+                    return null;
+                }
+                task = new Deadline(description, TaskDateTime.parse(parts[3].trim()));
+                break;
+            case "E":
+                if (parts.length < 5) {
+                    return null;
+                }
+                task = new Event(description,
+                        TaskDateTime.parse(parts[3].trim()),
+                        TaskDateTime.parse(parts[4].trim()));
+                break;
+            default:
                 return null;
             }
-            task = new Deadline(description, parts[3]);
-            break;
-        case "E":
-            if (parts.length < 5) {
-                return null;
-            }
-            task = new Event(description, parts[3], parts[4]);
-            break;
-        default:
+        } catch (MeowmeowException unreadableDate) {
+            // A saved date we can no longer parse (e.g. a file written by an
+            // older Meowmeow that stored free text). Treat the line as
+            // corrupt - the same "skip it with a warning" contract as any
+            // other malformed line.
             return null;
         }
         if (isDone) {
