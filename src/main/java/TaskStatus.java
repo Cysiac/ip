@@ -8,19 +8,30 @@
  * boolean flag.
  */
 public enum TaskStatus {
-    DONE("X", " Nice! I've marked this task as done, meow:"),
-    NOT_DONE(" ", " OK, I've marked this task as not done yet, meow:");
+    DONE("X", "1", " Nice! I've marked this task as done, meow:"),
+    NOT_DONE(" ", "0", " OK, I've marked this task as not done yet, meow:");
 
     private final String icon;
+    private final String fileFlag;
     private final String confirmationMessage;
 
-    TaskStatus(String icon, String confirmationMessage) {
+    TaskStatus(String icon, String fileFlag, String confirmationMessage) {
         this.icon = icon;
+        this.fileFlag = fileFlag;
         this.confirmationMessage = confirmationMessage;
     }
 
     public String getIcon() {
         return icon;
+    }
+
+    /**
+     * The status as it appears in the saved data file: "1" for done, "0"
+     * for not done. Kept here (next to the icon) so the file encoding lives
+     * in one place rather than being hardcoded in {@link Task}.
+     */
+    public String getFileFlag() {
+        return fileFlag;
     }
 
     public String getConfirmationMessage() {

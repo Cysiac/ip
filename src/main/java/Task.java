@@ -33,4 +33,15 @@ public class Task {
     public String toString() {
         return "[" + type.getTag() + "][" + status.getIcon() + "] " + description;
     }
+
+    /**
+     * Renders the task as one line for the saved data file, e.g.
+     * {@code "T | 1 | read book"}. Subclasses with extra fields
+     * ({@link Deadline}, {@link Event}) override this to append their own
+     * pipe-separated parts. Kept separate from {@link #toString()} so the
+     * on-screen format and the on-disk format can change independently.
+     */
+    public String toFileString() {
+        return type.getTag() + " | " + status.getFileFlag() + " | " + description;
+    }
 }

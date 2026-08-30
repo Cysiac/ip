@@ -21,6 +21,7 @@ Usage:
 """
 import argparse
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -100,6 +101,11 @@ def main():
     passed = 0
 
     for i, test in enumerate(tests, start=1):
+        # The program saves tasks to ./data/ and loads them on startup, so
+        # a file left by one test case would leak into the next. Clear it
+        # first so every test case starts from an empty task list.
+        shutil.rmtree("data", ignore_errors=True)
+
         print(f"\n{'=' * 70}")
         print(f"Test {i}/{len(tests)}: {test['name']}")
         if test["aim"]:

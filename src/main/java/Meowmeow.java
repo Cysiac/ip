@@ -5,12 +5,22 @@ public class Meowmeow {
     private static final String NAME = "Meowmeow";
     private static final String DIVIDER = "____________________________________________________________";
 
+    // Tasks are saved here after every change so they survive between runs.
+    // The path segments are passed separately so Storage can join them with
+    // the right separator for the current OS; it stays relative to the
+    // working directory (the project root, normally) so the app is portable
+    // between machines. Storage holds only this path, so one shared instance
+    // is fine.
+    private static final Storage STORAGE = new Storage("data", "meowmeow.txt");
+
     public static void main(String[] args) {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
 
         // ArrayList<Task> grows as needed, so there's no artificial cap on
-        // how many tasks can be stored (unlike a fixed-size array).
-        ArrayList<Task> tasks = new ArrayList<>();
+        // how many tasks can be stored (unlike a fixed-size array). The
+        // list starts from whatever was saved on the last run (empty on a
+        // first run).
+        ArrayList<Task> tasks = STORAGE.load();
 
         // try-with-resources guarantees the scanner (and System.in) is closed
         // even if something inside the loop throws.
@@ -151,6 +161,7 @@ public class Meowmeow {
         }
         Task task = tasks.get(index - 1);
         task.setStatus(status);
+        STORAGE.save(tasks);
         printBoxed(status.getConfirmationMessage(), "   " + task);
     }
 
@@ -170,6 +181,7 @@ public class Meowmeow {
             throw new MeowmeowException(" Meow? Task " + index + " doesn't exist in your list.");
         }
         Task removed = tasks.remove(index - 1);
+        STORAGE.save(tasks);
         String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've removed this task:",
                 "   " + removed,
@@ -192,6 +204,7 @@ public class Meowmeow {
      */
     private static void addTask(Task task, ArrayList<Task> tasks) {
         tasks.add(task);
+        STORAGE.save(tasks);
         String taskWord = tasks.size() == 1 ? "task" : "tasks";
         printBoxed(" Meow! I've added this task:",
                 "   " + task,
