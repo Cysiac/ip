@@ -5,7 +5,7 @@
  * "list &lt;date&gt;" query.
  *
  * <p>Which command a line invokes is still recognised by
- * {@link Command#fromInput(String)}; {@code Parser} takes over from there.
+ * {@link CommandType#fromInput(String)}; {@code Parser} takes over from there.
  * Every "I don't understand that" case is raised here as a
  * {@link MeowmeowException} carrying the exact message shown to the user, so
  * the command loop only has to catch it, not work out what went wrong.
@@ -30,7 +30,7 @@ public class Parser {
      * @throws MeowmeowException if no number was given, or the text is not a
      *     whole number.
      */
-    public static int parseTaskNumber(String arguments, Command command) throws MeowmeowException {
+    public static int parseTaskNumber(String arguments, CommandType command) throws MeowmeowException {
         if (arguments.isEmpty()) {
             throw new MeowmeowException(" Meow? Tell me which task number to " + command.keyword() + ".");
         }

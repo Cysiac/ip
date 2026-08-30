@@ -3,8 +3,8 @@
  * wiring: it holds the three collaborators - {@link Ui} for talking to the
  * user, {@link Storage} for the save file, {@link TaskList} for the tasks
  * themselves - and {@link #run()} reads commands and routes each one to
- * them. The work of understanding a command lives in {@link Command} and
- * {@link Parser}.
+ * them. The work of understanding a command lives in {@link CommandType}
+ * and {@link Parser}.
  */
 public class Meowmeow {
 
@@ -52,9 +52,9 @@ public class Meowmeow {
                 // Every command reports a problem by throwing a
                 // MeowmeowException rather than printing, so this one catch
                 // shows the friendly error for all of them - including the
-                // "unknown command" thrown by Command.fromInput.
+                // "unknown command" thrown by CommandType.fromInput.
                 try {
-                    Command command = Command.fromInput(input);
+                    CommandType command = CommandType.fromInput(input);
                     String arguments = command.argumentsOf(input);
                     switch (command) {
                     case BYE: {
@@ -97,7 +97,7 @@ public class Meowmeow {
                         break;
                     }
                     default:
-                        // Unreachable: every Command constant has a case
+                        // Unreachable: every CommandType constant has a case
                         // above. Kept so the compiler can warn if a new
                         // constant is ever added without handling it here.
                         throw new IllegalStateException("Unhandled command: " + command);

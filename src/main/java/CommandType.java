@@ -1,11 +1,14 @@
 /**
- * The set of commands Meowmeow understands, each paired with the keyword a
- * user types to invoke it (e.g. {@code MARK} for "mark"). Matching and
- * argument-stripping are both driven off the same {@code keyword} field, so
- * (unlike separate hardcoded string literals and substring offsets) the two
- * can never drift out of sync.
+ * The set of command keywords Meowmeow understands, each paired with the
+ * word a user types to invoke it (e.g. {@code MARK} for "mark"). Matching
+ * and argument-stripping are both driven off the same {@code keyword}
+ * field, so (unlike separate hardcoded string literals and substring
+ * offsets) the two can never drift out of sync.
+ *
+ * <p>This enum is only about recognising <em>which</em> command a line is;
+ * {@link Parser} turns that into a concrete {@link Command} object to run.
  */
-public enum Command {
+public enum CommandType {
     TODO("todo"),
     DEADLINE("deadline"),
     EVENT("event"),
@@ -17,7 +20,7 @@ public enum Command {
 
     private final String keyword;
 
-    Command(String keyword) {
+    CommandType(String keyword) {
         this.keyword = keyword;
     }
 
@@ -49,8 +52,8 @@ public enum Command {
      * Throws MeowmeowException, with the same message Meowmeow has always
      * shown for unrecognised input, if none match.
      */
-    public static Command fromInput(String input) throws MeowmeowException {
-        for (Command command : values()) {
+    public static CommandType fromInput(String input) throws MeowmeowException {
+        for (CommandType command : values()) {
             if (command.matches(input)) {
                 return command;
             }
@@ -65,7 +68,7 @@ public enum Command {
      */
     private static String helpText() {
         StringBuilder builder = new StringBuilder();
-        for (Command command : values()) {
+        for (CommandType command : values()) {
             if (builder.length() > 0) {
                 builder.append(", ");
             }
