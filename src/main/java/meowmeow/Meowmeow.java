@@ -1,3 +1,11 @@
+package meowmeow;
+
+import meowmeow.command.Command;
+import meowmeow.parser.Parser;
+import meowmeow.storage.Storage;
+import meowmeow.task.TaskList;
+import meowmeow.ui.Ui;
+
 /**
  * Meowmeow, a small command-line task tracker. This class is now just the
  * wiring: it holds the three collaborators - {@link Ui} for talking to the
@@ -34,7 +42,7 @@ public class Meowmeow {
 
     /**
      * Greets the user, then reads and runs commands until an
-     * {@link ExitCommand} ("bye") or the end of input. The {@link Ui} (and
+     * {@link meowmeow.command.ExitCommand ExitCommand} ("bye") or the end of input. The {@link Ui} (and
      * with it {@code System.in}) is closed on the way out.
      */
     public void run() {

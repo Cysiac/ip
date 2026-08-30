@@ -29,7 +29,7 @@ look broken.
 1. Compile the current sources:
 
    ```bash
-   javac -d out/production/ip src/main/java/*.java
+   javac -d out/production/ip $(find src/main/java -name "*.java")
    ```
 
    (If `javac` reports a version mismatch, run `sdk use java 25.0.3.fx-zulu` first — see AGENTS.md.)
@@ -41,7 +41,7 @@ look broken.
    ```
 
    It defaults to `test/ui-test-plan.md`, classpath `out/production/ip`,
-   and main class `Meowmeow`; override with `--plan`, `--classpath`, or
+   and main class `meowmeow.Meowmeow`; override with `--plan`, `--classpath`, or
    `--main` if those differ.
 
 3. The script prints, per test case, the console input sent and the

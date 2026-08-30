@@ -1,3 +1,5 @@
+package meowmeow.task;
+
 /**
  * Whether a {@link Task} is done or not done. Replaces a plain
  * {@code boolean} so call sites read as {@code TaskStatus.DONE} instead of

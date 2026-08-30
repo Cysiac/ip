@@ -1,6 +1,13 @@
+package meowmeow.command;
+
+import meowmeow.storage.Storage;
+import meowmeow.task.Task;
+import meowmeow.task.TaskList;
+import meowmeow.ui.Ui;
+
 /**
  * Adds a task to the list - the shared outcome of the "todo", "deadline"
- * and "event" commands. {@link Parser} has already built the right
+ * and "event" commands. {@link meowmeow.parser.Parser Parser} has already built the right
  * {@link Task} subclass, so the three commands differ only in how they are
  * parsed, not in what "add" does.
  */

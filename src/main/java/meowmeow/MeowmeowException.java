@@ -1,3 +1,5 @@
+package meowmeow;
+
 /**
  * Signals an error specific to Meowmeow (e.g. an unrecognised command, or a
  * malformed argument) that should be reported to the user as a friendly

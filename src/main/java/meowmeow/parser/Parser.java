@@ -1,3 +1,18 @@
+package meowmeow.parser;
+
+import meowmeow.MeowmeowException;
+import meowmeow.command.AddCommand;
+import meowmeow.command.Command;
+import meowmeow.command.DeleteCommand;
+import meowmeow.command.ExitCommand;
+import meowmeow.command.ListCommand;
+import meowmeow.command.MarkCommand;
+import meowmeow.task.Deadline;
+import meowmeow.task.Event;
+import meowmeow.task.TaskDateTime;
+import meowmeow.task.TaskStatus;
+import meowmeow.task.Todo;
+
 /**
  * Turns a full input line into a ready-to-run {@link Command}: it works out
  * which command the line invokes, reads that command's arguments (the task
@@ -63,7 +78,7 @@ public class Parser {
 
     /**
      * Reads the 1-based task number for a "mark", "unmark" or "delete"
-     * command. The number is not range-checked here - {@link TaskList} does
+     * command. The number is not range-checked here - {@link meowmeow.task.TaskList TaskList} does
      * that when the task is actually looked up.
      *
      * @param arguments the text after the command keyword.

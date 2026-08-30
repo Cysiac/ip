@@ -1,3 +1,7 @@
+package meowmeow.parser;
+
+import meowmeow.MeowmeowException;
+
 /**
  * The set of command keywords Meowmeow understands, each paired with the
  * word a user types to invoke it (e.g. {@code MARK} for "mark"). Matching
@@ -6,7 +10,7 @@
  * offsets) the two can never drift out of sync.
  *
  * <p>This enum is only about recognising <em>which</em> command a line is;
- * {@link Parser} turns that into a concrete {@link Command} object to run.
+ * {@link Parser} turns that into a concrete {@link meowmeow.command.Command Command} object to run.
  */
 public enum CommandType {
     TODO("todo"),
