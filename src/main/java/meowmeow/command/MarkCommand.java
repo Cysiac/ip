@@ -1,3 +1,12 @@
+package meowmeow.command;
+
+import meowmeow.MeowmeowException;
+import meowmeow.storage.Storage;
+import meowmeow.task.Task;
+import meowmeow.task.TaskList;
+import meowmeow.task.TaskStatus;
+import meowmeow.ui.Ui;
+
 /**
  * Switches a task to done or not-done - the "mark" and "unmark" commands.
  * They share one class because {@link TaskStatus} already carries the

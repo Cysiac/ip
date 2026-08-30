@@ -1,5 +1,10 @@
+package meowmeow.ui;
+
 import java.util.List;
 import java.util.Scanner;
+
+import meowmeow.task.Task;
+import meowmeow.task.TaskStatus;
 
 /**
  * Everything the user directly sees or types: reading command lines from
@@ -57,7 +62,7 @@ public class Ui implements AutoCloseable {
     }
 
     /**
-     * Shows a non-fatal warning from {@link Storage} (an unreadable line, a
+     * Shows a non-fatal warning from {@link meowmeow.storage.Storage Storage} (an unreadable line, a
      * failed save). Printed as a plain line rather than a boxed block,
      * since it can happen while loading, before the conversation proper.
      */

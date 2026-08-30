@@ -78,7 +78,7 @@ def main():
                          help="Path to the test plan markdown file")
     parser.add_argument("--classpath", default="out/production/ip",
                          help="Directory of compiled .class files")
-    parser.add_argument("--main", default="Meowmeow",
+    parser.add_argument("--main", default="meowmeow.Meowmeow",
                          help="Fully-qualified name of the main class to run")
     args = parser.parse_args()
 

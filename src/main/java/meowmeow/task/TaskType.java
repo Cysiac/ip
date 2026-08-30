@@ -1,3 +1,5 @@
+package meowmeow.task;
+
 /**
  * The kind of {@link Task} a user can add: a plain {@code Todo}, a
  * {@code Deadline} due by some point, or an {@code Event} spanning a time

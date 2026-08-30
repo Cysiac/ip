@@ -1,8 +1,15 @@
+package meowmeow.command;
+
+import meowmeow.MeowmeowException;
+import meowmeow.storage.Storage;
+import meowmeow.task.TaskList;
+import meowmeow.ui.Ui;
+
 /**
- * One user command, ready to run. {@link Parser#parse(String)} turns a raw
+ * One user command, ready to run. {@link meowmeow.parser.Parser#parse(String) Parser.parse} turns a raw
  * input line into a concrete subclass ({@link AddCommand},
  * {@link DeleteCommand}, {@link MarkCommand}, {@link ListCommand},
- * {@link ExitCommand}); the command loop in {@link Meowmeow} then just calls
+ * {@link ExitCommand}); the command loop in {@link meowmeow.Meowmeow Meowmeow} then just calls
  * {@link #execute} and checks {@link #isExit}.
  *
  * <p>All the "does this input make sense" checking has already happened in

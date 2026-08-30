@@ -1,3 +1,11 @@
+package meowmeow.command;
+
+import meowmeow.MeowmeowException;
+import meowmeow.storage.Storage;
+import meowmeow.task.Task;
+import meowmeow.task.TaskList;
+import meowmeow.ui.Ui;
+
 /**
  * Removes the task at a given 1-based position (the number shown by
  * "list") - the "delete" command.

@@ -1,3 +1,5 @@
+package meowmeow.task;
+
 /**
  * A plain task with no associated date or time, added via the "todo"
  * command. Renders with a "[T]" tag ahead of the usual status/description,

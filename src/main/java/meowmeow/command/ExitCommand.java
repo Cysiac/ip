@@ -1,3 +1,9 @@
+package meowmeow.command;
+
+import meowmeow.storage.Storage;
+import meowmeow.task.TaskList;
+import meowmeow.ui.Ui;
+
 /**
  * Says goodbye and ends the session - the "bye" command. The only command
  * whose {@link #isExit()} is {@code true}, which is how the command loop
