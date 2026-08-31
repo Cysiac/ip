@@ -22,6 +22,7 @@ public enum CommandType {
     /** Lists every task, or the tasks on one day. */
     LIST("list"),
     /** Marks a task as done. */
+    FIND("find"),
     MARK("mark"),
     /** Marks a task as not done. */
     UNMARK("unmark"),

@@ -42,6 +42,12 @@ public class CommandTypeTest {
     }
 
     @Test
+    public void fromInput_find_returnsFindCommand() throws MeowmeowException {
+        assertEquals(CommandType.FIND, CommandType.fromInput("find book"));
+        assertEquals(CommandType.FIND, CommandType.fromInput("FIND book"));
+    }
+
+    @Test
     public void fromInput_unmark_notConfusedWithMark() throws MeowmeowException {
         // "mark" is a substring of "unmark" but not a prefix, so "unmark 1"
         // must resolve to UNMARK, not MARK.
@@ -83,11 +89,17 @@ public class CommandTypeTest {
         assertEquals("", CommandType.TODO.argumentsOf("todo    "));
     }
 
+    @Test
+    public void argumentsOf_findKeyword_returnsKeywordTrimmed() {
+        assertEquals("book", CommandType.FIND.argumentsOf("find  book "));
+    }
+
     // ---- keyword: the word a user types ----
 
     @Test
     public void keyword_returnsTheInvokingWord() {
         assertEquals("todo", CommandType.TODO.keyword());
         assertEquals("unmark", CommandType.UNMARK.keyword());
+        assertEquals("find", CommandType.FIND.keyword());
     }
 }

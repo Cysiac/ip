@@ -5,6 +5,7 @@ import meowmeow.command.AddCommand;
 import meowmeow.command.Command;
 import meowmeow.command.DeleteCommand;
 import meowmeow.command.ExitCommand;
+import meowmeow.command.FindCommand;
 import meowmeow.command.ListCommand;
 import meowmeow.command.MarkCommand;
 import meowmeow.task.Deadline;
@@ -18,8 +19,8 @@ import meowmeow.task.Todo;
  * which command the line invokes, reads that command's arguments (the task
  * number for "mark"/"unmark"/"delete", the description for "todo", the
  * "/by" of a deadline, the "/from" and "/to" of an event, the date of a
- * "list &lt;date&gt;" query) and returns the matching {@code Command}
- * object.
+ * "list &lt;date&gt;" query, the keyword of a "find &lt;keyword&gt;" query)
+ * and returns the matching {@code Command} object.
  *
  * <p>Every "I don't understand that" case is raised here as a
  * {@link MeowmeowException} carrying the exact message shown to the user, so
@@ -56,6 +57,8 @@ public class Parser {
             return arguments.isEmpty()
                     ? new ListCommand()
                     : new ListCommand(TaskDateTime.parse(arguments));
+        case FIND:
+            return new FindCommand(parseKeyword(arguments));
         case MARK:
             return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.DONE);
         case UNMARK:
@@ -108,6 +111,21 @@ public class Parser {
             throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
         }
         return new Todo(arguments);
+    }
+
+    /**
+     * Reads the keyword a "find" command should search task descriptions
+     * for.
+     *
+     * @param arguments the text after the "find" keyword.
+     * @return the search keyword.
+     * @throws MeowmeowException if no keyword was given.
+     */
+    private static String parseKeyword(String arguments) throws MeowmeowException {
+        if (arguments.isEmpty()) {
+            throw new MeowmeowException(" Meow? Tell me what to search for, e.g. \"find book\".");
+        }
+        return arguments;
     }
 
     /**
