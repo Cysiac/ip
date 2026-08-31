@@ -130,6 +130,27 @@ public class Ui implements AutoCloseable {
         printBoxed(lines);
     }
 
+    /**
+     * Prints the tasks matching a "find &lt;keyword&gt;" query. {@code matches}
+     * is already filtered by the caller; the numbers here restart at 1 for
+     * this filtered view. An empty result gets its own line.
+     *
+     * @param matches the tasks whose description contains the keyword, in
+     *     list order.
+     */
+    public void showMatchingTasks(List<Task> matches) {
+        if (matches.isEmpty()) {
+            printBoxed(" No matching tasks, meow!");
+            return;
+        }
+        String[] lines = new String[matches.size() + 1];
+        lines[0] = " Here are the matching tasks in your list, meow:";
+        for (int i = 0; i < matches.size(); i++) {
+            lines[i + 1] = " " + (i + 1) + "." + matches.get(i);
+        }
+        printBoxed(lines);
+    }
+
     /** "task" for a count of 1, "tasks" otherwise. */
     private String taskWord(int count) {
         return count == 1 ? "task" : "tasks";

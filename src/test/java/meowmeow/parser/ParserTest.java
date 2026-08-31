@@ -17,6 +17,7 @@ import meowmeow.command.AddCommand;
 import meowmeow.command.Command;
 import meowmeow.command.DeleteCommand;
 import meowmeow.command.ExitCommand;
+import meowmeow.command.FindCommand;
 import meowmeow.command.ListCommand;
 import meowmeow.command.MarkCommand;
 import meowmeow.storage.Storage;
@@ -80,6 +81,16 @@ public class ParserTest {
     @Test
     public void parse_listWithDate_returnsListCommand() throws MeowmeowException {
         assertInstanceOf(ListCommand.class, Parser.parse("list 2/12/2019"));
+    }
+
+    @Test
+    public void parse_find_returnsFindCommand() throws MeowmeowException {
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
+    }
+
+    @Test
+    public void parse_findWithoutKeyword_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("find"));
     }
 
     @Test

@@ -143,6 +143,53 @@ public class TaskListTest {
         assertEquals(0, list.findOn(LocalDate.of(2020, 1, 1)).size());
     }
 
+    // ---- findByKeyword: tasks whose description contains a keyword ----
+
+    @Test
+    public void findByKeyword_returnsMatchingTasks_inListOrder() throws MeowmeowException {
+        TaskList list = new TaskList();
+        list.add(new Todo("read book"));
+        list.add(new Todo("buy milk"));
+        list.add(deadlineOn("return book", "2/12/2019"));
+
+        List<Task> matches = list.findByKeyword("book");
+
+        assertEquals(2, matches.size());
+        assertEquals("read book", matches.get(0).getDescription());
+        assertEquals("return book", matches.get(1).getDescription());
+    }
+
+    @Test
+    public void findByKeyword_noDescriptionContainsKeyword_returnsEmptyList() {
+        TaskList list = new TaskList();
+        list.add(new Todo("read book"));
+        list.add(new Todo("buy milk"));
+
+        assertEquals(0, list.findByKeyword("essay").size());
+    }
+
+    @Test
+    public void findByKeyword_differentCasing_stillMatches() {
+        TaskList list = new TaskList();
+        list.add(new Todo("Read Book"));
+
+        assertEquals(1, list.findByKeyword("book").size());
+        assertEquals(1, list.findByKeyword("BOOK").size());
+    }
+
+    @Test
+    public void findByKeyword_partialWord_matchesAsSubstring() {
+        TaskList list = new TaskList();
+        list.add(new Todo("booking a room"));
+
+        assertEquals(1, list.findByKeyword("book").size());
+    }
+
+    @Test
+    public void findByKeyword_emptyList_returnsEmptyList() {
+        assertEquals(0, new TaskList().findByKeyword("book").size());
+    }
+
     // ---- asList: read-only view ----
 
     @Test

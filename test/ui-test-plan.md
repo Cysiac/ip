@@ -338,7 +338,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow? I don't know what that means.
- Try: todo, deadline, event, list, mark, unmark, delete, bye
+ Try: todo, deadline, event, list, find, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -777,7 +777,7 @@ ____________________________________________________________
 ____________________________________________________________
 ____________________________________________________________
  Meow? I don't know what that means.
- Try: todo, deadline, event, list, mark, unmark, delete, bye
+ Try: todo, deadline, event, list, find, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
  Meow? Task 99 doesn't exist in your list.
@@ -1036,6 +1036,152 @@ ____________________________________________________________
 ____________________________________________________________
  Here are the tasks in your list, meow:
  1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Find tasks by keyword
+**Aim:** "find <keyword>" lists every task whose description contains the
+keyword (any task type), a plain non-matching task is left out, and the
+filtered numbering restarts at 1.
+
+```input
+todo read book
+deadline return book /by 2/12/2019
+todo buy milk
+find book
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [D][ ] return book (by: Dec 2 2019)
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] buy milk
+ Now you have 3 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the matching tasks in your list, meow:
+ 1.[T][ ] read book
+ 2.[D][ ] return book (by: Dec 2 2019)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Find with no matches
+**Aim:** "find <keyword>" with a keyword no task contains prints the "no
+matching tasks" line rather than an empty list header.
+
+```input
+todo read book
+todo buy milk
+find xyzzy
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] buy milk
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ No matching tasks, meow!
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Find is case-insensitive
+**Aim:** "find BOOK" matches a task described as "Read Book" - the keyword
+match ignores letter case, like the rest of Meowmeow's input handling.
+
+```input
+todo Read Book
+todo buy milk
+find BOOK
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] Read Book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Meow! I've added this task:
+   [T][ ] buy milk
+ Now you have 2 tasks in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here are the matching tasks in your list, meow:
+ 1.[T][ ] Read Book
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Bare find is guarded
+**Aim:** "find" with no keyword prints a friendly prompt instead of
+searching.
+
+```input
+find
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+Hello! I'm Meowmeow.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+ Meow? Tell me what to search for, e.g. "find book".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\

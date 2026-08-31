@@ -78,6 +78,26 @@ public class TaskList {
     }
 
     /**
+     * Returns the tasks whose description contains {@code keyword}, in list
+     * order. The match is case-insensitive and a substring test, so
+     * "book" matches "Booking" and "return book" alike - consistent with
+     * the rest of Meowmeow's case-insensitive input handling.
+     *
+     * @param keyword the text to look for inside each task's description.
+     * @return the matching tasks, in list order; empty if none match.
+     */
+    public List<Task> findByKeyword(String keyword) {
+        String needle = keyword.toLowerCase();
+        ArrayList<Task> matches = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(needle)) {
+                matches.add(task);
+            }
+        }
+        return matches;
+    }
+
+    /**
      * A read-only view of every task, in list order - for display and for
      * saving to disk. It is unmodifiable so callers change the list only
      * through this class's own methods.
