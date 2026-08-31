@@ -46,12 +46,17 @@ bad:   added find command.
 ### Required trailer lines
 
 This project appends two trailer lines to every commit message, after a
-blank line at the end of the body, verbatim:
+blank line at the end of the body:
 
 ```
 Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-Claude-Session: https://claude.ai/code/session_01RyQpTwze5rsH2SV1iUax1F
+Claude-Session: <current session URL>
 ```
+
+The `Co-Authored-By` line is verbatim. The `Claude-Session` value is the
+URL of the Claude Code session making the commit — it differs per session
+and the harness supplies it in its instructions; never copy a URL from a
+past commit or from this file.
 
 ## Branch names
 
