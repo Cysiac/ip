@@ -48,8 +48,8 @@ public class Task {
     }
 
     /**
-     * Whether this task happens on the given calendar date, used by the
-     * "list &lt;date&gt;" filter. A plain {@link Todo} has no date, so the
+     * Returns whether this task happens on the given calendar date, used by
+     * the "list &lt;date&gt;" filter. A plain {@link Todo} has no date, so the
      * base answer is {@code false}; {@link Deadline} and {@link Event}
      * override this with their own date logic.
      */

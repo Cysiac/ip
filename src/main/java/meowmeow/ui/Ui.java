@@ -24,31 +24,31 @@ public class Ui implements AutoCloseable {
 
     private final Scanner scanner;
 
-    /** Opens a UI reading commands from standard input. */
+    /** Constructs a UI that reads commands from standard input. */
     public Ui() {
         this.scanner = new Scanner(System.in);
     }
 
     /**
-     * True while there is another line of input to read. Lets the command
-     * loop end gracefully on end-of-input (e.g. piped input with no "bye"
-     * line) instead of {@link #readCommand()} throwing.
+     * Returns {@code true} while there is another line of input to read. Lets
+     * the command loop end gracefully on end-of-input (e.g. piped input with
+     * no "bye" line) instead of {@link #readCommand()} throwing.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
-    /** The next line of input, trimmed of surrounding whitespace. */
+    /** Returns the next line of input, trimmed of surrounding whitespace. */
     public String readCommand() {
         return scanner.nextLine().trim();
     }
 
-    /** The welcome banner printed once at startup. */
+    /** Prints the welcome banner shown once at startup. */
     public void showWelcome() {
         printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
     }
 
-    /** The farewell banner printed in response to "bye". */
+    /** Prints the farewell banner shown in response to "bye". */
     public void showFarewell() {
         printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
     }
@@ -141,7 +141,7 @@ public class Ui implements AutoCloseable {
         printBoxed(lines);
     }
 
-    /** "task" for a count of 1, "tasks" otherwise. */
+    /** Returns "task" for a count of 1, "tasks" otherwise. */
     private String taskWord(int count) {
         return count == 1 ? "task" : "tasks";
     }

@@ -39,6 +39,9 @@ public class Storage {
     private final Path file;
 
     /**
+     * Constructs a storage bound to a relative save-file path, built from the
+     * given path segments.
+     *
      * @param ui    where load/save warnings are shown.
      * @param first the first segment of the relative path, e.g. {@code "data"}.
      * @param more  any further segments, e.g. {@code "meowmeow.txt"}. Passing

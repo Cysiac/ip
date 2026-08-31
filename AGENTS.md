@@ -28,12 +28,33 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Java coding standard
+
+All Java written or edited in this project must follow the SE-EDU Java coding
+standard's **basic and intermediate** rules (naming, layout, imports,
+statements, JavaDoc). This is a course grading criterion, not an optional
+style preference.
+
+**Before adding or editing any class, method, field, or JavaDoc block under
+`src/`, and before reviewing a Java diff for style, invoke the
+`seedu-java-coding-standard` skill** and apply its checklist. The skill holds
+the full rule set; the advanced rules are out of scope.
+
 ## Git
 
-Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
-Commit subjects must follow the SE-EDU Git commit-message convention (required by the course).
+**Every commit message and branch name must follow the SE-EDU Git
+conventions. Before writing any commit message or creating any branch,
+invoke the `seedu-git-standard` skill** and apply its checklist. The skill
+holds the full rule set (subject line, body, branch naming, and the trailer
+lines this project appends).
+
+Additional project rules:
+
+* Use lightweight tags unless the user requests an annotated tag.
+* Commit messages must carry a body with enough detail to explain the
+  rationale for the change (the course treats the body as optional, but
+  this project requires it).
+* Do not commit or push unless explicitly asked.
 
 ## Testing
 
@@ -60,7 +81,7 @@ This repo is graded by an automated script as part of the CS2103T Individual Pro
 * **Repo structure is load-bearing for grading** — never rename the fork away from `ip`, rename `master` to `main`, or move source out of `[project root]/src`.
 * **Increments are tracked by git tags, not commit messages.** Each increment (e.g. `Level-7`, `A-Gradle`) needs a tag matching its exact ID string, and tags must be pushed explicitly (`git push --tags`) — a plain `git push` does not push them.
 * **Branch-based increments (`Level-7` onward) must merge with `--no-ff`** — a fast-forward merge loses the branch structure the grading script checks for.
-* **Java coding standard**: the SE-EDU standard's basic and intermediate rules are required, not optional style choices.
+* **Java coding standard**: the SE-EDU standard's basic and intermediate rules are required, not optional style choices — see the `## Java coding standard` section above, which mandates the `seedu-java-coding-standard` skill for all Java in this project.
 * **`A-Gradle`/JavaFX build setup**: follow the official SE-EDU JavaFX tutorial's sample `build.gradle` exactly — don't improvise a build config, mismatched setups break cross-platform builds.
 * **Reused code must be credited** or it's treated as plagiarism by the course: inline comments for adapted snippets, `//@@author {username}-reused` tags for non-trivial reused blocks, and broad/pervasive AI use disclosed in the iP README's Acknowledgements section.
 * **AI-use posture varies by task**: lean into AI for Week 6's optional increments (`A-BetterGui`, `A-Personality`, `A-MoreErrorHandling`, `A-MoreTesting`); lean toward coaching/review rather than producing the artifact for tasks meant as manual practice (peer PR review, full commit messages, PR descriptions).

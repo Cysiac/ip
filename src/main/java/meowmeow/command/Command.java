@@ -31,8 +31,8 @@ public abstract class Command {
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException;
 
     /**
-     * Whether the app should stop reading commands after this one. Only
-     * {@link ExitCommand} overrides this to {@code true}.
+     * Returns whether the app should stop reading commands after this one.
+     * Only {@link ExitCommand} overrides this to {@code true}.
      */
     public boolean isExit() {
         return false;

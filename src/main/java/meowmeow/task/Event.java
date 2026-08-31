@@ -28,7 +28,7 @@ public class Event extends Task {
         this.to = to;
     }
 
-    /** True when {@code date} is on the start day, the end day, or in between. */
+    /** Returns {@code true} when {@code date} is on the start day, the end day, or in between. */
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(from.getDate()) && !date.isAfter(to.getDate());

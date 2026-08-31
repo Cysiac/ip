@@ -25,7 +25,7 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    /** True when this deadline falls on {@code date}. */
+    /** Returns {@code true} when this deadline falls on {@code date}. */
     @Override
     public boolean occursOn(LocalDate date) {
         return by.getDate().equals(date);

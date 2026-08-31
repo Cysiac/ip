@@ -30,7 +30,7 @@ import meowmeow.task.Todo;
  */
 public class Parser {
 
-    /** Not meant to be instantiated - all behaviour is via the static methods. */
+    /** Prevents instantiation - all behaviour is via the static methods. */
     private Parser() {
     }
 
@@ -167,9 +167,10 @@ public class Parser {
     }
 
     /**
-     * Case-insensitive equivalent of {@code text.lastIndexOf(marker, fromIndex)}:
-     * finds the marker regardless of how the user capitalised it, while
-     * still returning an index into the original (not lowercased) text.
+     * Returns the case-insensitive equivalent of
+     * {@code text.lastIndexOf(marker, fromIndex)}: finds the marker regardless
+     * of how the user capitalised it, while still returning an index into the
+     * original (not lowercased) text.
      */
     private static int lastIndexOfIgnoreCase(String text, String marker, int fromIndex) {
         return text.toLowerCase().lastIndexOf(marker.toLowerCase(), fromIndex);

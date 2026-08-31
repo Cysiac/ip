@@ -20,21 +20,21 @@ import meowmeow.MeowmeowException;
 public class TaskList {
     private final ArrayList<Task> tasks;
 
-    /** An empty task list. */
+    /** Constructs an empty task list. */
     public TaskList() {
         this.tasks = new ArrayList<>();
     }
 
     /**
-     * A task list holding the given tasks (e.g. the ones just loaded from
-     * disk). The tasks are copied into a new list, so later changes here do
-     * not write back through the caller's collection.
+     * Constructs a task list holding the given tasks (e.g. the ones just
+     * loaded from disk). The tasks are copied into a new list, so later
+     * changes here do not write back through the caller's collection.
      */
     public TaskList(List<Task> initialTasks) {
         this.tasks = new ArrayList<>(initialTasks);
     }
 
-    /** How many tasks are in the list. */
+    /** Returns the number of tasks in the list. */
     public int size() {
         return tasks.size();
     }
@@ -45,7 +45,7 @@ public class TaskList {
     }
 
     /**
-     * The task at the given 1-based position.
+     * Returns the task at the given 1-based position.
      *
      * @param oneBasedIndex the 1-based position, as shown by "list".
      * @return the task at that position.
@@ -67,8 +67,8 @@ public class TaskList {
     }
 
     /**
-     * The tasks occurring on the given date - deadlines due that day and
-     * events whose span covers it (see {@link Task#occursOn(LocalDate)}) -
+     * Returns the tasks occurring on the given date - deadlines due that day
+     * and events whose span covers it (see {@link Task#occursOn(LocalDate)}) -
      * in list order.
      */
     public List<Task> findOn(LocalDate date) {
@@ -82,8 +82,8 @@ public class TaskList {
     }
 
     /**
-     * A read-only view of every task, in list order - for display and for
-     * saving to disk. It is unmodifiable so callers change the list only
+     * Returns a read-only view of every task, in list order - for display and
+     * for saving to disk. It is unmodifiable so callers change the list only
      * through this class's own methods.
      */
     public List<Task> asList() {
