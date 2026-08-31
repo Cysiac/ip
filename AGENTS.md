@@ -42,10 +42,19 @@ the full rule set; the advanced rules are out of scope.
 
 ## Git
 
-Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
-Do not commit or push unless explicitly asked.
-Commit subjects must follow the SE-EDU Git commit-message convention (required by the course).
+**Every commit message and branch name must follow the SE-EDU Git
+conventions. Before writing any commit message or creating any branch,
+invoke the `seedu-git-standard` skill** and apply its checklist. The skill
+holds the full rule set (subject line, body, branch naming, and the trailer
+lines this project appends).
+
+Additional project rules:
+
+* Use lightweight tags unless the user requests an annotated tag.
+* Commit messages must carry a body with enough detail to explain the
+  rationale for the change (the course treats the body as optional, but
+  this project requires it).
+* Do not commit or push unless explicitly asked.
 
 ## Testing
 
