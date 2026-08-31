@@ -21,8 +21,9 @@ public enum CommandType {
     EVENT("event"),
     /** Lists every task, or the tasks on one day. */
     LIST("list"),
-    /** Marks a task as done. */
+    /** Finds tasks whose description contains a keyword. */
     FIND("find"),
+    /** Marks a task as done. */
     MARK("mark"),
     /** Marks a task as not done. */
     UNMARK("unmark"),
