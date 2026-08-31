@@ -29,8 +29,8 @@ public enum CommandType {
     }
 
     /**
-     * True if {@code input} is exactly this command's keyword, or the
-     * keyword followed by a space and further text (its arguments).
+     * Returns {@code true} if {@code input} is exactly this command's keyword,
+     * or the keyword followed by a space and further text (its arguments).
      * Case-insensitive, matching the rest of Meowmeow's input handling.
      */
     private boolean matches(String input) {
@@ -38,14 +38,14 @@ public enum CommandType {
                 || input.regionMatches(true, 0, keyword + " ", 0, keyword.length() + 1);
     }
 
-    /** The keyword a user types to invoke this command, e.g. "mark". */
+    /** Returns the keyword a user types to invoke this command, e.g. "mark". */
     public String keyword() {
         return keyword;
     }
 
     /**
-     * Everything in {@code input} after this command's keyword, trimmed.
-     * Empty for a bare keyword with no arguments (e.g. "mark" -> "").
+     * Returns everything in {@code input} after this command's keyword,
+     * trimmed. Empty for a bare keyword with no arguments (e.g. "mark" -> "").
      */
     public String argumentsOf(String input) {
         return input.length() > keyword.length() ? input.substring(keyword.length()).trim() : "";
@@ -66,7 +66,7 @@ public enum CommandType {
     }
 
     /**
-     * The comma-separated keyword list shown in the "unknown command"
+     * Returns the comma-separated keyword list shown in the "unknown command"
      * message, generated from the enum's own values so it can't drift out
      * of sync with the commands actually implemented.
      */

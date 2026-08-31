@@ -94,20 +94,20 @@ public class TaskDateTime {
         throw new MeowmeowException(" Meow? I don't understand that date.\n" + FORMAT_HINT);
     }
 
-    /** The calendar date, used by the "list &lt;date&gt;" filter. */
+    /** Returns the calendar date, used by the "list &lt;date&gt;" filter. */
     public LocalDate getDate() {
         return date;
     }
 
-    /** Just the date part on screen, e.g. {@code "Dec 2 2019"} (no time). */
+    /** Returns just the date part on screen, e.g. {@code "Dec 2 2019"} (no time). */
     public String toDateString() {
         return date.format(DISPLAY_DATE);
     }
 
     /**
-     * True if this point is no later than {@code other} - used to check that
-     * an event's start isn't after its end. A missing time counts as the
-     * start of that day (00:00).
+     * Returns {@code true} if this point is no later than {@code other} - used
+     * to check that an event's start isn't after its end. A missing time
+     * counts as the start of that day (00:00).
      */
     public boolean isNotAfter(TaskDateTime other) {
         int dayComparison = date.compareTo(other.date);
@@ -120,8 +120,8 @@ public class TaskDateTime {
     }
 
     /**
-     * On screen, e.g. {@code "Dec 2 2019, 6:00 pm"} when a time was given, or
-     * {@code "Oct 15 2019"} when only a date was given.
+     * Returns the on-screen form, e.g. {@code "Dec 2 2019, 6:00 pm"} when a
+     * time was given, or {@code "Oct 15 2019"} when only a date was given.
      */
     @Override
     public String toString() {
@@ -136,9 +136,10 @@ public class TaskDateTime {
     }
 
     /**
-     * The save-file form, e.g. {@code "2019-12-02 1800"} or {@code "2019-12-02"}.
-     * This is itself one of the accepted input formats, so a saved value reloads
-     * through the same {@link #parse} with no separate reader needed.
+     * Returns the save-file form, e.g. {@code "2019-12-02 1800"} or
+     * {@code "2019-12-02"}. This is itself one of the accepted input formats,
+     * so a saved value reloads through the same {@link #parse} with no
+     * separate reader needed.
      */
     public String toFileString() {
         String storedDate = date.format(FILE_DATE);

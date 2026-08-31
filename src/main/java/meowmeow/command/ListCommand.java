@@ -18,14 +18,15 @@ import meowmeow.ui.Ui;
 public class ListCommand extends Command {
     private final TaskDateTime date;
 
-    /** "list" with no date - show every task. */
+    /** Constructs the "list" command with no date, which shows every task. */
     public ListCommand() {
         this.date = null;
     }
 
     /**
-     * "list &lt;date&gt;" - show only the tasks on {@code date}. A time, if
-     * the user gave one, is ignored since the filter matches by day.
+     * Constructs the "list &lt;date&gt;" command, which shows only the tasks on
+     * {@code date}. A time, if the user gave one, is ignored since the filter
+     * matches by day.
      */
     public ListCommand(TaskDateTime date) {
         this.date = date;

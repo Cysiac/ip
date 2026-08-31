@@ -18,6 +18,8 @@ public class MarkCommand extends Command {
     private final TaskStatus status;
 
     /**
+     * Constructs a command that switches the given task to the given status.
+     *
      * @param taskNumber the 1-based position (as shown by "list") to change.
      * @param status     the status to switch that task to.
      */

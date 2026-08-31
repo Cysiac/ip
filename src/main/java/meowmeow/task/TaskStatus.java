@@ -28,9 +28,9 @@ public enum TaskStatus {
     }
 
     /**
-     * The status as it appears in the saved data file: "1" for done, "0"
-     * for not done. Kept here (next to the icon) so the file encoding lives
-     * in one place rather than being hardcoded in {@link Task}.
+     * Returns the status as it appears in the saved data file: "1" for done,
+     * "0" for not done. Kept here (next to the icon) so the file encoding
+     * lives in one place rather than being hardcoded in {@link Task}.
      */
     public String getFileFlag() {
         return fileFlag;
