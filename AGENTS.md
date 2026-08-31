@@ -37,7 +37,21 @@ Commit subjects must follow the SE-EDU Git commit-message convention (required b
 
 ## Testing
 
-After any change to code under `src/`, use the `test-ui` skill: update `test/ui-test-plan.md` first if the change affects console input/output, then run the skill's tests and confirm they pass before considering the change done.
+Two independent test layers must both pass before a `src/` change is considered done:
+
+* **Console UI tests** (`test-ui` skill): after any change to code under `src/`, use the `test-ui` skill — update `test/ui-test-plan.md` first if the change affects console input/output, then run the skill's tests and confirm they pass.
+* **JUnit tests** (`./gradlew test`): live under `src/test/java/`, mirroring the package of the class they test (e.g. `meowmeow.parser.Parser` → `src/test/java/meowmeow/parser/ParserTest.java`). Follow JUnit 5 conventions; use `featureUnderTest_scenario_expectedBehaviour()` naming when a full sentence would be unwieldy.
+
+### JUnit coverage target
+
+Keep JUnit tests focused on roughly the **top ~50% highest-value methods** — the complex, core, or business-critical ones (parsing, persistence, date/collection logic). Trivial getters/setters, enum accessors, thin command orchestration, and console-rendering code (covered by the `test-ui` layer) are deliberately left out.
+
+**After every code change under `src/main/`, update the JUnit tests in the same commit to stay within that target:**
+
+* New high-value method → add a test class/methods covering all its reasonable cases (valid inputs, boundaries, each failure path).
+* Changed behaviour of a covered method → update its existing tests to match, and add cases for the new behaviour.
+* Removed or renamed method → remove or move its tests.
+* Then run `./gradlew test` and confirm the whole suite passes.
 
 ## CS2103T iP course constraints
 
