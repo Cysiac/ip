@@ -8,6 +8,11 @@ package meowmeow.task;
  */
 public class Todo extends Task {
 
+    /**
+     * Constructs a todo with the given description.
+     *
+     * @param description the task text as the user typed it.
+     */
     public Todo(String description) {
         super(description, TaskType.TODO);
     }

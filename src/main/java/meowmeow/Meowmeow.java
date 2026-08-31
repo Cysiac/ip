@@ -33,6 +33,9 @@ public class Meowmeow {
      * throwing, so there is no loading failure for this constructor to
      * recover from. Any such warning is therefore printed before the
      * welcome banner, exactly as in the sample.
+     *
+     * @param first the first segment of the save-file path, e.g. {@code "data"}.
+     * @param more  any further path segments, e.g. {@code "meowmeow.txt"}.
      */
     public Meowmeow(String first, String... more) {
         ui = new Ui();
@@ -73,6 +76,11 @@ public class Meowmeow {
         }
     }
 
+    /**
+     * Starts Meowmeow, saving to {@code ./data/meowmeow.txt}.
+     *
+     * @param args command-line arguments (unused).
+     */
     public static void main(String[] args) {
         new Meowmeow("data", "meowmeow.txt").run();
     }

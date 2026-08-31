@@ -56,6 +56,9 @@ public class Storage {
      * the file doesn't exist yet (a normal first run, not an error). A
      * line that can't be understood is skipped with a warning rather than
      * aborting the load, so one corrupt line doesn't lose every task.
+     *
+     * @return the tasks read from the file, in file order; empty if the
+     *     file does not exist yet.
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();

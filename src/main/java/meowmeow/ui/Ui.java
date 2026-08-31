@@ -73,6 +73,9 @@ public class Ui implements AutoCloseable {
     /**
      * Confirms that a task was added, and reports the new task count with
      * the right singular/plural wording.
+     *
+     * @param task      the task that was just added.
+     * @param taskCount the number of tasks now in the list.
      */
     public void showAdded(Task task, int taskCount) {
         printBoxed(" Meow! I've added this task:",
@@ -83,6 +86,9 @@ public class Ui implements AutoCloseable {
     /**
      * Confirms that a task was removed, and reports the new task count with
      * the right singular/plural wording.
+     *
+     * @param task      the task that was just removed.
+     * @param taskCount the number of tasks now in the list.
      */
     public void showRemoved(Task task, int taskCount) {
         printBoxed(" Meow! I've removed this task:",
@@ -90,7 +96,12 @@ public class Ui implements AutoCloseable {
                 " Now you have " + taskCount + " " + taskWord(taskCount) + " in the list, meow!");
     }
 
-    /** Confirms that a task's done/not-done status changed. */
+    /**
+     * Confirms that a task's done/not-done status changed.
+     *
+     * @param status the task's new status.
+     * @param task   the task whose status changed.
+     */
     public void showStatusChange(TaskStatus status, Task task) {
         printBoxed(status.getConfirmationMessage(), "   " + task);
     }

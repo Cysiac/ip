@@ -10,7 +10,9 @@ package meowmeow.task;
  * boolean flag.
  */
 public enum TaskStatus {
+    /** The task is finished. */
     DONE("X", "1", " Nice! I've marked this task as done, meow:"),
+    /** The task is not finished yet. */
     NOT_DONE(" ", "0", " OK, I've marked this task as not done yet, meow:");
 
     private final String icon;
@@ -23,6 +25,7 @@ public enum TaskStatus {
         this.confirmationMessage = confirmationMessage;
     }
 
+    /** Returns the icon shown in a task listing, e.g. {@code "X"} for done. */
     public String getIcon() {
         return icon;
     }
@@ -36,6 +39,7 @@ public enum TaskStatus {
         return fileFlag;
     }
 
+    /** Returns the message Meowmeow prints when a task is switched to this status. */
     public String getConfirmationMessage() {
         return confirmationMessage;
     }

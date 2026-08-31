@@ -14,6 +14,11 @@ import meowmeow.ui.Ui;
 public class AddCommand extends Command {
     private final Task task;
 
+    /**
+     * Constructs a command that adds the given task.
+     *
+     * @param task the task to add, already built by {@link meowmeow.parser.Parser Parser}.
+     */
     public AddCommand(Task task) {
         this.task = task;
     }

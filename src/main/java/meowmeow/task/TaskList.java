@@ -47,6 +47,8 @@ public class TaskList {
     /**
      * The task at the given 1-based position.
      *
+     * @param oneBasedIndex the 1-based position, as shown by "list".
+     * @return the task at that position.
      * @throws MeowmeowException if no task has that position.
      */
     public Task get(int oneBasedIndex) throws MeowmeowException {
@@ -56,6 +58,8 @@ public class TaskList {
     /**
      * Removes and returns the task at the given 1-based position.
      *
+     * @param oneBasedIndex the 1-based position, as shown by "list".
+     * @return the task that was removed.
      * @throws MeowmeowException if no task has that position.
      */
     public Task delete(int oneBasedIndex) throws MeowmeowException {

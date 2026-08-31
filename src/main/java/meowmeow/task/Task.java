@@ -15,20 +15,34 @@ public class Task {
     protected final TaskType type;
     protected TaskStatus status;
 
+    /**
+     * Constructs a task with the given description and type, initially
+     * not done.
+     *
+     * @param description the task text as the user typed it.
+     * @param type        the kind of task (todo, deadline or event).
+     */
     public Task(String description, TaskType type) {
         this.description = description;
         this.type = type;
         this.status = TaskStatus.NOT_DONE;
     }
 
+    /** Returns the task's description text. */
     public String getDescription() {
         return description;
     }
 
+    /** Returns whether the task is currently done or not done. */
     public TaskStatus getStatus() {
         return status;
     }
 
+    /**
+     * Sets the task's done/not-done status.
+     *
+     * @param status the new status.
+     */
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
