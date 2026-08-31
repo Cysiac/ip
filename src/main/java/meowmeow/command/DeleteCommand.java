@@ -13,6 +13,11 @@ import meowmeow.ui.Ui;
 public class DeleteCommand extends Command {
     private final int taskNumber;
 
+    /**
+     * Constructs a command that deletes the task at the given position.
+     *
+     * @param taskNumber the 1-based position (as shown by "list") to remove.
+     */
     public DeleteCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }

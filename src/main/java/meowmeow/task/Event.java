@@ -15,6 +15,13 @@ public class Event extends Task {
     protected TaskDateTime from;
     protected TaskDateTime to;
 
+    /**
+     * Constructs an event with the given description and start/end points.
+     *
+     * @param description the task text as the user typed it.
+     * @param from        the date (and optional time) the event starts.
+     * @param to          the date (and optional time) the event ends.
+     */
     public Event(String description, TaskDateTime from, TaskDateTime to) {
         super(description, TaskType.EVENT);
         this.from = from;

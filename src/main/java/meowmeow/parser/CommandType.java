@@ -13,13 +13,21 @@ import meowmeow.MeowmeowException;
  * {@link Parser} turns that into a concrete {@link meowmeow.command.Command Command} object to run.
  */
 public enum CommandType {
+    /** Adds a plain todo. */
     TODO("todo"),
+    /** Adds a task due by a given point. */
     DEADLINE("deadline"),
+    /** Adds a task spanning a start and end point. */
     EVENT("event"),
+    /** Lists every task, or the tasks on one day. */
     LIST("list"),
+    /** Marks a task as done. */
     MARK("mark"),
+    /** Marks a task as not done. */
     UNMARK("unmark"),
+    /** Deletes a task by its position. */
     DELETE("delete"),
+    /** Says goodbye and ends the session. */
     BYE("bye");
 
     private final String keyword;

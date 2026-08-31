@@ -9,6 +9,12 @@ package meowmeow;
  */
 public class MeowmeowException extends Exception {
 
+    /**
+     * Constructs an exception carrying the message to show the user.
+     *
+     * @param message the friendly explanation; may contain {@code "\n"} to
+     *     span several display lines.
+     */
     public MeowmeowException(String message) {
         super(message);
     }

@@ -14,6 +14,12 @@ public class Deadline extends Task {
 
     protected TaskDateTime by;
 
+    /**
+     * Constructs a deadline with the given description and due point.
+     *
+     * @param description the task text as the user typed it.
+     * @param by          the date (and optional time) the task is due by.
+     */
     public Deadline(String description, TaskDateTime by) {
         super(description, TaskType.DEADLINE);
         this.by = by;
