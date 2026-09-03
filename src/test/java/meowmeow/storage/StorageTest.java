@@ -104,9 +104,9 @@ public class StorageTest {
                 "T | 0 | keep me",
                 "X | 0 | unknown type tag",
                 "T | 2 | bad done flag",
-                "T | 0",                                // too few fields
-                "D | 0 | deadline with no date",        // D needs 4 fields
-                "D | 0 | deadline bad date | someday",  // date no longer parses
+                "T | 0", // too few fields
+                "D | 0 | deadline with no date", // D needs 4 fields
+                "D | 0 | deadline bad date | someday", // date no longer parses
                 "E | 0 | event with no end | 2019-12-02 1400", // E needs 5 fields
                 "T | 1 | keep me too");
         Storage storage = storageAt("tasks.txt");

@@ -162,7 +162,6 @@ public class Ui implements AutoCloseable {
         printBoxed(lines);
     }
 
-    /** "task" for a count of 1, "tasks" otherwise. */
     /** Returns "task" for a count of 1, "tasks" otherwise. */
     private String taskWord(int count) {
         return count == 1 ? "task" : "tasks";

@@ -341,7 +341,7 @@ public class TaskDateTimeTest {
     }
 
     @Test
-    public void isNotAfter_bothDateOnly_sameDay_true() throws MeowmeowException {
+    public void isNotAfter_bothDateOnlySameDay_true() throws MeowmeowException {
         TaskDateTime one = TaskDateTime.parse("2/12/2019");
         TaskDateTime same = TaskDateTime.parse("2019-12-02");
 
@@ -351,7 +351,7 @@ public class TaskDateTimeTest {
     }
 
     @Test
-    public void isNotAfter_bothDateOnly_differentDays_ordersByDate() throws MeowmeowException {
+    public void isNotAfter_bothDateOnlyDifferentDays_ordersByDate() throws MeowmeowException {
         TaskDateTime firstDay = TaskDateTime.parse("1/12/2019");
         TaskDateTime secondDay = TaskDateTime.parse("2/12/2019");
 

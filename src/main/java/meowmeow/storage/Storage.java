@@ -120,25 +120,25 @@ public class Storage {
         Task task;
         try {
             switch (typeTag) {
-            case "T":
-                task = new Todo(description);
-                break;
-            case "D":
-                if (parts.length < 4) {
+                case "T":
+                    task = new Todo(description);
+                    break;
+                case "D":
+                    if (parts.length < 4) {
+                        return null;
+                    }
+                    task = new Deadline(description, TaskDateTime.parse(parts[3].trim()));
+                    break;
+                case "E":
+                    if (parts.length < 5) {
+                        return null;
+                    }
+                    task = new Event(description,
+                            TaskDateTime.parse(parts[3].trim()),
+                            TaskDateTime.parse(parts[4].trim()));
+                    break;
+                default:
                     return null;
-                }
-                task = new Deadline(description, TaskDateTime.parse(parts[3].trim()));
-                break;
-            case "E":
-                if (parts.length < 5) {
-                    return null;
-                }
-                task = new Event(description,
-                        TaskDateTime.parse(parts[3].trim()),
-                        TaskDateTime.parse(parts[4].trim()));
-                break;
-            default:
-                return null;
             }
         } catch (MeowmeowException unreadableDate) {
             // A saved date we can no longer parse (e.g. a file written by an
