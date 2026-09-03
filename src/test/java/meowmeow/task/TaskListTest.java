@@ -122,11 +122,11 @@ public class TaskListTest {
     @Test
     public void findOn_returnsOnlyTasksOnThatDay_inListOrder() throws MeowmeowException {
         TaskList list = new TaskList();
-        list.add(new Todo("no date"));                              // never matches
-        list.add(deadlineOn("due that day", "2/12/2019"));          // matches
+        list.add(new Todo("no date")); // never matches
+        list.add(deadlineOn("due that day", "2/12/2019")); // matches
         list.add(new Event("spans the day",
                 TaskDateTime.parse("1/12/2019"), TaskDateTime.parse("3/12/2019"))); // matches
-        list.add(deadlineOn("another day", "5/12/2019"));           // no match
+        list.add(deadlineOn("another day", "5/12/2019")); // no match
 
         List<Task> matches = list.findOn(LocalDate.of(2019, 12, 2));
 

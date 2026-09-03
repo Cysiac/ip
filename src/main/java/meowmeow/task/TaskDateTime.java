@@ -29,6 +29,10 @@ public class TaskDateTime {
     /** One accepted input pattern, and whether it carries a time-of-day. */
     private record InputFormat(DateTimeFormatter formatter, boolean hasTime) { }
 
+    /** The one-line reminder of accepted formats, reused in every parse error. */
+    public static final String FORMAT_HINT =
+            " Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.";
+
     // Accepted input patterns, tried in this order. The date-and-time ones
     // come first so "2/12/2019 1800" isn't half-matched by a date-only
     // pattern. "uuuu" (not "yyyy") plus ResolverStyle.STRICT makes Java
@@ -53,10 +57,6 @@ public class TaskDateTime {
     /** The canonical time form written to the save file, e.g. {@code "1800"}. */
     private static final DateTimeFormatter FILE_TIME =
             DateTimeFormatter.ofPattern("HHmm", Locale.ENGLISH);
-
-    /** The one-line reminder of accepted formats, reused in every parse error. */
-    public static final String FORMAT_HINT =
-            " Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.";
 
     private final LocalDate date;
     private final LocalTime time;

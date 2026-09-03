@@ -202,8 +202,8 @@ public class ParserTest {
 
     @Test
     public void parse_eventEndBeforeStart_exceptionThrown() {
-        assertThrows(MeowmeowException.class,
-                () -> Parser.parse("event meeting /from 2/12/2019 1600 /to 2/12/2019 1400"));
+        assertThrows(MeowmeowException.class, () ->
+                Parser.parse("event meeting /from 2/12/2019 1600 /to 2/12/2019 1400"));
     }
 
     @Test
@@ -218,14 +218,14 @@ public class ParserTest {
 
     @Test
     public void parse_eventWithoutDescription_exceptionThrown() {
-        assertThrows(MeowmeowException.class,
-                () -> Parser.parse("event /from 2/12/2019 /to 3/12/2019"));
+        assertThrows(MeowmeowException.class, () ->
+                Parser.parse("event /from 2/12/2019 /to 3/12/2019"));
     }
 
     @Test
     public void parse_eventWithUnparseableEndpoint_exceptionThrown() {
-        assertThrows(MeowmeowException.class,
-                () -> Parser.parse("event meeting /from 2/12/2019 /to whenever"));
+        assertThrows(MeowmeowException.class, () ->
+                Parser.parse("event meeting /from 2/12/2019 /to whenever"));
     }
 
     // ---- mark / unmark / delete: task number parsing and effect ----

@@ -50,32 +50,32 @@ public class Parser {
         CommandType type = CommandType.fromInput(fullCommand);
         String arguments = type.argumentsOf(fullCommand);
         switch (type) {
-        case BYE:
-            return new ExitCommand();
-        case LIST:
-            // "list" alone lists everything; "list <date>" filters by day.
-            return arguments.isEmpty()
-                    ? new ListCommand()
-                    : new ListCommand(TaskDateTime.parse(arguments));
-        case FIND:
-            return new FindCommand(parseKeyword(arguments));
-        case MARK:
-            return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.DONE);
-        case UNMARK:
-            return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.NOT_DONE);
-        case DELETE:
-            return new DeleteCommand(parseTaskNumber(arguments, type));
-        case TODO:
-            return new AddCommand(parseTodo(arguments));
-        case DEADLINE:
-            return new AddCommand(parseDeadline(arguments));
-        case EVENT:
-            return new AddCommand(parseEvent(arguments));
-        default:
-            // Unreachable: every CommandType constant is handled above.
-            // Kept so the compiler warns if a new constant is added
-            // without a case here.
-            throw new IllegalStateException("Unhandled command: " + type);
+            case BYE:
+                return new ExitCommand();
+            case LIST:
+                // "list" alone lists everything; "list <date>" filters by day.
+                return arguments.isEmpty()
+                        ? new ListCommand()
+                        : new ListCommand(TaskDateTime.parse(arguments));
+            case FIND:
+                return new FindCommand(parseKeyword(arguments));
+            case MARK:
+                return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.DONE);
+            case UNMARK:
+                return new MarkCommand(parseTaskNumber(arguments, type), TaskStatus.NOT_DONE);
+            case DELETE:
+                return new DeleteCommand(parseTaskNumber(arguments, type));
+            case TODO:
+                return new AddCommand(parseTodo(arguments));
+            case DEADLINE:
+                return new AddCommand(parseDeadline(arguments));
+            case EVENT:
+                return new AddCommand(parseEvent(arguments));
+            default:
+                // Unreachable: every CommandType constant is handled above.
+                // Kept so the compiler warns if a new constant is added
+                // without a case here.
+                throw new IllegalStateException("Unhandled command: " + type);
         }
     }
 
