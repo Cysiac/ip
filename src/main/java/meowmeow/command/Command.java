@@ -20,15 +20,18 @@ import meowmeow.ui.Ui;
 public abstract class Command {
 
     /**
-     * Carries out this command against the app's state.
+     * Carries out this command against the app's state and returns the
+     * message to show the user. The console loop prints it (boxed); the GUI
+     * shows it as-is.
      *
      * @param tasks   the task list to read or change.
-     * @param ui      where the result is shown to the user.
+     * @param ui      builds the result message.
      * @param storage used to save the list after a change.
+     * @return the message describing what happened.
      * @throws MeowmeowException if the command cannot be completed (e.g. no
      *     task has the requested number).
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException;
+    public abstract String execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException;
 
     /**
      * Returns whether the app should stop reading commands after this one.

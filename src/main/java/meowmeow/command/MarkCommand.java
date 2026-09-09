@@ -29,12 +29,12 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException {
         // tasks.get rejects an out-of-range position with the "doesn't
         // exist" message.
         Task task = tasks.get(taskNumber);
         task.setStatus(status);
         storage.save(tasks.asList());
-        ui.showStatusChange(status, task);
+        return ui.showStatusChange(status, task);
     }
 }

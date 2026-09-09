@@ -8,6 +8,10 @@ plugins {
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 // Checkstyle enforces the SE-EDU Java coding standard (basic + intermediate rules).
@@ -27,6 +31,21 @@ dependencies {
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
+
+    String javaFxVersion = '17.0.7'
+
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:linux")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:linux")
 }
 
 test {
@@ -44,7 +63,10 @@ test {
 }
 
 application {
-    mainClass = 'meowmeow.Meowmeow'
+    // The GUI entry point. Launcher (not Main) is the main class because
+    // JavaFX is on the classpath rather than the module path - see the
+    // SE-EDU JavaFX tutorial. The console app is still meowmeow.Meowmeow.
+    mainClass = 'meowmeow.gui.Launcher'
 }
 
 jar {

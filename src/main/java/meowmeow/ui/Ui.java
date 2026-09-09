@@ -8,10 +8,16 @@ import meowmeow.task.TaskStatus;
 
 /**
  * Everything the user directly sees or types: reading command lines from
- * stdin, and printing every message Meowmeow shows back. All console text
- * (the divider, the banners, the per-command confirmations) lives here, so
- * the rest of the program can talk about <em>what</em> happened without
- * repeating <em>how</em> it is displayed.
+ * stdin, and building every message Meowmeow shows back. All message text
+ * (the banners, the per-command confirmations) lives here, so the rest of
+ * the program can talk about <em>what</em> happened without repeating
+ * <em>how</em> it reads.
+ *
+ * <p>Each {@code show...} method <em>returns</em> its message as a plain
+ * {@code String} rather than printing it, so the same text can be sent to
+ * the console (wrapped in the divider by {@link #print(String)}) or shown
+ * in the GUI as-is. Only {@link #print(String)} and {@link #showWarning}
+ * write to {@code System.out}.
  *
  * <p>{@code Ui} owns the {@link Scanner} over {@code System.in} and
  * implements {@link AutoCloseable} so a caller can hold it in a
@@ -43,123 +49,146 @@ public class Ui implements AutoCloseable {
         return scanner.nextLine().trim();
     }
 
-    /** Prints the welcome banner shown once at startup. */
-    public void showWelcome() {
-        printBoxed("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
+    /**
+     * Prints {@code body} to the console wrapped in the standard divider
+     * block, matching Meowmeow's console reply format. The GUI does not use
+     * this - it shows the {@code show...} strings directly.
+     *
+     * @param body the message body, as returned by a {@code show...} method.
+     */
+    public void print(String body) {
+        System.out.println(box(body));
     }
 
-    /** Prints the farewell banner shown in response to "bye". */
-    public void showFarewell() {
-        printBoxed(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
+    /** Returns the welcome banner shown once at startup. */
+    public String showWelcome() {
+        return join("(=^-ω-^=)  " + NAME, "Hello! I'm " + NAME + ".", "What can I do for you?");
+    }
+
+    /** Returns the farewell banner shown in response to "bye". */
+    public String showFarewell() {
+        return join(" /\\_/\\", "( ^.^ )  Meow! Bye bye~", " > ^ <");
     }
 
     /**
-     * Shows an error message. A message may contain {@code \n} to span
-     * several lines inside the one boxed block, so it is split here.
+     * Returns an error message. A message may already contain {@code \n} to
+     * span several lines; it is passed through unchanged.
+     *
+     * @param message the error text to show.
+     * @return the message, ready to display.
      */
-    public void showError(String message) {
-        printBoxed(message.split("\n"));
+    public String showError(String message) {
+        return join(message.split("\n"));
     }
 
     /**
      * Shows a non-fatal warning from {@link meowmeow.storage.Storage Storage} (an unreadable line, a
-     * failed save). Printed as a plain line rather than a boxed block,
-     * since it can happen while loading, before the conversation proper.
+     * failed save). Printed straight to {@code System.out} as a plain line
+     * rather than returned, since it can happen while loading - before the
+     * conversation proper - and outside any command's response.
+     *
+     * @param message the warning text to show.
      */
     public void showWarning(String message) {
         System.out.println(message);
     }
 
     /**
-     * Confirms that a task was added, and reports the new task count with
-     * the right singular/plural wording.
+     * Returns the confirmation that a task was added, with the new task
+     * count in the right singular/plural wording.
      *
      * @param task      the task that was just added.
      * @param taskCount the number of tasks now in the list.
+     * @return the confirmation message.
      */
-    public void showAdded(Task task, int taskCount) {
-        printBoxed(" Meow! I've added this task:",
+    public String showAdded(Task task, int taskCount) {
+        return join(" Meow! I've added this task:",
                 "   " + task,
                 " Now you have " + taskCount + " " + taskWord(taskCount) + " in the list, meow!");
     }
 
     /**
-     * Confirms that a task was removed, and reports the new task count with
-     * the right singular/plural wording.
+     * Returns the confirmation that a task was removed, with the new task
+     * count in the right singular/plural wording.
      *
      * @param task      the task that was just removed.
      * @param taskCount the number of tasks now in the list.
+     * @return the confirmation message.
      */
-    public void showRemoved(Task task, int taskCount) {
-        printBoxed(" Meow! I've removed this task:",
+    public String showRemoved(Task task, int taskCount) {
+        return join(" Meow! I've removed this task:",
                 "   " + task,
                 " Now you have " + taskCount + " " + taskWord(taskCount) + " in the list, meow!");
     }
 
     /**
-     * Confirms that a task's done/not-done status changed.
+     * Returns the confirmation that a task's done/not-done status changed.
      *
      * @param status the task's new status.
      * @param task   the task whose status changed.
+     * @return the confirmation message.
      */
-    public void showStatusChange(TaskStatus status, Task task) {
-        printBoxed(status.getConfirmationMessage(), "   " + task);
+    public String showStatusChange(TaskStatus status, Task task) {
+        return join(status.getConfirmationMessage(), "   " + task);
     }
 
     /**
-     * Prints the whole task list, numbered from 1 - the response to a bare
+     * Returns the whole task list, numbered from 1 - the response to a bare
      * "list".
+     *
+     * @param tasks the tasks to list, in list order.
+     * @return the numbered list message.
      */
-    public void showTasks(List<Task> tasks) {
+    public String showTasks(List<Task> tasks) {
         String[] lines = new String[tasks.size() + 1];
         lines[0] = " Here are the tasks in your list, meow:";
         for (int i = 0; i < tasks.size(); i++) {
             lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
         }
-        printBoxed(lines);
+        return join(lines);
     }
 
     /**
-     * Prints the tasks matching a "list &lt;date&gt;" query. {@code matches}
+     * Returns the tasks matching a "list &lt;date&gt;" query. {@code matches}
      * is already filtered to that day by the caller; {@code dateLabel} is the
      * day shown in the header (e.g. {@code "Dec 2 2019"}). The numbers here
      * restart at 1 for this filtered view.
      *
      * @param dateLabel the date as it should read in the message.
      * @param matches   the tasks occurring on that date, in list order.
+     * @return the numbered list message, or a "free day" line if empty.
      */
-    public void showTasksOn(String dateLabel, List<Task> matches) {
+    public String showTasksOn(String dateLabel, List<Task> matches) {
         if (matches.isEmpty()) {
-            printBoxed(" Nothing on " + dateLabel + " - free day, meow!");
-            return;
+            return " Nothing on " + dateLabel + " - free day, meow!";
         }
         String[] lines = new String[matches.size() + 1];
         lines[0] = " Here are the tasks on " + dateLabel + ", meow:";
         for (int i = 0; i < matches.size(); i++) {
             lines[i + 1] = " " + (i + 1) + "." + matches.get(i);
         }
-        printBoxed(lines);
+        return join(lines);
     }
 
     /**
-     * Prints the tasks matching a "find &lt;keyword&gt;" query. {@code matches}
+     * Returns the tasks matching a "find &lt;keyword&gt;" query. {@code matches}
      * is already filtered by the caller; the numbers here restart at 1 for
      * this filtered view. An empty result gets its own line.
      *
      * @param matches the tasks whose description contains the keyword, in
      *     list order.
+     * @return the numbered list message, or a "no matches" line if empty.
      */
-    public void showMatchingTasks(List<Task> matches) {
+    public String showMatchingTasks(List<Task> matches) {
         if (matches.isEmpty()) {
-            printBoxed(" No matching tasks, meow!");
-            return;
+            return " No matching tasks, meow!";
         }
         String[] lines = new String[matches.size() + 1];
         lines[0] = " Here are the matching tasks in your list, meow:";
         for (int i = 0; i < matches.size(); i++) {
             lines[i + 1] = " " + (i + 1) + "." + matches.get(i);
         }
-        printBoxed(lines);
+        return join(lines);
     }
 
     /** Returns "task" for a count of 1, "tasks" otherwise. */
@@ -167,17 +196,14 @@ public class Ui implements AutoCloseable {
         return count == 1 ? "task" : "tasks";
     }
 
-    /**
-     * Prints a block of lines surrounded by the divider, matching Meowmeow's
-     * standard reply format. Every message goes through here so the boxed
-     * layout is written once.
-     */
-    private void printBoxed(String... lines) {
-        System.out.println(DIVIDER);
-        for (String line : lines) {
-            System.out.println(line);
-        }
-        System.out.println(DIVIDER);
+    /** Joins message lines with a newline into a single body string. */
+    private String join(String... lines) {
+        return String.join("\n", lines);
+    }
+
+    /** Wraps a message body between the divider lines for console output. */
+    private String box(String body) {
+        return DIVIDER + "\n" + body + "\n" + DIVIDER;
     }
 
     /** Closes the underlying scanner (and with it {@code System.in}). */

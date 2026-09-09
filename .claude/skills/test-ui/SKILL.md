@@ -29,20 +29,26 @@ look broken.
 1. Compile the current sources:
 
    ```bash
-   javac -d out/production/ip $(find src/main/java -name "*.java")
+   ./gradlew compileJava
    ```
 
-   (If `javac` reports a version mismatch, run `sdk use java 25.0.3.fx-zulu` first — see AGENTS.md.)
+   This builds to `build/classes/java/main` with the JavaFX GUI classes on
+   the classpath. (A plain `javac -d out/production/ip $(find src/main/java
+   -name "*.java")` no longer works on its own — `meowmeow.gui` needs the
+   JavaFX jars. If Gradle reports a Java version mismatch, run
+   `sdk use java 25.0.3.fx-zulu` first — see AGENTS.md.)
 
 2. Run the test runner from the repository root:
 
    ```bash
-   python3 .claude/skills/test-ui/scripts/run_ui_tests.py
+   python3 .claude/skills/test-ui/scripts/run_ui_tests.py --classpath build/classes/java/main
    ```
 
-   It defaults to `test/ui-test-plan.md`, classpath `out/production/ip`,
-   and main class `meowmeow.Meowmeow`; override with `--plan`, `--classpath`, or
-   `--main` if those differ.
+   The runner defaults to `test/ui-test-plan.md`, classpath
+   `out/production/ip`, and main class `meowmeow.Meowmeow`; the
+   `--classpath` above points it at the Gradle output instead. The console
+   app is still `meowmeow.Meowmeow` even though the Gradle `run` task now
+   launches the GUI (`meowmeow.gui.Launcher`).
 
 3. The script prints, per test case, the console input sent and the
    actual console output produced — this is the session record. Show
