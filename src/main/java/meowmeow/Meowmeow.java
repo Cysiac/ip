@@ -13,6 +13,10 @@ import meowmeow.ui.Ui;
  * themselves - and {@link #run()} reads commands and routes each one to
  * them. Understanding a command is {@link Parser}'s job; each command is
  * then a {@link Command} object that runs itself.
+ *
+ * <p>The console app uses {@link #run()}; the JavaFX GUI holds a
+ * {@code Meowmeow} instead and calls {@link #getResponse(String)} once per
+ * line the user types.
  */
 public class Meowmeow {
 
@@ -49,7 +53,7 @@ public class Meowmeow {
      * with it {@code System.in}) is closed on the way out.
      */
     public void run() {
-        ui.showWelcome();
+        ui.print(ui.showWelcome());
         try {
             boolean isExit = false;
             // hasNextCommand() lets the loop also end gracefully on
@@ -65,14 +69,31 @@ public class Meowmeow {
                 // shows the friendly error for all of them.
                 try {
                     Command command = Parser.parse(fullCommand);
-                    command.execute(tasks, ui, storage);
+                    ui.print(command.execute(tasks, ui, storage));
                     isExit = command.isExit();
                 } catch (MeowmeowException e) {
-                    ui.showError(e.getMessage());
+                    ui.print(ui.showError(e.getMessage()));
                 }
             }
         } finally {
             ui.close();
+        }
+    }
+
+    /**
+     * Runs one line of user input and returns Meowmeow's reply, for the GUI.
+     * A {@link MeowmeowException} (an unknown command, a bad task number) is
+     * caught and its message returned as the reply, mirroring how
+     * {@link #run()} shows errors in the console.
+     *
+     * @param input one line the user typed into the GUI.
+     * @return the text Meowmeow should show in response.
+     */
+    public String getResponse(String input) {
+        try {
+            return Parser.parse(input).execute(tasks, ui, storage);
+        } catch (MeowmeowException e) {
+            return ui.showError(e.getMessage());
         }
     }
 

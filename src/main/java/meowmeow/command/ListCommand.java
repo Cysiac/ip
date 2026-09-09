@@ -33,11 +33,10 @@ public class ListCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public String execute(TaskList tasks, Ui ui, Storage storage) {
         if (date == null) {
-            ui.showTasks(tasks.asList());
-        } else {
-            ui.showTasksOn(date.toDateString(), tasks.findOn(date.getDate()));
+            return ui.showTasks(tasks.asList());
         }
+        return ui.showTasksOn(date.toDateString(), tasks.findOn(date.getDate()));
     }
 }

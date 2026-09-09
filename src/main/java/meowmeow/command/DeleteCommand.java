@@ -23,11 +23,11 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws MeowmeowException {
         // tasks.delete rejects an out-of-range position with the "doesn't
         // exist" message.
         Task removed = tasks.delete(taskNumber);
         storage.save(tasks.asList());
-        ui.showRemoved(removed, tasks.size());
+        return ui.showRemoved(removed, tasks.size());
     }
 }
