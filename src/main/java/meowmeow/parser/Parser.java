@@ -145,8 +145,9 @@ public class Parser {
         String description = byMarker < 0 ? "" : arguments.substring(0, byMarker).trim();
         String by = byMarker < 0 ? "" : arguments.substring(byMarker + 3).trim();
         if (byMarker < 0 || description.isEmpty() || by.isEmpty()) {
-            throw new MeowmeowException(" Meow? Use \"deadline <description> /by <when>\", e.g.\n"
-                    + " \"deadline return book /by 2/12/2019 1800\".");
+            throw new MeowmeowException(
+                    " Meow? Use \"deadline <description> /by <when>\", e.g.",
+                    " \"deadline return book /by 2/12/2019 1800\".");
         }
         // TaskDateTime.parse throws MeowmeowException if the text is not a
         // date Meowmeow recognises.
@@ -173,8 +174,8 @@ public class Parser {
         String to = toMarker < 0 ? "" : arguments.substring(toMarker + 3).trim();
         if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
             throw new MeowmeowException(
-                    " Meow? Use \"event <description> /from <start> /to <end>\", e.g.\n"
-                    + " \"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
+                    " Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
+                    " \"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         TaskDateTime start = TaskDateTime.parse(from);
         TaskDateTime end = TaskDateTime.parse(to);
