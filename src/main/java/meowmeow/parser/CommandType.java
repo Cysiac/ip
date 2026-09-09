@@ -72,7 +72,7 @@ public enum CommandType {
                 return command;
             }
         }
-        throw new MeowmeowException(" Meow? I don't know what that means.\n Try: " + helpText());
+        throw new MeowmeowException(" Meow? I don't know what that means.", " Try: " + helpText());
     }
 
     /**

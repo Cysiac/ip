@@ -91,7 +91,7 @@ public class TaskDateTime {
                 // Not this format - fall through and try the next one.
             }
         }
-        throw new MeowmeowException(" Meow? I don't understand that date.\n" + FORMAT_HINT);
+        throw new MeowmeowException(" Meow? I don't understand that date.", FORMAT_HINT);
     }
 
     /** Returns the calendar date, used by the "list &lt;date&gt;" filter. */
