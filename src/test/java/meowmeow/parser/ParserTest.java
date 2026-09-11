@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import meowmeow.task.Task;
 import meowmeow.task.TaskList;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.Todo;
+import meowmeow.ui.MessageStyle;
 import meowmeow.ui.Ui;
 
 /**
@@ -45,12 +47,14 @@ import meowmeow.ui.Ui;
  */
 public class ParserTest {
 
+    private static final long SEED = 42L;
+
     private Ui ui;
     private Storage storage;
 
     @BeforeEach
     public void setUp(@TempDir Path tempDir) {
-        ui = new Ui();
+        ui = new Ui(MessageStyle.PLAIN, new Random(SEED));
         // A real Storage pointed at a throwaway folder, so commands that
         // save (add/mark/delete) don't touch the project's data file.
         storage = new Storage(ui, tempDir.toString(), "tasks.txt");

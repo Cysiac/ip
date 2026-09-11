@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,6 +19,7 @@ import meowmeow.task.Task;
 import meowmeow.task.TaskDateTime;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.Todo;
+import meowmeow.ui.MessageStyle;
 import meowmeow.ui.Ui;
 
 /**
@@ -36,6 +38,8 @@ import meowmeow.ui.Ui;
  */
 public class StorageTest {
 
+    private static final long SEED = 42L;
+
     @TempDir
     private Path tempDir;
 
@@ -44,7 +48,7 @@ public class StorageTest {
         String first = segments[0];
         String[] more = new String[segments.length - 1];
         System.arraycopy(segments, 1, more, 0, more.length);
-        return new Storage(new Ui(), tempDir.resolve(first).toString(), more);
+        return new Storage(new Ui(MessageStyle.PLAIN, new Random(SEED)), tempDir.resolve(first).toString(), more);
     }
 
     private void writeSaveFile(String name, String... lines) throws IOException {
@@ -160,5 +164,18 @@ public class StorageTest {
         List<Task> reloaded = storage.load();
         assertEquals(1, reloaded.size());
         assertEquals("[T][ ] second save", reloaded.get(0).toString());
+    }
+
+    // ---- load: warnings reach the Ui, not just stdout ----
+
+    @Test
+    public void load_corruptLine_warningIsBuffered() throws IOException {
+        writeSaveFile("tasks.txt", "X | 0 | unknown type tag");
+        Ui ui = new Ui(MessageStyle.PLAIN, new Random(SEED));
+        Storage storage = new Storage(ui, tempDir.resolve("tasks.txt").toString());
+
+        storage.load();
+
+        assertEquals(1, ui.drainWarnings().size());
     }
 }

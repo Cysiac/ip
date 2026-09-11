@@ -95,12 +95,12 @@ public class Parser {
      */
     private static int parseTaskNumber(String arguments, CommandType command) throws MeowmeowException {
         if (arguments.isEmpty()) {
-            throw new MeowmeowException(" Meow? Tell me which task number to " + command.keyword() + ".");
+            throw new MeowmeowException(" Tell me which task number to " + command.keyword() + ".");
         }
         try {
             return Integer.parseInt(arguments);
         } catch (NumberFormatException notANumber) {
-            throw new MeowmeowException(" That's not a task number I recognise, meow?");
+            throw new MeowmeowException(" That's not a task number I recognise.");
         }
     }
 
@@ -111,7 +111,7 @@ public class Parser {
      */
     private static Todo parseTodo(String arguments) throws MeowmeowException {
         if (arguments.isEmpty()) {
-            throw new MeowmeowException(" Meow? Tell me what to add, e.g. \"todo borrow book\".");
+            throw new MeowmeowException(" Tell me what to add, e.g. \"todo borrow book\".");
         }
         return new Todo(arguments);
     }
@@ -126,7 +126,7 @@ public class Parser {
      */
     private static String parseKeyword(String arguments) throws MeowmeowException {
         if (arguments.isEmpty()) {
-            throw new MeowmeowException(" Meow? Tell me what to search for, e.g. \"find book\".");
+            throw new MeowmeowException(" Tell me what to search for, e.g. \"find book\".");
         }
         return arguments;
     }
@@ -149,7 +149,7 @@ public class Parser {
         String by = byMarker < 0 ? "" : arguments.substring(byMarker + 3).trim();
         if (byMarker < 0 || description.isEmpty() || by.isEmpty()) {
             throw new MeowmeowException(
-                    " Meow? Use \"deadline <description> /by <when>\", e.g.",
+                    " Use \"deadline <description> /by <when>\", e.g.",
                     " \"deadline return book /by 2/12/2019 1800\".");
         }
         // TaskDateTime.parse throws MeowmeowException if the text is not a
@@ -177,13 +177,13 @@ public class Parser {
         String to = toMarker < 0 ? "" : arguments.substring(toMarker + 3).trim();
         if (fromMarker < 0 || description.isEmpty() || from.isEmpty() || to.isEmpty()) {
             throw new MeowmeowException(
-                    " Meow? Use \"event <description> /from <start> /to <end>\", e.g.",
+                    " Use \"event <description> /from <start> /to <end>\", e.g.",
                     " \"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
         TaskDateTime start = TaskDateTime.parse(from);
         TaskDateTime end = TaskDateTime.parse(to);
         if (!start.isNotAfter(end)) {
-            throw new MeowmeowException(" Meow? An event can't end before it starts.");
+            throw new MeowmeowException(" An event can't end before it starts.");
         }
         return new Event(description, start, end);
     }

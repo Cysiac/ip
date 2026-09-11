@@ -78,7 +78,7 @@ public enum CommandType {
                 .filter(command -> command.matches(input))
                 .findFirst()
                 .orElseThrow(() -> new MeowmeowException(
-                        " Meow? I don't know what that means.", " Try: " + helpText()));
+                        " I don't know what that means.", " Try: " + helpText()));
     }
 
     /**
