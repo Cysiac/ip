@@ -9,7 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import meowmeow.Meowmeow;
@@ -24,7 +24,7 @@ import meowmeow.ResponseKind;
  * also shows Meowmeow's {@link Meowmeow#startupMessages() startup messages}
  * once, since that is the first point this window has a backend to ask.
  */
-public class MainWindow extends AnchorPane {
+public class MainWindow extends BorderPane {
     /** How long the farewell stays on screen before the window closes. */
     private static final Duration EXIT_DELAY = Duration.seconds(1.2);
 
