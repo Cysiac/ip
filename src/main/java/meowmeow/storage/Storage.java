@@ -1,7 +1,6 @@
 package meowmeow.storage;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -168,13 +167,13 @@ public class Storage {
             if (parent != null) {
                 Files.createDirectories(parent);
             }
-            // try-with-resources closes (and flushes) the writer even if
-            // writing a line throws partway through.
-            try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file))) {
-                for (Task task : tasks) {
-                    writer.println(task.toFileString());
-                }
-            }
+            // Render every task to its saved line, then write them all at
+            // once. Files.write truncates any previous contents and adds the
+            // line separators.
+            List<String> lines = tasks.stream()
+                    .map(Task::toFileString)
+                    .toList();
+            Files.write(file, lines);
         } catch (IOException e) {
             ui.showWarning("Meow... I couldn't save your tasks: " + e.getMessage());
         }

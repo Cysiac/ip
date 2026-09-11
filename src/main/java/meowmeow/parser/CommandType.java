@@ -1,5 +1,8 @@
 package meowmeow.parser;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import meowmeow.MeowmeowException;
 
 /**
@@ -67,12 +70,11 @@ public enum CommandType {
      * shown for unrecognised input, if none match.
      */
     public static CommandType fromInput(String input) throws MeowmeowException {
-        for (CommandType command : values()) {
-            if (command.matches(input)) {
-                return command;
-            }
-        }
-        throw new MeowmeowException(" Meow? I don't know what that means.", " Try: " + helpText());
+        return Arrays.stream(values())
+                .filter(command -> command.matches(input))
+                .findFirst()
+                .orElseThrow(() -> new MeowmeowException(
+                        " Meow? I don't know what that means.", " Try: " + helpText()));
     }
 
     /**
@@ -81,13 +83,8 @@ public enum CommandType {
      * of sync with the commands actually implemented.
      */
     private static String helpText() {
-        StringBuilder builder = new StringBuilder();
-        for (CommandType command : values()) {
-            if (builder.length() > 0) {
-                builder.append(", ");
-            }
-            builder.append(command.keyword);
-        }
-        return builder.toString();
+        return Arrays.stream(values())
+                .map(CommandType::keyword)
+                .collect(Collectors.joining(", "));
     }
 }
