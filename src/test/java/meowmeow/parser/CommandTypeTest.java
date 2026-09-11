@@ -2,6 +2,7 @@ package meowmeow.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +56,20 @@ public class CommandTypeTest {
     }
 
     @Test
+    public void fromInput_priority_returnsPriorityCommand() throws MeowmeowException {
+        assertEquals(CommandType.PRIORITY, CommandType.fromInput("priority 2 high"));
+    }
+
+    @Test
+    public void fromInput_unknownWord_helpTextListsPriority() {
+        // helpText() is built from the enum's own values, so a new command
+        // word (like PRIORITY) must appear in it without any extra upkeep.
+        MeowmeowException exception = assertThrows(MeowmeowException.class, () ->
+                CommandType.fromInput("dance"));
+        assertTrue(exception.getMessage().contains("priority"));
+    }
+
+    @Test
     public void fromInput_keywordRunTogetherWithText_exceptionThrown() {
         // "todos" is not "todo" followed by a space, so it is not the todo command.
         assertThrows(MeowmeowException.class, () -> CommandType.fromInput("todos"));
@@ -101,5 +116,6 @@ public class CommandTypeTest {
         assertEquals("todo", CommandType.TODO.keyword());
         assertEquals("unmark", CommandType.UNMARK.keyword());
         assertEquals("find", CommandType.FIND.keyword());
+        assertEquals("priority", CommandType.PRIORITY.keyword());
     }
 }

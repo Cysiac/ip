@@ -39,6 +39,7 @@ public class Ui implements AutoCloseable {
     private static final String DECOR_ADDED = "✅";
     private static final String DECOR_REMOVED = "🗑";
     private static final String DECOR_MARK = "✔";
+    private static final String DECOR_PRIORITY = "⭐";
     private static final String DECOR_LIST = "📋";
     private static final String DECOR_FIND = "🔍";
     private static final String DECOR_ERROR = "❌";
@@ -204,6 +205,16 @@ public class Ui implements AutoCloseable {
     public String showStatusChange(TaskStatus status, Task task) {
         String header = status == TaskStatus.DONE ? Messages.markedDone(random) : Messages.markedNotDone(random);
         return render(DECOR_MARK, join(header, "   " + task));
+    }
+
+    /**
+     * Returns the confirmation that a task's priority changed.
+     *
+     * @param task the task whose priority changed.
+     * @return the confirmation message.
+     */
+    public String showPriorityChange(Task task) {
+        return render(DECOR_PRIORITY, join(Messages.priorityChanged(random), "   " + task));
     }
 
     /**

@@ -39,12 +39,12 @@ public class Event extends Task {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+    protected String details() {
+        return " (from: " + from + " to: " + to + ")";
     }
 
     @Override
-    public String toFileString() {
-        return super.toFileString() + " | " + from.toFileString() + " | " + to.toFileString();
+    protected String fileDetails() {
+        return " | " + from.toFileString() + " | " + to.toFileString();
     }
 }

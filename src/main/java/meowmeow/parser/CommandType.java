@@ -32,6 +32,8 @@ public enum CommandType {
     UNMARK("unmark"),
     /** Deletes a task by its position. */
     DELETE("delete"),
+    /** Sets or clears a task's priority. */
+    PRIORITY("priority"),
     /** Says goodbye and ends the session. */
     BYE("bye");
 
