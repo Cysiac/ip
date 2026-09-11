@@ -39,6 +39,26 @@ public enum TaskStatus {
         return fileFlag;
     }
 
+    /**
+     * Returns the status whose {@link #getFileFlag() file flag} is
+     * {@code fileFlag}, or {@code null} if neither status uses it. The exact
+     * inverse of {@link #getFileFlag()}: it lets
+     * {@link meowmeow.storage.Storage Storage} recognise a saved done-flag
+     * with one lookup instead of comparing against each status in turn, and
+     * treat any other value as a corrupt line.
+     *
+     * @param fileFlag the done-flag field read from a save-file line.
+     * @return the matching status, or {@code null} if the flag is unrecognised.
+     */
+    public static TaskStatus fromFileFlag(String fileFlag) {
+        for (TaskStatus status : values()) {
+            if (status.fileFlag.equals(fileFlag)) {
+                return status;
+            }
+        }
+        return null;
+    }
+
     /** Returns the message Meowmeow prints when a task is switched to this status. */
     public String getConfirmationMessage() {
         return confirmationMessage;
