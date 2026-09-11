@@ -11,6 +11,7 @@ import meowmeow.task.Deadline;
 import meowmeow.task.Event;
 import meowmeow.task.Task;
 import meowmeow.task.TaskDateTime;
+import meowmeow.task.TaskPriority;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.TaskType;
 import meowmeow.task.Todo;
@@ -19,7 +20,8 @@ import meowmeow.ui.Ui;
 /**
  * Reads and writes Meowmeow's task list to a plain-text file on disk, so
  * tasks survive between runs. Each task is stored as one pipe-separated
- * line - see {@link Task#toFileString()} for the exact format.
+ * line - see {@link Task#toFileString()} for the exact format, including
+ * the priority field appended only when a task has one.
  *
  * <p>The path is always <em>relative</em> to the working directory (never
  * something machine-specific like {@code C:\data}) and is built from
@@ -53,7 +55,8 @@ public class Storage {
     private static final int EVENT_FROM_INDEX = 3;
     private static final int EVENT_TO_INDEX = 4;
 
-    // How many fields a well-formed line of each task type has.
+    // How many fields a well-formed line of each task type has, not counting
+    // an optional trailing priority field (see readPriority).
     private static final int TODO_FIELD_COUNT = 3;
     private static final int DEADLINE_FIELD_COUNT = 4;
     private static final int EVENT_FIELD_COUNT = 5;
@@ -120,6 +123,11 @@ public class Storage {
      * done-flag that isn't {@code 0} or {@code 1}, fewer fields than the type
      * needs, or a date part that no longer parses - so a corrupted file loses
      * only the bad lines, not all of them.
+     *
+     * <p>An unrecognised trailing priority field is a milder problem than
+     * those: every field the task actually needs is still intact, so
+     * {@link #readPriority} degrades it to {@link TaskPriority#NONE} instead
+     * of dropping the whole line.
      */
     private Task parseTask(String line) {
         // -1 limit keeps trailing empty fields, so a task whose last part
@@ -142,7 +150,45 @@ public class Storage {
             return null;
         }
         task.setStatus(status);
+        task.setPriority(readPriority(parts, baseFieldCount(type)));
         return task;
+    }
+
+    /** Returns how many fields a well-formed line of {@code type} has, not counting an optional priority field. */
+    private static int baseFieldCount(TaskType type) {
+        switch (type) {
+            case TODO:
+                return TODO_FIELD_COUNT;
+            case DEADLINE:
+                return DEADLINE_FIELD_COUNT;
+            case EVENT:
+                return EVENT_FIELD_COUNT;
+            default:
+                // Unreachable: every TaskType constant is handled above.
+                // Kept so the compiler warns if a new constant is added
+                // without a case here.
+                throw new IllegalStateException("Unhandled task type: " + type);
+        }
+    }
+
+    /**
+     * Reads the optional trailing priority field at {@code priorityIndex}.
+     * Unlike the rest of {@link #parseTask}, an unrecognised or missing
+     * priority never drops the line - it only means the task itself carries
+     * no priority, so it degrades to {@link TaskPriority#NONE} instead.
+     *
+     * @param parts         the line split on {@link #FIELD_SEPARATOR}.
+     * @param priorityIndex where the priority field would be, i.e. the
+     *                      task's {@link #baseFieldCount(TaskType) base field count}.
+     * @return the saved priority, or {@link TaskPriority#NONE} if the field
+     *     is absent or not a priority Meowmeow recognises.
+     */
+    private static TaskPriority readPriority(String[] parts, int priorityIndex) {
+        if (parts.length <= priorityIndex) {
+            return TaskPriority.NONE;
+        }
+        TaskPriority priority = TaskPriority.fromInput(parts[priorityIndex].trim());
+        return priority == null ? TaskPriority.NONE : priority;
     }
 
     /**

@@ -48,6 +48,14 @@ final class Messages {
         " Undone. As expected.",
     };
 
+    private static final String[] PRIORITY_CHANGED = {
+        " Fine, that one matters more now.",
+        " Priority updated. Try to actually act on it.",
+        " Reordered your regrets for you.",
+        " Done. Act like it means something this time.",
+        " There. Now it looks important.",
+    };
+
     private static final String[] LIST_HEADER = {
         " Here's everything you're avoiding:",
         " Your ever-growing list of regrets:",
@@ -141,6 +149,11 @@ final class Messages {
     /** Returns a randomly chosen "marked as not done" reaction line. */
     static String markedNotDone(Random random) {
         return pick(random, MARKED_NOT_DONE);
+    }
+
+    /** Returns a randomly chosen "priority changed" reaction line. */
+    static String priorityChanged(Random random) {
+        return pick(random, PRIORITY_CHANGED);
     }
 
     /** Returns a randomly chosen header for a non-empty task list. */

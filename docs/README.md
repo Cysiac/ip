@@ -30,6 +30,11 @@ Example: `todo borrow book`
  Now you have 1 task in the list, meow!
 ```
 
+You can also set a priority right away with a `/p` (or `/priority`) flag,
+anywhere in the command - see [Setting a priority](#setting-a-priority-priority).
+
+Example: `todo borrow book /p high`
+
 ### Adding a deadline: `deadline`
 
 Adds a task due by a specific date/time.
@@ -47,6 +52,11 @@ Accepted date formats: `2/12/2019 1800`, `2/12/2019`, `2019-12-02 1800`, or
  Now you have 1 task in the list, meow!
 ```
 
+A `/p` (or `/priority`) flag also works here, anywhere in the command -
+see [Setting a priority](#setting-a-priority-priority).
+
+Example: `deadline return book /by 2/12/2019 1800 /p high`
+
 ### Adding an event: `event`
 
 Adds a task spanning a start and an end.
@@ -56,6 +66,9 @@ Format: `event <description> /from <start> /to <end>`
 Example: `event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600`
 
 The end must not be before the start.
+
+A `/p` (or `/priority`) flag also works here, anywhere in the command -
+see [Setting a priority](#setting-a-priority-priority).
 
 ### Listing all tasks: `list`
 
@@ -96,6 +109,30 @@ Format: `delete <task number>`
 
 Example: `delete 1`
 
+### Setting a priority: `priority`
+
+Sets or clears a task's priority: `high`, `medium`, or `low`. A task's
+priority appears as a trailing `(priority: ...)` after its other details,
+and is not shown at all once cleared. Levels can also be given as a single
+letter (`h`, `m`, `l`), and either is case-insensitive.
+
+Format: `priority <task number> <level>`
+
+Example: `priority 2 high`
+
+```
+ Fine, that one matters more now.
+   [T][ ] read book (priority: HIGH)
+```
+
+Clear a priority back to none with the `none` (or `n`) level.
+
+Example: `priority 2 none`
+
+A priority can also be set right away when adding a task - see the `/p`
+flag on [`todo`](#adding-a-todo-todo), [`deadline`](#adding-a-deadline-deadline)
+and [`event`](#adding-an-event-event) above.
+
 ### Exiting: `bye`
 
 Says goodbye and closes the window.
@@ -120,4 +157,5 @@ typing `bye`.
 | Mark a task done      | `mark <task number>`                            | `mark 1`                                        |
 | Mark a task not done  | `unmark <task number>`                          | `unmark 1`                                      |
 | Delete a task         | `delete <task number>`                          | `delete 1`                                      |
+| Set a task's priority | `priority <task number> <level>`                | `priority 2 high`                               |
 | Exit                  | `bye`                                           | `bye`                                           |

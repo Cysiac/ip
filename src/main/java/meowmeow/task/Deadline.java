@@ -35,12 +35,12 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + " (by: " + by + ")";
+    protected String details() {
+        return " (by: " + by + ")";
     }
 
     @Override
-    public String toFileString() {
-        return super.toFileString() + " | " + by.toFileString();
+    protected String fileDetails() {
+        return " | " + by.toFileString();
     }
 }

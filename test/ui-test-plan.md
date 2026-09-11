@@ -337,7 +337,7 @@ ____________________________________________________________
 ____________________________________________________________
  Excuse me?
  I don't know what that means.
- Try: todo, deadline, event, list, find, mark, unmark, delete, bye
+ Try: todo, deadline, event, list, find, mark, unmark, delete, priority, bye
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -775,7 +775,7 @@ ____________________________________________________________
 ____________________________________________________________
  Excuse me?
  I don't know what that means.
- Try: todo, deadline, event, list, find, mark, unmark, delete, bye
+ Try: todo, deadline, event, list, find, mark, unmark, delete, priority, bye
 ____________________________________________________________
 ____________________________________________________________
  I refuse to guess. Try again.
@@ -1186,6 +1186,208 @@ ____________________________________________________________
 ____________________________________________________________
  /\_/\
 ( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Set a priority when adding a task
+**Aim:** A "/p" flag on "todo" sets the new task's priority, shown as a
+trailing "(priority: ...)" in both the confirmation and "list".
+
+```input
+todo read book /p high
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ There. Added. You're welcome.
+   [T][ ] read book (priority: HIGH)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here's everything you're avoiding:
+ 1.[T][ ] read book (priority: HIGH)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Leaving already? Fine, meow.
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Priority flag before the /by marker
+**Aim:** The "/p" flag may appear anywhere in a "deadline" command's
+arguments, not only last - here it comes before "/by" and both are still
+read correctly.
+
+```input
+deadline report /p high /by 2/12/2019
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ There. Added. You're welcome.
+   [D][ ] report (by: Dec 2 2019) (priority: HIGH)
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Here's everything you're avoiding:
+ 1.[D][ ] report (by: Dec 2 2019) (priority: HIGH)
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Leaving already? Fine, meow.
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Change and clear an existing task's priority
+**Aim:** "priority N high" sets an already-added task's priority, and
+"priority N none" clears it back to no priority shown.
+
+```input
+todo read book
+priority 1 high
+list
+priority 1 none
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ There. Added. You're welcome.
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Fine, that one matters more now.
+   [T][ ] read book (priority: HIGH)
+____________________________________________________________
+____________________________________________________________
+ Here's what you asked for:
+ 1.[T][ ] read book (priority: HIGH)
+____________________________________________________________
+____________________________________________________________
+ Done. Act like it means something this time.
+   [T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ Here's everything you're avoiding:
+ 1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! See you when you inevitably need me again.
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Bare priority command is guarded
+**Aim:** "priority" with no task number or level prints a usage hint
+instead of crashing.
+
+```input
+priority
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ Nice try.
+ Use "priority <task number> <level>", e.g. "priority 2 high".
+ Levels: high/h, medium/m, low/l, none/n.
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Meow! Bye bye~
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Invalid priority level is rejected without affecting the task
+**Aim:** An unrecognised priority level prints a friendly error listing
+the accepted levels, and leaves the task's existing priority unchanged.
+
+```input
+todo read book
+priority 1 urgent
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ There. Added. You're welcome.
+   [T][ ] read book
+ Now you have 1 task in the list, meow!
+____________________________________________________________
+____________________________________________________________
+ Excuse me?
+ That's not a priority I know.
+ Levels: high/h, medium/m, low/l, none/n.
+____________________________________________________________
+____________________________________________________________
+ Here's what you asked for:
+ 1.[T][ ] read book
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Leaving already? Fine, meow.
+ > ^ <
+____________________________________________________________
+```
+
+## Test: Two priority flags in one command are rejected
+**Aim:** Giving both "/p" and "/priority" on the same "todo" command is
+ambiguous, so it is rejected and the task is not added at all.
+
+```input
+todo read book /p high /priority low
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ Nice try.
+ One priority per task, please.
+ I found more than one /p or /priority flag.
+____________________________________________________________
+____________________________________________________________
+ Here's everything you're avoiding:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```

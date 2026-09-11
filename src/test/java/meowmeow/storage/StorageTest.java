@@ -17,6 +17,7 @@ import meowmeow.task.Deadline;
 import meowmeow.task.Event;
 import meowmeow.task.Task;
 import meowmeow.task.TaskDateTime;
+import meowmeow.task.TaskPriority;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.Todo;
 import meowmeow.ui.MessageStyle;
@@ -122,6 +123,46 @@ public class StorageTest {
         assertEquals("[T][X] keep me too", tasks.get(1).toString());
     }
 
+    // ---- load: the optional trailing priority field ----
+
+    @Test
+    public void load_lineWithoutPriorityField_loadsAsNone() throws IOException {
+        writeSaveFile("tasks.txt", "T | 0 | read book");
+        Storage storage = storageAt("tasks.txt");
+
+        Task task = storage.load().get(0);
+
+        assertEquals(TaskPriority.NONE, task.getPriority());
+    }
+
+    @Test
+    public void load_trailingPriorityField_appliedForEveryTaskType() throws IOException {
+        writeSaveFile("tasks.txt",
+                "T | 0 | read book | HIGH",
+                "D | 0 | return book | 2019-12-02 1800 | LOW",
+                "E | 0 | project | 2019-12-02 1400 | 2019-12-02 1600 | MEDIUM");
+        Storage storage = storageAt("tasks.txt");
+
+        List<Task> tasks = storage.load();
+
+        assertEquals(TaskPriority.HIGH, tasks.get(0).getPriority());
+        assertEquals(TaskPriority.LOW, tasks.get(1).getPriority());
+        assertEquals(TaskPriority.MEDIUM, tasks.get(2).getPriority());
+    }
+
+    @Test
+    public void load_unrecognisedPriorityToken_taskKeptAsNoneWithoutWarning() throws IOException {
+        writeSaveFile("tasks.txt", "T | 0 | read book | URGENT");
+        Ui ui = new Ui(MessageStyle.PLAIN, new Random(SEED));
+        Storage storage = new Storage(ui, tempDir.resolve("tasks.txt").toString());
+
+        List<Task> tasks = storage.load();
+
+        assertEquals(1, tasks.size());
+        assertEquals(TaskPriority.NONE, tasks.get(0).getPriority());
+        assertEquals(0, ui.drainWarnings().size());
+    }
+
     // ---- save, then load: the two must round-trip ----
 
     @Test
@@ -143,6 +184,28 @@ public class StorageTest {
             assertEquals(original.get(i).toFileString(), reloaded.get(i).toFileString());
             assertEquals(original.get(i).toString(), reloaded.get(i).toString());
         }
+    }
+
+    @Test
+    public void saveThenLoad_priorityRoundTrips() throws Exception {
+        Todo highPriority = new Todo("borrow book");
+        highPriority.setPriority(TaskPriority.HIGH);
+
+        Storage storage = storageAt("tasks.txt");
+        storage.save(List.of(highPriority));
+        Task reloaded = storage.load().get(0);
+
+        assertEquals(TaskPriority.HIGH, reloaded.getPriority());
+        assertEquals(highPriority.toFileString(), reloaded.toFileString());
+    }
+
+    @Test
+    public void save_taskWithNoPriority_writesLineIdenticalToBeforePrioritiesExisted() throws Exception {
+        Storage storage = storageAt("tasks.txt");
+
+        storage.save(List.of(new Todo("borrow book")));
+
+        assertEquals(List.of("T | 0 | borrow book"), Files.readAllLines(tempDir.resolve("tasks.txt")));
     }
 
     @Test

@@ -11,6 +11,7 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import meowmeow.task.TaskPriority;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.Todo;
 
@@ -132,5 +133,25 @@ public class UiTest {
         String notDone = ui.showStatusChange(TaskStatus.NOT_DONE, task);
 
         assertNotEquals(done, notDone);
+    }
+
+    @Test
+    public void showPriorityChange_echoesTheUpdatedTask() {
+        Ui ui = new Ui(MessageStyle.PLAIN, new Random(1));
+        Todo task = new Todo("read book");
+        task.setPriority(TaskPriority.HIGH);
+
+        assertTrue(ui.showPriorityChange(task).contains(task.toString()));
+    }
+
+    @Test
+    public void showPriorityChange_differsFromShowStatusChangeWording() {
+        Ui ui = new Ui(MessageStyle.PLAIN, new Random(1));
+        Todo task = new Todo("read book");
+
+        String priorityChange = ui.showPriorityChange(task);
+        String statusChange = ui.showStatusChange(TaskStatus.DONE, task);
+
+        assertNotEquals(priorityChange, statusChange);
     }
 }

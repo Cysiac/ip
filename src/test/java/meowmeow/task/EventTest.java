@@ -92,4 +92,22 @@ public class EventTest {
         assertEquals("E | 0 | camp | 2019-12-01 | 2019-12-03",
                 event("camp", "1/12/2019", "3/12/2019").toFileString());
     }
+
+    // ---- priority ----
+
+    @Test
+    public void toString_priorityHigh_suffixComesAfterBothEndpoints() throws MeowmeowException {
+        Event e = threeDayEvent();
+        e.setPriority(TaskPriority.HIGH);
+
+        assertEquals("[E][ ] camp (from: Dec 1 2019 to: Dec 3 2019) (priority: HIGH)", e.toString());
+    }
+
+    @Test
+    public void toFileString_priorityMedium_fieldComesAfterBothEndpoints() throws MeowmeowException {
+        Event e = threeDayEvent();
+        e.setPriority(TaskPriority.MEDIUM);
+
+        assertEquals("E | 0 | camp | 2019-12-01 | 2019-12-03 | MEDIUM", e.toFileString());
+    }
 }

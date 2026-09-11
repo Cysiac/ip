@@ -58,6 +58,11 @@ public class MessagesTest {
     }
 
     @Test
+    public void priorityChanged_hasAtLeastFourVariants() {
+        assertTrue(distinctResultCount(Messages::priorityChanged) >= MINIMUM_VARIANTS);
+    }
+
+    @Test
     public void listHeader_hasAtLeastFourVariants() {
         assertTrue(distinctResultCount(Messages::listHeader) >= MINIMUM_VARIANTS);
     }

@@ -21,9 +21,11 @@ import meowmeow.command.ExitCommand;
 import meowmeow.command.FindCommand;
 import meowmeow.command.ListCommand;
 import meowmeow.command.MarkCommand;
+import meowmeow.command.PriorityCommand;
 import meowmeow.storage.Storage;
 import meowmeow.task.Task;
 import meowmeow.task.TaskList;
+import meowmeow.task.TaskPriority;
 import meowmeow.task.TaskStatus;
 import meowmeow.task.Todo;
 import meowmeow.ui.MessageStyle;
@@ -36,9 +38,11 @@ import meowmeow.ui.Ui;
  * <p>{@code parse} is core, critical logic: every command the user types
  * flows through it, and it owns all the "I don't understand that" checks.
  * Its private helpers ({@code parseDeadline}, {@code parseEvent},
- * {@code parseTaskNumber}, the end-first case-insensitive {@code /by}
- * {@code /from} {@code /to} search) are covered here through {@code parse}
- * rather than tested directly.
+ * {@code parseTaskNumber}, {@code parsePriority}, the end-first
+ * case-insensitive {@code /by} {@code /from} {@code /to} search) are covered
+ * here through {@code parse} rather than tested directly - the "/p" and
+ * "/priority" flag scan itself is tested directly in
+ * {@link PriorityFlagTest}.
  *
  * <p>The concrete {@link Command} subclasses expose no getters, so a parsed
  * command is checked two ways: its runtime type (was the right kind of
@@ -129,6 +133,11 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_priority_returnsPriorityCommand() throws MeowmeowException {
+        assertInstanceOf(PriorityCommand.class, Parser.parse("priority 1 high"));
+    }
+
+    @Test
     public void parse_keywordCaseInsensitive_stillRecognised() throws MeowmeowException {
         assertInstanceOf(ExitCommand.class, Parser.parse("BYE"));
         TaskList tasks = parseAndRun("TODO borrow book");
@@ -148,6 +157,37 @@ public class ParserTest {
     @Test
     public void parse_todoWithoutDescription_exceptionThrown() {
         assertThrows(MeowmeowException.class, () -> Parser.parse("todo"));
+    }
+
+    @Test
+    public void parse_todoWithPriorityFlagLast_priorityAppliedAndStrippedFromDescription() throws MeowmeowException {
+        TaskList tasks = parseAndRun("todo borrow book /p high");
+
+        assertEquals("[T][ ] borrow book (priority: HIGH)", tasks.get(1).toString());
+    }
+
+    @Test
+    public void parse_todoWithPriorityFlagFirst_descriptionIsWhatFollows() throws MeowmeowException {
+        TaskList tasks = parseAndRun("todo /p high borrow book");
+
+        assertEquals("[T][ ] borrow book (priority: HIGH)", tasks.get(1).toString());
+    }
+
+    @Test
+    public void parse_todoWithLongPriorityMarker_alsoAccepted() throws MeowmeowException {
+        TaskList tasks = parseAndRun("todo borrow book /priority low");
+
+        assertEquals("[T][ ] borrow book (priority: LOW)", tasks.get(1).toString());
+    }
+
+    @Test
+    public void parse_todoWithUnknownPriorityLevel_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("todo borrow book /p urgent"));
+    }
+
+    @Test
+    public void parse_todoWithTwoPriorityFlags_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("todo borrow book /p high /priority low"));
     }
 
     // ---- deadline ----
@@ -194,6 +234,20 @@ public class ParserTest {
         assertThrows(MeowmeowException.class, () -> Parser.parse("deadline return book /by someday"));
     }
 
+    @Test
+    public void parse_deadlineWithPriorityFlagBeforeByMarker_bothApplied() throws MeowmeowException {
+        TaskList tasks = parseAndRun("deadline return book /p high /by 2/12/2019");
+
+        assertEquals("[D][ ] return book (by: Dec 2 2019) (priority: HIGH)", tasks.get(1).toString());
+    }
+
+    @Test
+    public void parse_deadlineWithPriorityFlagAfterByMarker_bothApplied() throws MeowmeowException {
+        TaskList tasks = parseAndRun("deadline return book /by 2/12/2019 /p high");
+
+        assertEquals("[D][ ] return book (by: Dec 2 2019) (priority: HIGH)", tasks.get(1).toString());
+    }
+
     // ---- event ----
 
     @Test
@@ -230,6 +284,13 @@ public class ParserTest {
     public void parse_eventWithUnparseableEndpoint_exceptionThrown() {
         assertThrows(MeowmeowException.class, () ->
                 Parser.parse("event meeting /from 2/12/2019 /to whenever"));
+    }
+
+    @Test
+    public void parse_eventWithPriorityFlag_applied() throws MeowmeowException {
+        TaskList tasks = parseAndRun("event camp /from 2/12/2019 /to 3/12/2019 /p medium");
+
+        assertEquals("[E][ ] camp (from: Dec 2 2019 to: Dec 3 2019) (priority: MEDIUM)", tasks.get(1).toString());
     }
 
     // ---- mark / unmark / delete: task number parsing and effect ----
@@ -278,6 +339,58 @@ public class ParserTest {
     public void parse_markOutOfRangeNumber_exceptionThrownWhenRun() {
         // Parser doesn't range-check; the error surfaces when the command runs.
         assertThrows(MeowmeowException.class, () -> parseAndRun("mark 5", new Todo("a")));
+    }
+
+    // ---- priority ----
+
+    @Test
+    public void parse_priority_setsNamedTasksPriority() throws MeowmeowException {
+        TaskList tasks = parseAndRun("priority 1 high", new Todo("a"));
+
+        assertEquals(TaskPriority.HIGH, tasks.get(1).getPriority());
+    }
+
+    @Test
+    public void parse_priorityNone_clearsNamedTasksPriority() throws MeowmeowException {
+        Task highPriority = new Todo("a");
+        highPriority.setPriority(TaskPriority.HIGH);
+
+        TaskList tasks = parseAndRun("priority 1 none", highPriority);
+
+        assertEquals(TaskPriority.NONE, tasks.get(1).getPriority());
+    }
+
+    @Test
+    public void parse_priorityShorthandLevel_accepted() throws MeowmeowException {
+        TaskList tasks = parseAndRun("priority 1 l", new Todo("a"));
+
+        assertEquals(TaskPriority.LOW, tasks.get(1).getPriority());
+    }
+
+    @Test
+    public void parse_priorityWithoutNumber_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("priority"));
+    }
+
+    @Test
+    public void parse_priorityWithoutLevel_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("priority 1"));
+    }
+
+    @Test
+    public void parse_priorityWithNonNumber_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("priority two high"));
+    }
+
+    @Test
+    public void parse_priorityWithUnknownLevel_exceptionThrown() {
+        assertThrows(MeowmeowException.class, () -> Parser.parse("priority 1 urgent"));
+    }
+
+    @Test
+    public void parse_priorityOutOfRangeNumber_exceptionThrownWhenRun() {
+        // Parser doesn't range-check; the error surfaces when the command runs.
+        assertThrows(MeowmeowException.class, () -> parseAndRun("priority 5 high", new Todo("a")));
     }
 
     // ---- unknown / empty input ----

@@ -76,4 +76,22 @@ public class DeadlineTest {
 
         assertEquals("D | 1 | return book | 2019-12-02", d.toFileString());
     }
+
+    // ---- priority ----
+
+    @Test
+    public void toString_priorityHigh_suffixComesAfterDueDate() throws MeowmeowException {
+        Deadline d = deadline("return book", "2/12/2019");
+        d.setPriority(TaskPriority.HIGH);
+
+        assertEquals("[D][ ] return book (by: Dec 2 2019) (priority: HIGH)", d.toString());
+    }
+
+    @Test
+    public void toFileString_priorityLow_fieldComesAfterDueDate() throws MeowmeowException {
+        Deadline d = deadline("return book", "2/12/2019");
+        d.setPriority(TaskPriority.LOW);
+
+        assertEquals("D | 0 | return book | 2019-12-02 | LOW", d.toFileString());
+    }
 }
