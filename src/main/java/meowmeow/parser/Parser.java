@@ -48,6 +48,9 @@ public class Parser {
      */
     public static Command parse(String fullCommand) throws MeowmeowException {
         CommandType type = CommandType.fromInput(fullCommand);
+        // fromInput() returns a matching command or throws for an unknown one;
+        // it never returns null, so the switch below always has a real type.
+        assert type != null : "CommandType.fromInput returns a command or throws, never null";
         String arguments = type.argumentsOf(fullCommand);
         switch (type) {
             case BYE:

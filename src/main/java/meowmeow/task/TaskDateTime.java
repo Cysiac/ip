@@ -62,6 +62,10 @@ public class TaskDateTime {
     private final LocalTime time;
 
     private TaskDateTime(LocalDate date, LocalTime time) {
+        // The whole class is built around "date always present, time optional"
+        // (see the class comment). Every accepted input format resolves a
+        // LocalDate, so a null date here would mean a parsing bug.
+        assert date != null : "a TaskDateTime always has a date; only the time may be null";
         this.date = date;
         this.time = time;
     }

@@ -24,6 +24,10 @@ public class Event extends Task {
      */
     public Event(String description, TaskDateTime from, TaskDateTime to) {
         super(description, TaskType.EVENT);
+        // Both callers (Parser and Storage) parse the "/from" and "/to" values
+        // into real TaskDateTime objects before constructing the event.
+        assert from != null : "an event must have a start date";
+        assert to != null : "an event must have an end date";
         this.from = from;
         this.to = to;
     }
