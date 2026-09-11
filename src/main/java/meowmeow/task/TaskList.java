@@ -78,13 +78,9 @@ public class TaskList {
      * in list order.
      */
     public List<Task> findOn(LocalDate date) {
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.occursOn(date))
+                .toList();
     }
 
     /**
@@ -98,13 +94,9 @@ public class TaskList {
      */
     public List<Task> findByKeyword(String keyword) {
         String needle = keyword.toLowerCase();
-        ArrayList<Task> matches = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(needle)) {
-                matches.add(task);
-            }
-        }
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase().contains(needle))
+                .toList();
     }
 
     /**

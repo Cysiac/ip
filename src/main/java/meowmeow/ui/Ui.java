@@ -2,6 +2,8 @@ package meowmeow.ui;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import meowmeow.task.Task;
 import meowmeow.task.TaskStatus;
@@ -140,12 +142,7 @@ public class Ui implements AutoCloseable {
      * @return the numbered list message.
      */
     public String showTasks(List<Task> tasks) {
-        String[] lines = new String[tasks.size() + 1];
-        lines[0] = " Here are the tasks in your list, meow:";
-        for (int i = 0; i < tasks.size(); i++) {
-            lines[i + 1] = " " + (i + 1) + "." + tasks.get(i);
-        }
-        return join(lines);
+        return numberedList(" Here are the tasks in your list, meow:", tasks);
     }
 
     /**
@@ -162,12 +159,7 @@ public class Ui implements AutoCloseable {
         if (matches.isEmpty()) {
             return " Nothing on " + dateLabel + " - free day, meow!";
         }
-        String[] lines = new String[matches.size() + 1];
-        lines[0] = " Here are the tasks on " + dateLabel + ", meow:";
-        for (int i = 0; i < matches.size(); i++) {
-            lines[i + 1] = " " + (i + 1) + "." + matches.get(i);
-        }
-        return join(lines);
+        return numberedList(" Here are the tasks on " + dateLabel + ", meow:", matches);
     }
 
     /**
@@ -183,12 +175,24 @@ public class Ui implements AutoCloseable {
         if (matches.isEmpty()) {
             return " No matching tasks, meow!";
         }
-        String[] lines = new String[matches.size() + 1];
-        lines[0] = " Here are the matching tasks in your list, meow:";
-        for (int i = 0; i < matches.size(); i++) {
-            lines[i + 1] = " " + (i + 1) + "." + matches.get(i);
-        }
-        return join(lines);
+        return numberedList(" Here are the matching tasks in your list, meow:", matches);
+    }
+
+    /**
+     * Returns {@code tasks} as a 1-based numbered list under {@code header}.
+     * Shared by the "list", "list &lt;date&gt;" and "find" responses, which
+     * differ only in that header line and their empty-result wording (which
+     * the callers handle before calling here).
+     *
+     * @param header the line shown above the numbered tasks.
+     * @param tasks  the tasks to number, in the order given.
+     * @return the header, then one " {@code n.<task>}" line per task.
+     */
+    private String numberedList(String header, List<Task> tasks) {
+        String numbered = IntStream.range(0, tasks.size())
+                .mapToObj(i -> " " + (i + 1) + "." + tasks.get(i))
+                .collect(Collectors.joining("\n"));
+        return numbered.isEmpty() ? header : header + "\n" + numbered;
     }
 
     /** Returns "task" for a count of 1, "tasks" otherwise. */
