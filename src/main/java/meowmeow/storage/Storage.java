@@ -13,6 +13,7 @@ import meowmeow.task.Event;
 import meowmeow.task.Task;
 import meowmeow.task.TaskDateTime;
 import meowmeow.task.TaskStatus;
+import meowmeow.task.TaskType;
 import meowmeow.task.Todo;
 import meowmeow.ui.Ui;
 
@@ -35,6 +36,29 @@ import meowmeow.ui.Ui;
  * thrown, so one bad line never loses the rest of the list.
  */
 public class Storage {
+
+    /**
+     * The regex separating fields on one saved line, e.g. the {@code " | "}
+     * in {@code "D | 0 | return book | 2019-12-02 1800"}. The pipe is escaped
+     * because {@link String#split(String, int)} takes a regex.
+     */
+    private static final String FIELD_SEPARATOR = " \\| ";
+
+    // Field positions on a saved line, shared by every task type.
+    private static final int TYPE_TAG_INDEX = 0;
+    private static final int DONE_FLAG_INDEX = 1;
+    private static final int DESCRIPTION_INDEX = 2;
+
+    // Field positions of the date parts, by task type.
+    private static final int DEADLINE_BY_INDEX = 3;
+    private static final int EVENT_FROM_INDEX = 3;
+    private static final int EVENT_TO_INDEX = 4;
+
+    // How many fields a well-formed line of each task type has.
+    private static final int TODO_FIELD_COUNT = 3;
+    private static final int DEADLINE_FIELD_COUNT = 4;
+    private static final int EVENT_FIELD_COUNT = 5;
+
     private final Ui ui;
     private final Path file;
 
@@ -101,44 +125,61 @@ public class Storage {
     private Task parseTask(String line) {
         // -1 limit keeps trailing empty fields, so a task whose last part
         // is blank still splits into the expected number of pieces.
-        String[] parts = line.split(" \\| ", -1);
-        if (parts.length < 3) {
+        String[] parts = line.split(FIELD_SEPARATOR, -1);
+        if (parts.length < TODO_FIELD_COUNT) {
             return null;
         }
-        String typeTag = parts[0].trim();
-        String doneFlag = parts[1].trim();
-        String description = parts[2];
 
-        // Reject a garbled flag instead of silently treating it as "not
-        // done" - a flag we don't recognise means the line is corrupted.
-        if (!doneFlag.equals(TaskStatus.DONE.getFileFlag())
-                && !doneFlag.equals(TaskStatus.NOT_DONE.getFileFlag())) {
+        // A tag or flag the enums don't recognise means the line is corrupt;
+        // fromTag / fromFileFlag return null for exactly that case.
+        TaskType type = TaskType.fromTag(parts[TYPE_TAG_INDEX].trim());
+        TaskStatus status = TaskStatus.fromFileFlag(parts[DONE_FLAG_INDEX].trim());
+        if (type == null || status == null) {
             return null;
         }
-        boolean isDone = doneFlag.equals(TaskStatus.DONE.getFileFlag());
 
-        Task task;
+        Task task = buildTask(type, parts);
+        if (task == null) {
+            return null;
+        }
+        task.setStatus(status);
+        return task;
+    }
+
+    /**
+     * Builds the {@link Task} subclass named by {@code type} from the date
+     * fields on {@code parts}. Returns {@code null} if the line is too short
+     * for that type or carries a date that no longer parses - the same "skip
+     * just this line" contract {@link #parseTask} applies to any other
+     * malformed line.
+     *
+     * @param type  the task type, already recognised from the line's tag.
+     * @param parts the line split on {@link #FIELD_SEPARATOR}.
+     * @return the rebuilt task, or {@code null} if the line is malformed.
+     */
+    private Task buildTask(TaskType type, String[] parts) {
+        String description = parts[DESCRIPTION_INDEX];
         try {
-            switch (typeTag) {
-                case "T":
-                    task = new Todo(description);
-                    break;
-                case "D":
-                    if (parts.length < 4) {
+            switch (type) {
+                case TODO:
+                    return new Todo(description);
+                case DEADLINE:
+                    if (parts.length < DEADLINE_FIELD_COUNT) {
                         return null;
                     }
-                    task = new Deadline(description, TaskDateTime.parse(parts[3].trim()));
-                    break;
-                case "E":
-                    if (parts.length < 5) {
+                    return new Deadline(description, TaskDateTime.parse(parts[DEADLINE_BY_INDEX].trim()));
+                case EVENT:
+                    if (parts.length < EVENT_FIELD_COUNT) {
                         return null;
                     }
-                    task = new Event(description,
-                            TaskDateTime.parse(parts[3].trim()),
-                            TaskDateTime.parse(parts[4].trim()));
-                    break;
+                    return new Event(description,
+                            TaskDateTime.parse(parts[EVENT_FROM_INDEX].trim()),
+                            TaskDateTime.parse(parts[EVENT_TO_INDEX].trim()));
                 default:
-                    return null;
+                    // Unreachable: every TaskType constant is handled above.
+                    // Kept so the compiler warns if a new constant is added
+                    // without a case here.
+                    throw new IllegalStateException("Unhandled task type: " + type);
             }
         } catch (MeowmeowException unreadableDate) {
             // A saved date we can no longer parse (e.g. a file written by an
@@ -147,10 +188,6 @@ public class Storage {
             // other malformed line.
             return null;
         }
-        if (isDone) {
-            task.setStatus(TaskStatus.DONE);
-        }
-        return task;
     }
 
     /**
