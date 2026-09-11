@@ -115,7 +115,7 @@ public class TaskList {
      */
     private int toListIndex(int oneBasedIndex) throws MeowmeowException {
         if (oneBasedIndex < 1 || oneBasedIndex > tasks.size()) {
-            throw new MeowmeowException(" Meow? Task " + oneBasedIndex + " doesn't exist in your list.");
+            throw new MeowmeowException(" Task " + oneBasedIndex + " doesn't exist in your list.");
         }
 
         int listIndex = oneBasedIndex - 1;

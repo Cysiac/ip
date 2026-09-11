@@ -8,12 +8,20 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import meowmeow.Meowmeow;
+import meowmeow.Response;
 
 /**
  * Controller for the main window. Wires the input field and Send button to
  * {@link Meowmeow#getResponse(String)} and appends a pair of
  * {@link DialogBox}es (the user's line, then Meowmeow's reply) to the
  * scrolling conversation for each command entered.
+ *
+ * <p>{@link Meowmeow#getResponse(String)} may return more than one
+ * {@link Response} (e.g. a save-failure warning alongside a confirmation);
+ * each is shown as its own dialog box, in order. Styling a reply by its
+ * {@link Response#kind()} - and greeting the user on start-up, and closing
+ * the window on an {@link meowmeow.ResponseKind#EXIT EXIT} reply - is GUI
+ * polish that lands with the GUI's own increment, not this one.
  */
 public class MainWindow extends AnchorPane {
     @FXML
@@ -46,9 +54,9 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Handles one line of user input: shows it, shows Meowmeow's reply, and
-     * clears the input field. Bound to both the Send button and the Enter
-     * key in the FXML.
+     * Handles one line of user input: shows it, shows each of Meowmeow's
+     * reply messages, and clears the input field. Bound to both the Send
+     * button and the Enter key in the FXML.
      */
     @FXML
     private void handleUserInput() {
@@ -56,11 +64,10 @@ public class MainWindow extends AnchorPane {
         if (input.isBlank()) {
             return;
         }
-        String response = meowmeow.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getMeowmeowDialog(response, meowmeowImage)
-        );
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(input, userImage));
+        for (Response response : meowmeow.getResponse(input)) {
+            dialogContainer.getChildren().add(DialogBox.getMeowmeowDialog(response.text(), meowmeowImage));
+        }
         userInput.clear();
     }
 }

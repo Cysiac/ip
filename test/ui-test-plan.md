@@ -27,8 +27,7 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -48,11 +47,10 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ The full list, for better or worse:
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -74,21 +72,20 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -109,33 +106,32 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Nice! I've marked this task as done, meow:
+ Look at you, finishing things.
    [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- OK, I've marked this task as not done yet, meow:
+ Marked not done. Shocking.
    [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Meow! See you when you inevitably need me again.
  > ^ <
 ____________________________________________________________
 ```
@@ -157,37 +153,36 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [T][ ] return book
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Ugh, fine, it's on the list.
    [T][ ] join sports club
  Now you have 3 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've removed this task:
+ Fine, it's gone. Don't ask me to bring it back.
    [T][ ] return book
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[T][ ] read book
  2.[T][ ] join sports club
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Meow! See you when you inevitably need me again.
  > ^ <
 ____________________________________________________________
 ```
@@ -204,11 +199,11 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Tell me which task number to delete.
+ Nice try.
+ Tell me which task number to delete.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
@@ -233,27 +228,28 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- That's not a task number I recognise, meow?
+ Excuse me?
+ That's not a task number I recognise.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 5 doesn't exist in your list.
+ I refuse to guess. Try again.
+ Task 5 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Bye. Don't come crying when you forget something.
  > ^ <
 ____________________________________________________________
 ```
@@ -271,18 +267,19 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Tell me which task number to mark.
+ Nice try.
+ Tell me which task number to mark.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Tell me which task number to unmark.
+ Excuse me?
+ Tell me which task number to unmark.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -300,18 +297,19 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- That's not a task number I recognise, meow?
+ Nice try.
+ That's not a task number I recognise.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 5 doesn't exist in your list.
+ Excuse me?
+ Task 5 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -330,19 +328,20 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Tell me what to add, e.g. "todo borrow book".
+ Nice try.
+ Tell me what to add, e.g. "todo borrow book".
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't know what that means.
+ Excuse me?
+ I don't know what that means.
  Try: todo, deadline, event, list, find, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -361,21 +360,20 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -394,20 +392,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "deadline <description> /by <when>", e.g.
+ Nice try.
+ Use "deadline <description> /by <when>", e.g.
  "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "deadline <description> /by <when>", e.g.
+ Excuse me?
+ Use "deadline <description> /by <when>", e.g.
  "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -426,21 +425,20 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -459,24 +457,26 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "event <description> /from <start> /to <end>", e.g.
+ Nice try.
+ Use "event <description> /from <start> /to <end>", e.g.
  "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "event <description> /from <start> /to <end>", e.g.
+ Excuse me?
+ Use "event <description> /from <start> /to <end>", e.g.
  "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "event <description> /from <start> /to <end>", e.g.
+ I refuse to guess. Try again.
+ Use "event <description> /from <start> /to <end>", e.g.
  "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -497,33 +497,32 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] borrow book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Ugh, fine, it's on the list.
    [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 3 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][ ] borrow book
  2.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
  3.[E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Bye. Don't come crying when you forget something.
  > ^ <
 ____________________________________________________________
 ```
@@ -542,22 +541,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [E][ ] project meeting (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -576,22 +574,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [D][ ] reply /by email (by: Dec 2 2019)
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [E][ ] remind team /to buy cake (from: Dec 2 2019, 2:00 pm to: Dec 2 2019, 4:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -612,27 +609,29 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't understand that date.
+ Nice try.
+ I don't understand that date.
  Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't understand that date.
+ Excuse me?
+ I don't understand that date.
  Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't understand that date.
+ I refuse to guess. Try again.
+ I don't understand that date.
  Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Bye. Don't come crying when you forget something.
  > ^ <
 ____________________________________________________________
 ```
@@ -650,18 +649,18 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? An event can't end before it starts.
+ Nice try.
+ An event can't end before it starts.
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -684,35 +683,34 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] borrow book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [D][ ] return book (by: Dec 2 2019, 6:00 pm)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Ugh, fine, it's on the list.
    [E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
  Now you have 3 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks on Dec 2 2019, meow:
+ Your Dec 2 2019 agenda, such as it is:
  1.[D][ ] return book (by: Dec 2 2019, 6:00 pm)
  2.[E][ ] conf (from: Dec 1 2019, 9:00 am to: Dec 3 2019, 5:00 pm)
 ____________________________________________________________
 ____________________________________________________________
- Nothing on Dec 10 2019 - free day, meow!
+ No tasks on Dec 10 2019. Suspicious.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Meow! See you when you inevitably need me again.
  > ^ <
 ____________________________________________________________
 ```
@@ -730,21 +728,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] borrow book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't understand that date.
+ Excuse me?
+ I don't understand that date.
  Try: 2/12/2019 1800, 2/12/2019, 2019-12-02 1800, or 2019-12-02.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -767,31 +765,33 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow? I don't know what that means.
+ Excuse me?
+ I don't know what that means.
  Try: todo, deadline, event, list, find, mark, unmark, delete, bye
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 99 doesn't exist in your list.
+ I refuse to guess. Try again.
+ Task 99 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 99 doesn't exist in your list.
+ I refuse to guess. Try again.
+ Task 99 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [T][ ] write essay
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][ ] read book
  2.[T][ ] write essay
 ____________________________________________________________
@@ -818,27 +818,28 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- That's not a task number I recognise, meow?
+ Excuse me?
+ That's not a task number I recognise.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 5 doesn't exist in your list.
+ I refuse to guess. Try again.
+ Task 5 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Bye. Don't come crying when you forget something.
  > ^ <
 ____________________________________________________________
 ```
@@ -861,29 +862,31 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task 0 doesn't exist in your list.
+ Excuse me?
+ Task 0 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Task -1 doesn't exist in your list.
+ I refuse to guess. Try again.
+ Task -1 doesn't exist in your list.
 ____________________________________________________________
 ____________________________________________________________
- That's not a task number I recognise, meow?
+ I refuse to guess. Try again.
+ That's not a task number I recognise.
 ____________________________________________________________
 ____________________________________________________________
- Nice! I've marked this task as done, meow:
+ Look at you, finishing things.
    [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][X] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -911,32 +914,31 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Nice! I've marked this task as done, meow:
+ Look at you, finishing things.
    [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- Nice! I've marked this task as done, meow:
+ Finally.
    [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
- OK, I've marked this task as not done yet, meow:
+ Marked not done. Shocking.
    [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
- OK, I've marked this task as not done yet, meow:
+ Back on the list. Typical.
    [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's what you asked for:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
@@ -961,20 +963,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "deadline <description> /by <when>", e.g.
+ Nice try.
+ Use "deadline <description> /by <when>", e.g.
  "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "deadline <description> /by <when>", e.g.
+ Excuse me?
+ Use "deadline <description> /by <when>", e.g.
  "deadline return book /by 2/12/2019 1800".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -993,20 +996,21 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "event <description> /from <start> /to <end>", e.g.
+ Nice try.
+ Use "event <description> /from <start> /to <end>", e.g.
  "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
- Meow? Use "event <description> /from <start> /to <end>", e.g.
+ Excuse me?
+ Use "event <description> /from <start> /to <end>", e.g.
  "event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -1025,21 +1029,20 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the tasks in your list, meow:
+ Here's everything you're avoiding:
  1.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -1060,32 +1063,31 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [D][ ] return book (by: Dec 2 2019)
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Ugh, fine, it's on the list.
    [T][ ] buy milk
  Now you have 3 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the matching tasks in your list, meow:
+ Here's what matched:
  1.[T][ ] read book
  2.[D][ ] return book (by: Dec 2 2019)
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Bye. Don't come crying when you forget something.
  > ^ <
 ____________________________________________________________
 ```
@@ -1104,25 +1106,24 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] read book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [T][ ] buy milk
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- No matching tasks, meow!
+ No matches. Maybe you imagined it.
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -1141,26 +1142,25 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ There. Added. You're welcome.
    [T][ ] Read Book
  Now you have 1 task in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Meow! I've added this task:
+ Fine. Added. Happy now?
    [T][ ] buy milk
  Now you have 2 tasks in the list, meow!
 ____________________________________________________________
 ____________________________________________________________
- Here are the matching tasks in your list, meow:
+ Here's what matched:
  1.[T][ ] Read Book
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
-( ^.^ )  Meow! Bye bye~
+( ^.^ )  Leaving already? Fine, meow.
  > ^ <
 ____________________________________________________________
 ```
@@ -1177,11 +1177,11 @@ bye
 ```output
 ____________________________________________________________
 (=^-ω-^=)  Meowmeow
-Hello! I'm Meowmeow.
-What can I do for you?
+I'm Meowmeow. Let's see what you've got.
 ____________________________________________________________
 ____________________________________________________________
- Meow? Tell me what to search for, e.g. "find book".
+ Nice try.
+ Tell me what to search for, e.g. "find book".
 ____________________________________________________________
 ____________________________________________________________
  /\_/\
