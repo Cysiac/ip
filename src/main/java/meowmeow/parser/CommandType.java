@@ -61,6 +61,10 @@ public enum CommandType {
      * trimmed. Empty for a bare keyword with no arguments (e.g. "mark" -> "").
      */
     public String argumentsOf(String input) {
+        // Only ever called after matches()/fromInput() has confirmed that input
+        // begins with this keyword; the substring below relies on that.
+        assert input.regionMatches(true, 0, keyword, 0, keyword.length())
+                : "argumentsOf expects input beginning with this command's keyword";
         return input.length() > keyword.length() ? input.substring(keyword.length()).trim() : "";
     }
 

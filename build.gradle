@@ -82,4 +82,8 @@ shadowJar {
 
 run {
     standardInput = System.in
+    // Turn on Java's `assert` checks when running the app, so the invariants
+    // documented with assertions are actually verified. Gradle already enables
+    // assertions for the `test` task by default, but not for `run`.
+    enableAssertions = true
 }

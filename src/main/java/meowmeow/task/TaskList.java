@@ -31,6 +31,9 @@ public class TaskList {
      * changes here do not write back through the caller's collection.
      */
     public TaskList(List<Task> initialTasks) {
+        // Storage.load() returns an empty list (never null) for a first run, so
+        // the only caller always has a real list to hand over.
+        assert initialTasks != null : "initial task list should not be null";
         this.tasks = new ArrayList<>(initialTasks);
     }
 
@@ -41,6 +44,9 @@ public class TaskList {
 
     /** Adds a task to the end of the list. */
     public void add(Task task) {
+        // findOn() and findByKeyword() call methods on every element, so a null
+        // task in the list would break them later, far from the real cause.
+        assert task != null : "the task list must never hold a null task";
         tasks.add(task);
     }
 
@@ -111,6 +117,12 @@ public class TaskList {
         if (oneBasedIndex < 1 || oneBasedIndex > tasks.size()) {
             throw new MeowmeowException(" Meow? Task " + oneBasedIndex + " doesn't exist in your list.");
         }
-        return oneBasedIndex - 1;
+
+        int listIndex = oneBasedIndex - 1;
+        // Records the postcondition: once the range check above has passed, the
+        // converted index is always safe to use on the backing list.
+        assert listIndex >= 0 && listIndex < tasks.size()
+                : "range check should guarantee a valid list index";
+        return listIndex;
     }
 }

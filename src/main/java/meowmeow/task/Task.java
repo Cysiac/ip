@@ -23,6 +23,12 @@ public class Task {
      * @param type        the kind of task (todo, deadline or event).
      */
     public Task(String description, TaskType type) {
+        // Parser rejects an empty command line before building a task, and every
+        // subclass passes one of the TaskType constants, so a half-formed task
+        // should never reach this constructor.
+        assert description != null : "a task description should never be null";
+        assert type != null : "every task must have a type";
+
         this.description = description;
         this.type = type;
         this.status = TaskStatus.NOT_DONE;

@@ -22,6 +22,9 @@ public class Deadline extends Task {
      */
     public Deadline(String description, TaskDateTime by) {
         super(description, TaskType.DEADLINE);
+        // Both callers (Parser and Storage) parse the "/by" value into a real
+        // TaskDateTime before constructing the deadline, so it is never null.
+        assert by != null : "a deadline must have a due date";
         this.by = by;
     }
 
