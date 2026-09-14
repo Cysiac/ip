@@ -190,6 +190,13 @@ public class ParserTest {
         assertThrows(MeowmeowException.class, () -> Parser.parse("todo borrow book /p high /priority low"));
     }
 
+    @Test
+    public void parse_todoDescriptionContainsPipe_exceptionThrown() {
+        // "|" is the save-file field separator; letting it through would
+        // silently corrupt the description on the next load.
+        assertThrows(MeowmeowException.class, () -> Parser.parse("todo review PR | approve"));
+    }
+
     // ---- deadline ----
 
     @Test
@@ -248,6 +255,13 @@ public class ParserTest {
         assertEquals("[D][ ] return book (by: Dec 2 2019) (priority: HIGH)", tasks.get(1).toString());
     }
 
+    @Test
+    public void parse_deadlineDescriptionContainsPipe_exceptionThrown() {
+        // "|" is the save-file field separator; letting it through would
+        // silently corrupt the description on the next load.
+        assertThrows(MeowmeowException.class, () -> Parser.parse("deadline pay bill | rent /by 2/12/2019"));
+    }
+
     // ---- event ----
 
     @Test
@@ -291,6 +305,14 @@ public class ParserTest {
         TaskList tasks = parseAndRun("event camp /from 2/12/2019 /to 3/12/2019 /p medium");
 
         assertEquals("[E][ ] camp (from: Dec 2 2019 to: Dec 3 2019) (priority: MEDIUM)", tasks.get(1).toString());
+    }
+
+    @Test
+    public void parse_eventDescriptionContainsPipe_exceptionThrown() {
+        // "|" is the save-file field separator; letting it through would
+        // silently corrupt the description on the next load.
+        assertThrows(MeowmeowException.class, () ->
+                Parser.parse("event standup | planning /from 2/12/2019 /to 3/12/2019"));
     }
 
     // ---- mark / unmark / delete: task number parsing and effect ----
