@@ -113,8 +113,8 @@ public class Parser {
      * arguments may also carry a "/p" or "/priority" flag anywhere in them,
      * e.g. {@code "borrow book /p high"} or {@code "/p high borrow book"}.
      *
-     * @throws MeowmeowException if no description was given, or the priority
-     *     flag is malformed.
+     * @throws MeowmeowException if no description was given, the description
+     *     contains "|", or the priority flag is malformed.
      */
     private static Todo parseTodo(String arguments) throws MeowmeowException {
         PriorityFlag flag = PriorityFlag.extractFrom(arguments);
@@ -122,6 +122,7 @@ public class Parser {
         if (description.isEmpty()) {
             throw new MeowmeowException(" Tell me what to add, e.g. \"todo borrow book\".");
         }
+        requireNoFileSeparator(description);
         Todo todo = new Todo(description);
         todo.setPriority(flag.priority());
         return todo;
@@ -153,8 +154,8 @@ public class Parser {
      * the same.
      *
      * @throws MeowmeowException if the "/by" marker, the description or the
-     *     date is missing, the date is not one Meowmeow recognises, or the
-     *     priority flag is malformed.
+     *     date is missing, the description contains "|", the date is not one
+     *     Meowmeow recognises, or the priority flag is malformed.
      */
     private static Deadline parseDeadline(String arguments) throws MeowmeowException {
         PriorityFlag flag = PriorityFlag.extractFrom(arguments);
@@ -167,6 +168,7 @@ public class Parser {
                     " Use \"deadline <description> /by <when>\", e.g.",
                     " \"deadline return book /by 2/12/2019 1800\".");
         }
+        requireNoFileSeparator(description);
         // TaskDateTime.parse throws MeowmeowException if the text is not a
         // date Meowmeow recognises.
         Deadline deadline = new Deadline(description, TaskDateTime.parse(by));
@@ -184,8 +186,9 @@ public class Parser {
      * real "/from" is the rightmost one before it.
      *
      * @throws MeowmeowException if a marker, the description or an endpoint
-     *     is missing, an endpoint is not a date Meowmeow recognises, the end
-     *     is before the start, or the priority flag is malformed.
+     *     is missing, the description contains "|", an endpoint is not a
+     *     date Meowmeow recognises, the end is before the start, or the
+     *     priority flag is malformed.
      */
     private static Event parseEvent(String arguments) throws MeowmeowException {
         PriorityFlag flag = PriorityFlag.extractFrom(arguments);
@@ -200,6 +203,7 @@ public class Parser {
                     " Use \"event <description> /from <start> /to <end>\", e.g.",
                     " \"event project meeting /from 2/12/2019 1400 /to 2/12/2019 1600\".");
         }
+        requireNoFileSeparator(description);
         TaskDateTime start = TaskDateTime.parse(from);
         TaskDateTime end = TaskDateTime.parse(to);
         if (!start.isNotAfter(end)) {
@@ -228,6 +232,22 @@ public class Parser {
         int taskNumber = parseTaskNumber(parts[0], CommandType.PRIORITY);
         TaskPriority priority = PriorityFlag.parseLevel(parts[1].trim());
         return new PriorityCommand(taskNumber, priority);
+    }
+
+    /**
+     * Rejects a description that contains "|", the character
+     * {@link meowmeow.storage.Storage Storage} uses to separate fields on a
+     * saved line. Letting it through would round-trip fine on this save, but
+     * silently corrupt (truncate) the description the next time the file is
+     * loaded, since the extra "|" would be misread as a field boundary.
+     *
+     * @param description the "todo"/"deadline"/"event" description to check.
+     * @throws MeowmeowException if the description contains "|".
+     */
+    private static void requireNoFileSeparator(String description) throws MeowmeowException {
+        if (description.contains("|")) {
+            throw new MeowmeowException(" Sorry, task descriptions can't contain \"|\".");
+        }
     }
 
     /**

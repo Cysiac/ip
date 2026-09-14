@@ -1362,6 +1362,47 @@ ____________________________________________________________
 ____________________________________________________________
 ```
 
+## Test: Descriptions containing "|" are rejected
+**Aim:** "|" is the save-file field separator, so a "todo", "deadline" or
+"event" description containing it is rejected with a friendly error
+instead of being added - letting it through would silently corrupt the
+description the next time the file is reloaded.
+
+```input
+todo review PR | approve
+deadline pay bill | rent /by 2/12/2019
+event standup | planning /from 2/12/2019 /to 3/12/2019
+list
+bye
+```
+
+```output
+____________________________________________________________
+(=^-ω-^=)  Meowmeow
+I'm Meowmeow. Let's see what you've got.
+____________________________________________________________
+____________________________________________________________
+ Nice try.
+ Sorry, task descriptions can't contain "|".
+____________________________________________________________
+____________________________________________________________
+ Excuse me?
+ Sorry, task descriptions can't contain "|".
+____________________________________________________________
+____________________________________________________________
+ I refuse to guess. Try again.
+ Sorry, task descriptions can't contain "|".
+____________________________________________________________
+____________________________________________________________
+ Here's what you asked for:
+____________________________________________________________
+____________________________________________________________
+ /\_/\
+( ^.^ )  Bye. Don't come crying when you forget something.
+ > ^ <
+____________________________________________________________
+```
+
 ## Test: Two priority flags in one command are rejected
 **Aim:** Giving both "/p" and "/priority" on the same "todo" command is
 ambiguous, so it is rejected and the task is not added at all.
